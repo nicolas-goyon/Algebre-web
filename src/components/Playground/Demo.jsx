@@ -1,5 +1,4 @@
 import Renommage from "./Renomage";
-import MathJax from 'react-mathjax';
 import {Noeud} from '../../assets/classes/Noeud';
 
 
@@ -10,19 +9,14 @@ export default function Demo(prop) {
     const blockFormula = `\\int_0^\\infty x^2 dx`;
 
     return (
-        <div className="columns-2 w-full">
-            <script>
-            </script>
-            <div className="w-full border-2 min-h-100">
+        <div className="flex flex-row w-full gap-5">
+            <div className="w-full border-2 h-40 p-10">
                 <Renommage />
-                <MathJax.Provider>
-                    <div>
-                        <p>Inline formula: <MathJax.Node inline formula={latexString} /></p>
-                        <hr></hr>
-                        <p>Block formula:</p>
-                        <MathJax.Node formula={blockFormula} />
-                    </div>
-                </MathJax.Provider>
+                
+            </div>
+            
+            <div className="w-full border-2 h-40">
+                
             </div>
         </div>
     )
