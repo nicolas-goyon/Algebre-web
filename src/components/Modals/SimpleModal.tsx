@@ -1,10 +1,10 @@
+import React from 'react';
 import { Fragment, useEffect, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import classNames from 'classnames';
 
-export default function SimpleModal(prop) {
+export default function SimpleModal(prop: any) {
     const [open, setOpen] = useState(prop.openState)
-    useEffect((e) => {
+    useEffect(() => {
         prop.openButton.current.addEventListener("click", () => {
             setOpen(true)
         })

@@ -12,11 +12,12 @@ export class Difference extends Noeud{
     estValide (): Boolean{
         return this.ensemble1.estValide() && this.ensemble2.estValide() 
     }
-    toJSON(): String{
+    
+    toJSON(): string{
         let objet = {  
             type: this.type,
-            ensemble1: this.ensemble1.toJSON(),
-            ensemble2: this.ensemble2.toJSON(),
+            ensemble1: JSON.parse(this.ensemble1.toJSON()),
+            ensemble2: JSON.parse(this.ensemble2.toJSON()),
         }
         return JSON.stringify(objet)
     }
@@ -24,7 +25,7 @@ export class Difference extends Noeud{
 
 
     toLatex(): String{
-        let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\\ ( " + this.ensemble1.toLatex() + " )"
+        let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\\ ( " + this.ensemble2.toLatex() + " )"
         return chaine
     }
     

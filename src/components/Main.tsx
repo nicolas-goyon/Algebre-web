@@ -1,6 +1,7 @@
+import React from 'react';
 import Demo from "./Playground/Demo";
 
-export default function Main(prop) {
+export default function Main(prop: any) {
 
 
     return (

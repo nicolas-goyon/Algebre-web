@@ -2,10 +2,10 @@ import React from 'react';
 import { Noeud } from "./Noeud.tsx";
 
 export class Projection extends Noeud{
-    champs: [String];
+    champs: String[];
     ensemble: Noeud;
     
-    constructor(champs: [String], ensemble: Noeud) {
+    constructor(champs: String[], ensemble: Noeud) {
         super("Projection")
         this.champs = champs
         this.ensemble = ensemble
@@ -15,11 +15,11 @@ export class Projection extends Noeud{
         return this.ensemble.estValide()
     }
 
-    toJSON(): String{
+    toJSON(): string{
         let objet = {  
             type: this.type,
             champs: this.champs,
-            ensemble: JSON.stringify(this.ensemble)
+            ensemble: JSON.parse(this.ensemble.toJSON())
         }
         return JSON.stringify(objet)
     }
@@ -27,9 +27,9 @@ export class Projection extends Noeud{
 
 
     toLatex(){
-        let chaine = "\pi_{"
+        let chaine = "\\pi_{"
         for (let i in this.champs){
-            chaine += i + ", "
+            chaine += this.champs[i] + ", "
         }
         chaine = chaine.slice(0, -2);
         chaine += "}"

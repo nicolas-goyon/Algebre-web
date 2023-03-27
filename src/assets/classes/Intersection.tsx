@@ -14,17 +14,17 @@ export class Intersection extends Noeud{
         return this.ensemble1.estValide() && this.ensemble2.estValide() 
     }
 
-    toJSON(): String{
+    toJSON(): string{
         let objet = {  
             type: this.type,
-            ensemble1: this.ensemble1.toJSON(),
-            ensemble2: this.ensemble2.toJSON()
+            ensemble1: JSON.parse(this.ensemble1.toJSON()),
+            ensemble2: JSON.parse(this.ensemble2.toJSON())
         }
         return JSON.stringify(objet)
     }
     
     toLatex():String{
-        let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\cap\ ( " + this.ensemble1.toLatex() + " )"
+        let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\cap\ ( " + this.ensemble2.toLatex() + " )"
         return chaine
     }
     

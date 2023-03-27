@@ -13,17 +13,17 @@ export class Selection extends Noeud{
         return this.ensemble.estValide()
     }
 
-    toJSON(): String{
+    toJSON(): string{
         let objet = {  
             type: this.type,
             condition: this.condition,
-            ensemble: this.ensemble.toJSON()
+            ensemble: JSON.parse(this.ensemble.toJSON())
         }
         return JSON.stringify(objet)
     }
     
     toLatex(): String{
-        let chaine = "\pi_{"
+        let chaine = "\sigma_{"
         for (let i in this.condition){
             chaine += i[0] + i[1] + i[2] + ", "
         }

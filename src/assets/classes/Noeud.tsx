@@ -11,7 +11,7 @@ export abstract class Noeud {
         return true
     }
 
-    toJSON():String{
+    toJSON(): string{
         let objet = {}
         return JSON.stringify(objet)
     }

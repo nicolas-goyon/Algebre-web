@@ -1,4 +1,6 @@
-export default function Password(prop){
+import React from 'react';
+
+export default function Password(prop: any){
     return (
         <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor={prop.id}>

@@ -15,24 +15,24 @@ export class Renommage extends Noeud{
         return this.ensemble.estValide()
     }
 
-    toJSON(): String{
+    toJSON(): string{
         let objet = {  
             type: this.type,
             champs: this.champs,
-            ensemble: this.ensemble.toJSON()
+            ensemble: JSON.parse(this.ensemble.toJSON())
         }
         return JSON.stringify(objet)
     }
     
 
     toLatex(): String{
-        let chaine = "\rho_{"
+        let chaine = "\\rho_{"
         for (let i in this.champs){
             let arr = this.champs[i]
             let dep = i;
             chaine += dep + " => " + arr + ", "
         }
-        chaine = chaine.slice(0, -1);
+        chaine = chaine.slice(0, -2);
         chaine += "}"
         chaine += "( "+ this.ensemble.toLatex() + " )"
         return chaine

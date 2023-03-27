@@ -15,11 +15,11 @@ export class Union extends Noeud{
     }
 
 
-    toJSON(): String{
+    toJSON(): string{
         let objet = {  
             type: this.type,
-            ensemble1: this.ensemble1.toJSON(),
-            ensemble2: this.ensemble2.toJSON()
+            ensemble1: JSON.parse(this.ensemble1.toJSON()),
+            ensemble2: JSON.parse(this.ensemble2.toJSON())
         }
         return JSON.stringify(objet)
     }

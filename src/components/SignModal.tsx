@@ -1,10 +1,11 @@
+import React from 'react';
 import { LinkIcon } from '@heroicons/react/24/outline'
 import SimpleModal from './Modals/SimpleModal'
 import Form from './Forms/Form'
 import Text from './Forms/Text'
 import Password from './Forms/Password'
 
-export default function SignModal(prop) {
+export default function SignModal(prop: any) {
   const formulaire =
     <Form>
       <Text label="Username" id="uname" placeholder="JeanDupond" />

@@ -1,6 +1,6 @@
 import { Noeud } from "./Noeud.tsx";
 
-export class Intersection extends Noeud{
+export class Ensemble extends Noeud{
     nom : String;
     constructor(nom: String) {
         super("Ensemble")
@@ -11,7 +11,7 @@ export class Intersection extends Noeud{
         return true 
     }
 
-    toJSON(): String{
+    toJSON(): string{
         let objet = {  
             type: this.type,
             nom: this.nom,
