@@ -10,11 +10,10 @@ import {Droppable} from '../components/Dnd/Droppable';
 let count = 0;
 
 export default function App() {
-    let d : String[] = []
-    let dZone :String[]  = []
+    let d : {id : String, parent: String}[] = []
+    
     const [items, setItems] = useState(d);
-    const [parents, setParents] = useState(dZone);
-
+    
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -28,9 +27,9 @@ export default function App() {
             <div className="flex flex-col w-full border-2 gap-5 min-h-40 p-10 bg-primary">
                 <Droppable id="droppable-1" style={{width: "100%", height: "100%"}}>
                     {items.map((item, index) => {
-                        if (parents[index] === "droppable-1") {
-                            return (<Draggable key={index} id={index}>
-                                {item}
+                        if (items[index].parent === "droppable-1") {
+                            return (<Draggable key={index} id={index.toString()}>
+                                {item.id}
                             </Draggable>);
                         }
                     })}
@@ -40,9 +39,9 @@ export default function App() {
             <div className="w-full border-2 h-40 bg-light">
                 <Droppable id="droppable-2" style={{width: "100%", height: "100%"}} >
                     {items.map((item, index) => {
-                        if (parents[index] === "droppable-2") {
-                            return (<Draggable key={index} id={index}>
-                                {item}
+                        if (items[index].parent  === "droppable-2") {
+                            return (<Draggable key={index} id={index.toString()}>
+                                {item.id}
                             </Draggable>);
                         }
                     })}
@@ -51,9 +50,9 @@ export default function App() {
             <div className="w-full border-2 h-40 bg-warning">
                 <Droppable id="droppable-3" style={{width: "100%", height: "100%"}}>
                     {items.map((item, index) => {
-                        if (parents[index] === "droppable-3") {
-                            return (<Draggable key={index} id={index}>
-                                {item}
+                        if (items[index].parent  === "droppable-3") {
+                            return (<Draggable key={index} id={index.toString()}>
+                                {item.id}
                             </Draggable>);
                         }
                     })}
@@ -74,25 +73,23 @@ export default function App() {
 
     function addItem() {
         count++;
-        setItems(items => [...items, 'Item'+count]);
-        setParents(parents => [...parents, 'droppable-1']);
+        setItems(items => [...items, {id: "item " + count, parent: "droppable-1"}]);
     }
     
     function handleDragEnd(over: any) {
         if (over) {
             const idBlock = over.active.id;
             const idZone = over.over.id;
-            setParents(parents => {
-                const newParents = [...parents];
-                newParents[idBlock] = idZone;
-                return newParents;
+            setItems(items => {
+                const newItems = [...items];
+                newItems[idBlock] = {id: items[idBlock].id, parent: idZone};
+                return newItems;
             });
+
             if (over.over.id === 'droppable-3') {
                 console.log("suppression : " + idBlock)
-                items.splice(idBlock, 1);
-                setItems(items);
-                parents.splice(idBlock, 1);
-                setParents(parents);
+                // suppression de l'élément de la liste par filter 
+                setItems(items => items.filter((item, index) => index !== parseInt(idBlock)));
             }
         }
     }
