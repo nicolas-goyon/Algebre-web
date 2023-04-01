@@ -22,7 +22,7 @@ Ce projet utilise les technologies suivantes :
 # Installation
 - Clonez le projet depuis GitHub
 - Ouvrez un terminal et accédez au dossier du projet
-- Exécutez la commande `npm install` pour installer les dépendances
+- Exécutez la commande `npm install --force` pour installer les dépendances
 - Exécutez la commande `npm start` pour lancer l'application
 
 # Licence
