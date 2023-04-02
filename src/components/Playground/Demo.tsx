@@ -37,41 +37,49 @@ export default function Demo(prop: any) {
     
     const [count, setCount] = useState(0);
     const [items, setItems] = useState(d);
-    let dropListBase : String[] = [ "droppable-1", "droppable-2", "droppable-3"];
-    
+    const dropListBase : String[] = [ "droppable-1", "droppable-2", "droppable-3"];
+
+    /* --------------------------------- Boutons -------------------------------- */
+    const boutonIcon = (
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+            <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
+        </svg>
+    )
+    const boutons = [
+        "Renommage",
+        "Selection",
+        "Ensemble"
+    ];
+    /* ------------------------------- FIN BOUTONS ------------------------------ */
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
+            {/* --------------------------------- BOUTONS -------------------------------- */}
             <div className="flex flex-row gap-2">
-                <button onClick={addNoeud} datatype='Renommage'
-                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                    </svg>
-                    Renommage
-                </button>
-                <button onClick={addNoeud} datatype='Selection'
-                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                    </svg>
-                    Selection
-                </button>
-                <button onClick={addNoeud} datatype='Ensemble'
-                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                        <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                    </svg>
-                    Ensemble
-                </button>
+                {boutons.map((bouton, index) => {
+                    return (
+                        <button onClick={addNoeud} datatype={bouton}
+                            className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
+                        >
+                            {boutonIcon}
+                            {bouton}
+                        </button>
+                    )
+                })}
+
             </div>
+            {/* ------------------------------- FIN BOUTONS ------------------------------ */}
+
+
+
+            {/* -------------------------------------------------------------------------- */}
+            {/*                                 Playground                                 */}
+            {/* -------------------------------------------------------------------------- */}
 
             <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} >
                 <section className="py-16 w-full h-full">
                     <div className="flex flex-row w-full gap-5">
+                        {/* --------------------------------- Zone 1 --------------------------------- */}
                         <div className="flex flex-col w-full border-2 gap-5 min-h-40 bg-primary">
                             <Droppable id={dropListBase[0]} style={{width: "100%", height: "100%"}}>
                                 <div className='p-10 h-full w-100'>
@@ -83,7 +91,9 @@ export default function Demo(prop: any) {
                                 </div>
                             </Droppable>
                         </div>
+                        {/* ------------------------------- FIN Zone 1 ------------------------------ */}
                         
+                        {/* --------------------------------- Zone 2 --------------------------------- */}
                         <div className="w-full border-2 gap-5 min-h-40 bg-light">
                             <Droppable id={dropListBase[1]} style={{width: "100%", height: "100%"}} >
                                 <div className='p-10 h-full w-100'>
@@ -96,22 +106,28 @@ export default function Demo(prop: any) {
                             </Droppable>
                            
                         </div>
+                        {/* ------------------------------- FIN Zone 2 ------------------------------ */}
+                        
+
+                        {/* -------------------------------- Poubelle -------------------------------- */}
                         <div className="justify-end w-30 h-30">
                             <div className="gap-5 border-danger rounded-md border-2">
                                 <Droppable id={dropListBase[2]} style={{width: "100%", height: "100%"}}>
                                     {/* Logo heroicon de taille 50 par 50 avec des bords rond en rouge (danger) */}
                                     <TrashIcon className="h-full w-full text-red-500" />
-                                    
                                 </Droppable>
-                            
-                                
                             </div>
                         </div>
+                        {/* ------------------------------ FIN Poubelle ------------------------------ */}
+
                     </div>
                     
                 </section>
                         
             </DndContext>
+            {/* -------------------------------------------------------------------------- */}
+            {/*                              FIN Playground                                */}
+            {/* -------------------------------------------------------------------------- */}
             
         </div>
     );
@@ -123,6 +139,7 @@ export default function Demo(prop: any) {
             idDrop = "droppable-" + index + "-" + 1;
         }
         let block = NoeudsGet.getJSXElement(items[index].type);
+
 
         let droppableZone = <div></div>;
         if(items[index].type != Noeuds.Ensemble) {
@@ -141,8 +158,6 @@ export default function Demo(prop: any) {
             );
         }
 
-        
-        
         // créer un item renommage et permet d'avoir une zone de drop dans l'item renommage
         return (
             <Draggable key={index} id={index.toString()}>
@@ -162,20 +177,6 @@ export default function Demo(prop: any) {
 
         setCount(count + 1);
         setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: newType}]);
-    }
-
-    function addRenommage() {
-        setCount(count + 1);
-        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: Noeuds.Renommage}]);
-    }
-    function addSelection() {
-        setCount(count + 1);
-        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: Noeuds.Selection}]);
-    }
-
-    function addEnsemble(){
-        setCount(count + 1);
-        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: Noeuds.Ensemble}]);
     }
     
     function handleDragEnd(event: any) {
