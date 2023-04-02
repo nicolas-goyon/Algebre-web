@@ -2,11 +2,13 @@ import React, {useEffect, useState} from 'react';
 // import { Projection } from "../../assets/classes/Projection";
 // import { Ensemble } from "../../assets/classes/Ensemble";
 import {DndContext, pointerWithin} from '@dnd-kit/core';
+import { TrashIcon } from '@heroicons/react/24/outline'
 import {Draggable} from '../Dnd/Draggable';
 import {Droppable} from '../Dnd/Droppable';
-import Renommage from './Renomage';
+import Renommage from './Renommage';
 import Selection from './Selection';
-import { TrashIcon } from '@heroicons/react/24/outline'
+import Ensemble from './Ensemble';
+import {Noeuds, NoeudsGet} from '../../assets/classes/Noeuds';
 
 
 // let c = ["id", "test"]
@@ -31,7 +33,7 @@ import { TrashIcon } from '@heroicons/react/24/outline'
 
 
 export default function Demo(prop: any) {
-    let d : {id : String, parent: String, type: String}[] = []
+    let d : {id : String, parent: String, type: Noeuds}[] = []
     
     const [count, setCount] = useState(0);
     const [items, setItems] = useState(d);
@@ -40,23 +42,32 @@ export default function Demo(prop: any) {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
-            <button onClick={addRenommage}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                </svg>
-                Renommage
-            </button>
-            <button onClick={addSelection}
-                className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
-                    <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
-                </svg>
-                Selection
-            </button>
-
+            <div className="flex flex-row gap-2">
+                <button onClick={addNoeud} datatype='Renommage'
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                        <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
+                    </svg>
+                    Renommage
+                </button>
+                <button onClick={addNoeud} datatype='Selection'
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                        <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
+                    </svg>
+                    Selection
+                </button>
+                <button onClick={addNoeud} datatype='Ensemble'
+                    className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                        <path fillRule="evenodd" d="M12 5.25a.75.75 0 01.75.75v5.25H18a.75.75 0 010 1.5h-5.25V18a.75.75 0 01-1.5 0v-5.25H6a.75.75 0 010-1.5h5.25V6a.75.75 0 01.75-.75z" clipRule="evenodd" />
+                    </svg>
+                    Ensemble
+                </button>
+            </div>
 
             <DndContext onDragEnd={handleDragEnd} collisionDetection={pointerWithin} >
                 <section className="py-16 w-full h-full">
@@ -66,7 +77,7 @@ export default function Demo(prop: any) {
                                 <div className='p-10 h-full w-100'>
                                 {items.map((item, index) => {
                                     if (items[index].parent === "droppable-1") {
-                                        return makeItem(index, "droppable-1");
+                                        return makeItem(index);
                                     }
                                 })}
                                 </div>
@@ -78,7 +89,7 @@ export default function Demo(prop: any) {
                                 <div className='p-10 h-full w-100'>
                                 {items.map((item, index) => {
                                     if (items[index].parent  === "droppable-2") {
-                                        return makeItem(index, "droppable-2");
+                                        return makeItem(index);
                                     }
                                 })}
                                 </div>
@@ -105,58 +116,66 @@ export default function Demo(prop: any) {
         </div>
     );
     
-    function makeItem(index: number, type: String): JSX.Element {
+    function makeItem(index: number): JSX.Element {
         
         let idDrop : String = "";
-        if( type != "Ensemble") {
+        if( items[index].type != Noeuds.Ensemble) {
             idDrop = "droppable-" + index + "-" + 1;
         }
-        let block = <Renommage/>
-        switch (items[index].type) {
-            case "Renommage":
-                block =  (
-                    <Renommage/>
-                );
-                break;
-            case "Selection":
-                block = (
-                    <Selection/>
-                );
-                break;
+        let block = NoeudsGet.getJSXElement(items[index].type);
+
+        let droppableZone = <div></div>;
+        if(items[index].type != Noeuds.Ensemble) {
+            droppableZone = (
+                <Droppable id={idDrop} style={{width: "100%", height: "100%", backgroundColor:"grey"}}>
+                    <div className='pl-4 py-3 w-100' style={{"minHeight": "3em"}} >
+                        {/* faire en sorte que l'item soit draggable dans la zone de drop */}
+                        {items.map((item, index2) => {
+                            if (items[index2].parent === idDrop) {
+                                return makeItem(index2);
+                            }
+                        })}
+
+                    </div>
+                </Droppable>
+            );
         }
+
         
         
         // créer un item renommage et permet d'avoir une zone de drop dans l'item renommage
         return (
             <Draggable key={index} id={index.toString()}>
-                <div className="flex flex-col border-2 bg-light-50" style={{minWidth:"10em"}}>
+                <div className="flex flex-col border-2 bg-light-50" style={{minWidth:"6em"}}>
                 {block}
 
-                {type != "Ensemble" &&
-                    <Droppable id={idDrop} style={{width: "100%", height: "100%", backgroundColor:"grey"}}>
-                        <div className='pl-4 py-3 w-100' style={{"minHeight": "6em"}} >
-                            {/* faire en sorte que l'item soit draggable dans la zone de drop */}
-                            {items.map((item, index2) => {
-                                if (items[index2].parent === idDrop) {
-                                    return makeItem(index2, idDrop);
-                                }
-                            })}
-
-                        </div>
-                    </Droppable>
-                }
+                {droppableZone}
                 </div>
             </Draggable>
         );
     }
 
+    function addNoeud(event: any) {
+        // Récupérer le datatype du bouton cliqué
+        const type = event.target.getAttribute("datatype");
+        const newType = NoeudsGet.getNoeuds(type)
+
+        setCount(count + 1);
+        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: newType}]);
+    }
+
     function addRenommage() {
         setCount(count + 1);
-        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: "Renommage"}]);
+        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: Noeuds.Renommage}]);
     }
     function addSelection() {
         setCount(count + 1);
-        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: "Selection"}]);
+        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: Noeuds.Selection}]);
+    }
+
+    function addEnsemble(){
+        setCount(count + 1);
+        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: Noeuds.Ensemble}]);
     }
     
     function handleDragEnd(event: any) {

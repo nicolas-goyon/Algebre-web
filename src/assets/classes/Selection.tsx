@@ -1,10 +1,11 @@
 import { Noeud } from "./Noeud.tsx";
+import { Noeuds } from "./Noeuds.tsx";
 
 export class Selection extends Noeud{
     condition : [[champ:String, condition: String, valeur: String]];
     ensemble: Noeud;
     constructor(condition: [[champ:String, condition: String, valeur: String]], ensemble: Noeud) {
-        super("Selection")
+        super(Noeuds.Selection)
         this.condition = condition
         this.ensemble = ensemble
     }

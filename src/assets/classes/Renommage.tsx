@@ -1,12 +1,12 @@
-import React from 'react';
 import { Noeud } from "./Noeud.tsx";
+import { Noeuds } from "./Noeuds.tsx";
 
 export class Renommage extends Noeud{
     champs: {[index:string]: String};
     ensemble: Noeud;
     
     constructor(champs: {[index:string]: String}, ensemble: Noeud) {
-        super("Renommage")
+        super(Noeuds.Renommage)
         this.champs = champs
         this.ensemble = ensemble
     }

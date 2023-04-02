@@ -1,9 +1,9 @@
 import { Noeud } from "./Noeud.tsx";
-
+import { Noeuds } from "./Noeuds.tsx";
 export class Ensemble extends Noeud{
     nom : String;
     constructor(nom: String) {
-        super("Ensemble")
+        super(Noeuds.Ensemble)
         this.nom = nom
     }
 

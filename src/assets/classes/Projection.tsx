@@ -1,12 +1,12 @@
-import React from 'react';
 import { Noeud } from "./Noeud.tsx";
+import { Noeuds } from "./Noeuds.tsx";
 
 export class Projection extends Noeud{
     champs: String[];
     ensemble: Noeud;
     
     constructor(champs: String[], ensemble: Noeud) {
-        super("Projection")
+        super(Noeuds.Projection)
         this.champs = champs
         this.ensemble = ensemble
     }

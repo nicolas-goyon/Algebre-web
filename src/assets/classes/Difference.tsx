@@ -1,10 +1,11 @@
 import { Noeud } from "./Noeud.tsx";
+import { Noeuds } from "./Noeuds.tsx";
 
 export class Difference extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
     constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super("Difference")
+        super(Noeuds.Difference)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }

@@ -1,9 +1,9 @@
-
+import { Noeuds } from "./Noeuds";
 export abstract class Noeud {
-    type : String;
+    type : Noeuds;
 
 
-    constructor(type: String) {
+    constructor(type: Noeuds) {
         this.type = type
     }
 
