@@ -1,6 +1,20 @@
 import React from "react"
 import { Renommage, Selection, Projection, Ensemble } from "../../components/Playground/NoeudsComponents"
 
+export { Noeud } from "./Noeud"
+export { Ensemble } from "./Ensemble"
+
+export { Renommage } from "./Renommage"
+export { Selection } from "./Selection"
+export { Projection } from "./Projection"
+
+export { Union } from "./Union"
+export { Produit } from "./Produit"
+export { Intersection } from "./Intersection"
+export { Difference } from "./Difference"
+// export { Jointure } from "./Jointure"
+
+
 export enum Noeuds {
     // Noeud de base 
     Noeud = "Noeud",

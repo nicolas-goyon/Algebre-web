@@ -1,14 +1,9 @@
-import React, {useEffect, useState} from 'react';
-// import { Projection } from "../../assets/classes/Projection";
-// import { Ensemble } from "../../assets/classes/Ensemble";
-import {DndContext, pointerWithin} from '@dnd-kit/core';
+import React, { useState } from 'react';
+import { DndContext, pointerWithin } from '@dnd-kit/core';
 import { TrashIcon } from '@heroicons/react/24/outline'
-import {Draggable} from '../Dnd/Draggable';
-import {Droppable} from '../Dnd/Droppable';
-import Renommage from './Renommage';
-import Selection from './Selection';
-import Ensemble from './Ensemble';
-import {Noeuds, NoeudsGet} from '../../assets/classes/Noeuds';
+import { Draggable } from '../Dnd/Draggable';
+import { Droppable } from '../Dnd/Droppable';
+import { Noeuds, NoeudsGet } from '../../assets/classes/Noeuds';
 
 
 // let c = ["id", "test"]
@@ -28,9 +23,6 @@ import {Noeuds, NoeudsGet} from '../../assets/classes/Noeuds';
 
 // console.log(dif.toLatex());
 // console.log(dif.toJSON())
-
-
-
 
 export default function Demo(prop: any) {
     let d : {id : String, parent: String, type: Noeuds}[] = []
@@ -134,15 +126,13 @@ export default function Demo(prop: any) {
     
     function makeItem(index: number): JSX.Element {
         
-        let idDrop : String = "";
-        if( items[index].type != Noeuds.Ensemble) {
-            idDrop = "droppable-" + index + "-" + 1;
-        }
         let block = NoeudsGet.getJSXElement(items[index].type);
-
-
         let droppableZone = <div></div>;
-        if(items[index].type != Noeuds.Ensemble) {
+        
+        if( items[index].type != Noeuds.Ensemble) {
+        
+            let idDrop : String = "droppable-" + index + "-" + 1;
+        
             droppableZone = (
                 <Droppable id={idDrop} style={{width: "100%", height: "100%", backgroundColor:"grey"}}>
                     <div className='pl-4 py-3 w-100' style={{"minHeight": "3em"}} >
