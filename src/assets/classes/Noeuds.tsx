@@ -1,5 +1,6 @@
 import React from "react"
-import { Renommage, Selection, Projection, Ensemble } from "../../components/Playground/NoeudsComponents"
+import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit } from "../../components/Playground/NoeudsComponents"
+import { Noeud } from "./Noeud"
 
 export { Noeud } from "./Noeud"
 export { Ensemble } from "./Ensemble"
@@ -15,76 +16,124 @@ export { Difference } from "./Difference"
 // export { Jointure } from "./Jointure"
 
 
-export enum Noeuds {
+export const NoeudsBase = {
     // Noeud de base 
-    Noeud = "Noeud",
-    Ensemble = "Ensemble",
-    
-    // Noeuds avec 1 enfant
-    Renommage = "Renommage",
-    Selection = "Selection",
-    Projection = "Projection",
-    
-    // Noeuds avec 2 enfants
-    Union = "Union",
-    Produit = "Produit",
-    Intersection = "Intersection",
-    Difference = "Difference",
-    
-    // Jointures
-    // Jointure = "Jointure",
+    Noeud:{
+        name:"Noeud",
+        component: (<div></div>),
+        children: 0,
+        hasChamp: false,
+        isBinary: false,
+        class: Noeud
+    },
+    // Noeuds avec 0 enfants
+    Ensemble:{
+        name:"Ensemble",
+        component: (<Ensemble/>),
+        children: 0,
+        hasChamp: true,
+        isBinary: false,
+        class: Ensemble
+    },
 
+    // Noeuds avec 1 enfant
+    Renommage:{
+        name:"Renommage",
+        component: (<Renommage/>),
+        children: 1,
+        hasChamp: true,
+        isBinary: false,
+        class: Renommage
+    },
+    Selection:{
+        name:"Selection",
+        component: (<Selection/>),
+        children: 1,
+        hasChamp: true,
+        isBinary: false,
+        class: Selection
+    },
+    Projection:{
+        name:"Projection",
+        component: (<Projection/>),
+        children: 1,
+        hasChamp: true,
+        isBinary: false,
+        class: Projection
+    },
+
+    // Noeuds avec 2 enfants
+    Union:{
+        name:"Union",
+        component: (<Union/>),
+        children: 2,
+        hasChamp: false,
+        isBinary: true,
+        class: Union
+    },
+    Produit:{
+        name:"Produit",
+        component: (<Produit/>),
+        children: 2,
+        hasChamp: false,
+        isBinary: true,
+        class: Produit
+    },
+    Intersection:{
+        name:"Intersection",
+        component: (<Intersection/>),
+        children: 2,
+        hasChamp: false,
+        isBinary: true,
+        class: Intersection
+    },
+    Difference:{
+        name:"Difference",
+        component: (<Difference/>),
+        children: 2,
+        hasChamp: false,
+        isBinary: true,
+        class: Difference
+    },
+
+    // Jointures
+    // Jointure:{
+    //     name:"Jointure",
+    //     component: (<Jointure/>),
+    //     children: 2,
+    //     hasChamp: false,
+    //     isBinary: true,
+    //     class: Jointure
+    // },
 }
+
 export class NoeudsGet{
     static getNoeuds(noeud: String): Noeuds{
         switch(noeud){
             case "Noeud":
-                return Noeuds.Noeud
+                return NoeudsBase.Noeud
             case "Ensemble":
-                return Noeuds.Ensemble
+                return NoeudsBase.Ensemble
             case "Renommage":
-                return Noeuds.Renommage
+                return NoeudsBase.Renommage
             case "Selection":
-                return Noeuds.Selection
+                return NoeudsBase.Selection
             case "Projection":
-                return Noeuds.Projection
+                return NoeudsBase.Projection
             case "Union":
-                return Noeuds.Union
+                return NoeudsBase.Union
             case "Produit":
-                return Noeuds.Produit
+                return NoeudsBase.Produit
             case "Intersection":
-                return Noeuds.Intersection
+                return NoeudsBase.Intersection
             case "Difference":
-                return Noeuds.Difference
+                return NoeudsBase.Difference
             default:
-                return  Noeuds.Noeud
+                return NoeudsBase.Noeud
         }
     }
 
-    static getJSXElement(noeud: Noeuds): JSX.Element{
-        switch(noeud){
-            case Noeuds.Noeud:
-                // return <Noeud />
-                return <div></div>
-            case Noeuds.Ensemble:
-                return <Ensemble />
-            case Noeuds.Renommage:
-                return <Renommage />
-            case Noeuds.Selection:
-                return <Selection />
-            case Noeuds.Projection:
-                return <Projection />
-            // case Noeuds.Union:
-            //     return <Union />
-            // case Noeuds.Produit:
-            //     return <Produit />
-            // case Noeuds.Intersection:
-            //     return <Intersection />
-            // case Noeuds.Difference:
-            //     return <Difference />
-            default:
-                // return <Noeud />
-                return <div></div>
-        }
-    }
 }
+type Values<Type> = Type[keyof Type];
+
+export type Noeuds = Values<typeof NoeudsBase>;

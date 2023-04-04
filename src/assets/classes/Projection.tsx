@@ -1,12 +1,12 @@
 import { Noeud } from "./Noeud.tsx";
-import { Noeuds } from "./Noeuds.tsx";
+import { NoeudsBase } from "./Noeuds.tsx";
 
 export class Projection extends Noeud{
     champs: String[];
     ensemble: Noeud;
     
     constructor(champs: String[], ensemble: Noeud) {
-        super(Noeuds.Projection)
+        super(NoeudsBase.Projection)
         this.champs = champs
         this.ensemble = ensemble
     }

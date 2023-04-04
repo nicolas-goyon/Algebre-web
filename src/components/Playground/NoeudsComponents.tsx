@@ -7,4 +7,4 @@ export {default as Projection} from "./Projection";
 export {default as Intersection} from "./Intersection";
 export {default as Difference} from "./Difference";
 export {default as Union} from "./Union";
-// export {default as Produit} from "./Produit";
+export {default as Produit} from "./Produit";

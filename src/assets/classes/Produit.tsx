@@ -1,11 +1,11 @@
 import { Noeud } from "./Noeud.tsx";
-import { Noeuds } from "./Noeuds.tsx";
+import { NoeudsBase } from "./Noeuds.tsx";
 export class Produit extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
     
     constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super(Noeuds.Produit)
+        super(NoeudsBase.Produit)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }

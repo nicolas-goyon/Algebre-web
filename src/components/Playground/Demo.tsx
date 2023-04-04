@@ -3,7 +3,7 @@ import { DndContext, pointerWithin } from '@dnd-kit/core';
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { Draggable } from '../Dnd/Draggable';
 import { Droppable } from '../Dnd/Droppable';
-import { Noeuds, NoeudsGet } from '../../assets/classes/Noeuds';
+import { Noeuds, NoeudsBase, NoeudsGet } from '../../assets/classes/Noeuds';
 
 
 // let c = ["id", "test"]
@@ -25,11 +25,12 @@ import { Noeuds, NoeudsGet } from '../../assets/classes/Noeuds';
 // console.log(dif.toJSON())
 
 export default function Demo(prop: any) {
-    let d : {id : String, parent: String, type: Noeuds}[] = []
-    
+    let d : {id : String, parent: String, type: Noeuds}[] = [];
     const [count, setCount] = useState(0);
     const [items, setItems] = useState(d);
     const dropListBase : String[] = [ "droppable-1", "droppable-2", "droppable-3"];
+
+    console.log("Demo5")
 
     /* --------------------------------- Boutons -------------------------------- */
     const boutonIcon = (
@@ -43,14 +44,13 @@ export default function Demo(prop: any) {
         "Ensemble"
     ];
     /* ------------------------------- FIN BOUTONS ------------------------------ */
-
     return (
         <div className="flex flex-col items-center justify-center min-h-screen py-2">
             {/* --------------------------------- BOUTONS -------------------------------- */}
             <div className="flex flex-row gap-2">
                 {boutons.map((bouton, index) => {
                     return (
-                        <button onClick={addNoeud} datatype={bouton}
+                        <button onClick={addNoeud} datatype={bouton} id={index+""}
                             className="flex items-center gap-2 px-3 py-1.5 text-sm text-indigo-600 duration-150 bg-indigo-50 rounded-lg hover:bg-indigo-100 active:bg-indigo-200"
                         >
                             {boutonIcon}
@@ -126,10 +126,10 @@ export default function Demo(prop: any) {
     
     function makeItem(index: number): JSX.Element {
         
-        let block = NoeudsGet.getJSXElement(items[index].type);
+        let block = items[index].type.component;
         let droppableZone = <div></div>;
         
-        if( items[index].type != Noeuds.Ensemble) {
+        if( items[index].type != NoeudsBase.Ensemble) {
         
             let idDrop : String = "droppable-" + index + "-" + 1;
         
@@ -162,7 +162,7 @@ export default function Demo(prop: any) {
 
     function addNoeud(event: any) {
         // Récupérer le datatype du bouton cliqué
-        const type = event.target.getAttribute("datatype");
+        const type : String = event.target.getAttribute("datatype");
         const newType = NoeudsGet.getNoeuds(type)
 
         setCount(count + 1);
@@ -197,7 +197,7 @@ export default function Demo(prop: any) {
             });
             if (over.id === 'droppable-3') {
                 console.log("suppression : " + idBlock)
-                setItems(items => items.filter((item, index) => index !== parseInt(idBlock)));
+                setItems(items => items.filter((item, index) => index != parseInt(idBlock)));
             }
         }
     }

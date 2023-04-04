@@ -1,12 +1,12 @@
 import { Noeud } from "./Noeud.tsx";
-import { Noeuds } from "./Noeuds.tsx";
+import { NoeudsBase } from "./Noeuds.tsx";
 
 export class Union extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
     
     constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super(Noeuds.Union)
+        super(NoeudsBase.Union)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }
