@@ -5,8 +5,8 @@ export class Renommage extends Noeud{
     champs: {[index:string]: String};
     ensemble: Noeud;
     
-    constructor(champs: {[index:string]: String}, ensemble: Noeud) {
-        super(NoeudsBase.Renommage)
+    constructor(champs: {[index:string]: String}, ensemble: Noeud, index: number) {
+        super(NoeudsBase.Renommage, index)
         this.champs = champs
         this.ensemble = ensemble
     }
@@ -36,6 +36,10 @@ export class Renommage extends Noeud{
         chaine += "}"
         chaine += "( "+ this.ensemble.toLatex() + " )"
         return chaine
+    }
+
+    copy(): Noeud{
+        return new Renommage(this.champs, this.ensemble.copy(), this.index)
     }
 
 }

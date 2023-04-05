@@ -1,10 +1,12 @@
 import { Noeuds } from "./Noeuds";
 export abstract class Noeud {
     type : Noeuds;
+    index : number;
 
 
-    constructor(type: Noeuds) {
+    constructor(type: Noeuds, index: number) {
         this.type = type
+        this.index = index
     }
 
     estValide():Boolean{
@@ -23,6 +25,8 @@ export abstract class Noeud {
     toLatex():String{
         return ""
     }
+
+    abstract copy():Noeud;
 
 
 }

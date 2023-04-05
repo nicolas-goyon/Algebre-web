@@ -4,8 +4,8 @@ export class Intersection extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
 
-    constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super(NoeudsBase.Intersection)
+    constructor(ensemble1: Noeud, ensemble2: Noeud, index: number) {
+        super(NoeudsBase.Intersection, index)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }
@@ -28,5 +28,9 @@ export class Intersection extends Noeud{
         return chaine
     }
     
+    copy(): Noeud{
+        return new Intersection(this.ensemble1.copy(), this.ensemble2.copy(), this.index)
+    }
+
 
 }

@@ -5,7 +5,7 @@ import { MathJaxContext } from 'better-react-mathjax';
 import App from './App';
 
 const rootElement = document.getElementById('root');
-
+// console.log(process.env.REACT_APP_DATABASE_URL);
 const config = {
   loader: { load: ["[tex]/html"] },
   tex: {

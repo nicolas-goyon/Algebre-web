@@ -4,8 +4,8 @@ import { NoeudsBase } from "./Noeuds.tsx";
 export class Difference extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
-    constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super(NoeudsBase.Difference)
+    constructor(ensemble1: Noeud, ensemble2: Noeud, index: number) {
+        super(NoeudsBase.Difference , index)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }
@@ -28,6 +28,10 @@ export class Difference extends Noeud{
     toLatex(): String{
         let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\\ ( " + this.ensemble2.toLatex() + " )"
         return chaine
+    }
+     
+    copy(): Noeud{
+        return new Difference(this.ensemble1.copy(), this.ensemble2.copy(), this.index)
     }
     
 

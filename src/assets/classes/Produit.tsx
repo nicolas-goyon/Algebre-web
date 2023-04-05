@@ -4,8 +4,8 @@ export class Produit extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
     
-    constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super(NoeudsBase.Produit)
+    constructor(ensemble1: Noeud, ensemble2: Noeud, index: number) {
+        super(NoeudsBase.Produit, index)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }
@@ -27,5 +27,10 @@ export class Produit extends Noeud{
         let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\times\ ( " + this.ensemble2.toLatex() + " )"
         return chaine
     }
+
+    copy(): Noeud{
+        return new Produit(this.ensemble1.copy(), this.ensemble2.copy(), this.index)
+    }
+    
 
 }

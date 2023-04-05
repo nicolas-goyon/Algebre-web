@@ -5,8 +5,8 @@ export class Union extends Noeud{
     ensemble1: Noeud;
     ensemble2: Noeud;
     
-    constructor(ensemble1: Noeud, ensemble2: Noeud) {
-        super(NoeudsBase.Union)
+    constructor(ensemble1: Noeud, ensemble2: Noeud, index: number) {
+        super(NoeudsBase.Union, index)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }
@@ -28,6 +28,10 @@ export class Union extends Noeud{
     toLatex(){
         let chaine = "( "+ this.ensemble1.toLatex() + " )\ \\cup\ ( " + this.ensemble1.toLatex() + " )"
         return chaine
+    }
+
+    copy(): Noeud{
+        return new Union(this.ensemble1.copy(), this.ensemble2.copy(), this.index)
     }
 
 }

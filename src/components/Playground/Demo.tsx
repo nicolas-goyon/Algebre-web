@@ -23,10 +23,11 @@ import { Noeuds, NoeudsBase, NoeudsGet } from '../../assets/classes/Noeuds';
 
 // console.log(dif.toLatex());
 // console.log(dif.toJSON())
-
+type element = {id:number, type: Noeuds};
 export default function Demo(prop: any) {
-    let d : {id : String, parent: String, type: Noeuds}[] = [];
-    const [count, setCount] = useState(0);
+    let d : element[][] = [];
+    const [countDrop, setCountDrop] = useState(3); // nombre de dropable
+    const [countDrag, setCountDrag] = useState(3); // nombre de draggable
     const [items, setItems] = useState(d);
     const dropListBase : String[] = [ "droppable-1", "droppable-2", "droppable-3"];
 
@@ -75,10 +76,8 @@ export default function Demo(prop: any) {
                         <div className="flex flex-col w-full border-2 gap-5 min-h-40 bg-primary">
                             <Droppable id={dropListBase[0]} style={{width: "100%", height: "100%"}}>
                                 <div className='p-10 h-full w-100'>
-                                {items.map((item, index) => {
-                                    if (items[index].parent === "droppable-1") {
-                                        return makeItem(index);
-                                    }
+                                {items[0].map((item, index) => {
+                                        return makeItem(0,index);
                                 })}
                                 </div>
                             </Droppable>
@@ -89,10 +88,8 @@ export default function Demo(prop: any) {
                         <div className="w-full border-2 gap-5 min-h-40 bg-light">
                             <Droppable id={dropListBase[1]} style={{width: "100%", height: "100%"}} >
                                 <div className='p-10 h-full w-100'>
-                                {items.map((item, index) => {
-                                    if (items[index].parent  === "droppable-2") {
-                                        return makeItem(index);
-                                    }
+                                {items[1].map((item, index) => {
+                                        return makeItem(0,index);
                                 })}
                                 </div>
                             </Droppable>
@@ -124,12 +121,12 @@ export default function Demo(prop: any) {
         </div>
     );
     
-    function makeItem(index: number): JSX.Element {
-        
-        let block = items[index].type.component;
+    function makeItem(idDroppable: number, index: number): JSX.Element {
+        const item = items[idDroppable][index];
+        let block = item.type.component;
         let droppableZone = <div></div>;
         
-        if( items[index].type != NoeudsBase.Ensemble) {
+        if( item.type != NoeudsBase.Ensemble) {
         
             let idDrop : String = "droppable-" + index + "-" + 1;
         
@@ -137,12 +134,12 @@ export default function Demo(prop: any) {
                 <Droppable id={idDrop} style={{width: "100%", height: "100%", backgroundColor:"grey"}}>
                     <div className='pl-4 py-3 w-100' style={{"minHeight": "3em"}} >
                         {/* faire en sorte que l'item soit draggable dans la zone de drop */}
-                        {items.map((item, index2) => {
-                            if (items[index2].parent === idDrop) {
-                                return makeItem(index2);
-                            }
-                        })}
-
+                        {/* TODO */}
+                        {
+                        items[idDroppable].map((item, index) => {
+                            return makeItem(idDroppable, index);
+                        })
+                        }
                     </div>
                 </Droppable>
             );
@@ -150,7 +147,7 @@ export default function Demo(prop: any) {
 
         // créer un item renommage et permet d'avoir une zone de drop dans l'item renommage
         return (
-            <Draggable key={index} id={index.toString()}>
+            <Draggable key={index} id={index.toString()} parent={idDroppable}>
                 <div className="flex flex-col border-2 bg-light-50" style={{minWidth:"6em"}}>
                 {block}
 
@@ -165,14 +162,26 @@ export default function Demo(prop: any) {
         const type : String = event.target.getAttribute("datatype");
         const newType = NoeudsGet.getNoeuds(type)
 
-        setCount(count + 1);
-        setItems(items => [...items, {id: "item " + count, parent: "droppable-1", type: newType}]);
+        setCountDrag(countDrag + 1);
+        // Ajouter un item dans la zone de drop 1
+        setItems(items => {
+            let i = [...items];
+            for(let j = 0; j < items.length; j++){
+                if(j == 0){
+                    i[j] = [...items[j], {id: countDrag, type: newType}];
+                }   
+                else
+                    i[j] = [...items[j]];
+            }
+            return i;
+        });
     }
     
     function handleDragEnd(event: any) {
         const {over, active} = event;
         if (event) {
             const idBlock = active.id;
+            const blockParent = active.parent;
             const idZone = over.id;
             
             if (!dropListBase.includes(over.id)) {
@@ -189,32 +198,34 @@ export default function Demo(prop: any) {
                     return;
                 }
             }
-
+            // Ajout de l'item dans la zone de drop
             setItems(items => {
-                const newItems = [...items];
-                newItems[idBlock] = {id: items[idBlock].id, parent: idZone, type: items[idBlock].type};
-                return newItems;
+                let i = [...items];
+                for(let j = 0; j < items.length; j++){
+                    if(j == idZone){
+                        i[j] = [...items[j], {id: idBlock, type: items[blockParent][idBlock].type}];
+                    }
+                    if(j == blockParent){
+                        i[j] = [...items[j].slice(0, idBlock), ...items[j].slice(parseInt(idBlock) + 1)];
+                    }
+                    else
+                        i[j] = [...items[j]];
+                }
+                return i;
             });
+
+
             if (over.id === 'droppable-3') {
                 console.log("suppression : " + idBlock)
-                setItems(items => items.filter((item, index) => index != parseInt(idBlock)));
+                // TODO : Suppression de l'item et suppression des zones de drop correspondant aux enfants de façon récursive
             }
         }
     }
 
     // Fonction qui compte le nombre d'item dans une zone de drop
-    function countItem(id: String) {
-        return searchItem(id).length;
+    function countItem(id: number) {
+        return items[id].length;
     }
 
-    // Fonction qui permet de chercher un item dans une zone de drop
-    function searchItem(id: String) {
-        let itemList:{id:String, parent:String}[] = [];
-        items.map((item, index) => {
-            if (items[index].parent === id) {
-                itemList.push(items[index]);
-            }
-        })
-        return itemList;
-    }
+
 }

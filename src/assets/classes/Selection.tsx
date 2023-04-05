@@ -4,8 +4,8 @@ import { NoeudsBase } from "./Noeuds.tsx";
 export class Selection extends Noeud{
     condition : [[champ:String, condition: String, valeur: String]];
     ensemble: Noeud;
-    constructor(condition: [[champ:String, condition: String, valeur: String]], ensemble: Noeud) {
-        super(NoeudsBase.Selection)
+    constructor(condition: [[champ:String, condition: String, valeur: String]], ensemble: Noeud, index: number) {
+        super(NoeudsBase.Selection, index)
         this.condition = condition
         this.ensemble = ensemble
     }
@@ -32,6 +32,10 @@ export class Selection extends Noeud{
         chaine += "}"
         chaine += "( "+ this.ensemble.toLatex() + " )"
         return chaine
+    }
+    
+    copy(): Noeud{
+        return new Selection(this.condition, this.ensemble.copy(), this.index)
     }
     
 

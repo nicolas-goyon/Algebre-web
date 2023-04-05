@@ -5,8 +5,8 @@ export class Projection extends Noeud{
     champs: String[];
     ensemble: Noeud;
     
-    constructor(champs: String[], ensemble: Noeud) {
-        super(NoeudsBase.Projection)
+    constructor(champs: String[], ensemble: Noeud, index: number) {
+        super(NoeudsBase.Projection, index)
         this.champs = champs
         this.ensemble = ensemble
     }
@@ -36,5 +36,10 @@ export class Projection extends Noeud{
         chaine += "( "+ this.ensemble.toLatex() + " )"
         return chaine
     }
+
+    copy(): Noeud{
+        return new Projection(this.champs, this.ensemble.copy(), this.index)
+    }
+    
 
 }
