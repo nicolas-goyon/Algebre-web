@@ -2,8 +2,8 @@ import { Noeud } from "./Noeud.tsx";
 import { NoeudsBase } from "./Noeuds.tsx";
 export class Ensemble extends Noeud{
     nom : String;
-    constructor(nom: String, index: number) {
-        super(NoeudsBase.Ensemble, index)
+    constructor(nom: String, index: number, parent : Noeud | null = null) {
+        super(NoeudsBase.Ensemble, index, parent)
         this.nom = nom
     }
 
@@ -26,6 +26,16 @@ export class Ensemble extends Noeud{
 
     copy(): Noeud{
         return new Ensemble(this.nom, this.index)
+    }
+
+    deleteChild(index: Noeud): void {
+        // do nothing
+    }
+
+    fillArray(): Noeud[] {
+        let array: Noeud[] = []
+        array[this.index] = this;
+        return array
     }
 
 

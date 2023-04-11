@@ -1,16 +1,20 @@
+import { arrayMerge } from "../tools/ArraysTools.tsx";
 import { Noeud } from "./Noeud.tsx";
 import { NoeudsBase } from "./Noeuds.tsx";
 
 export class Selection extends Noeud{
     condition : [[champ:String, condition: String, valeur: String]];
-    ensemble: Noeud;
-    constructor(condition: [[champ:String, condition: String, valeur: String]], ensemble: Noeud, index: number) {
-        super(NoeudsBase.Selection, index)
+    ensemble: Noeud | null;
+    constructor(condition: [[champ:String, condition: String, valeur: String]], ensemble: Noeud | null, index: number, parent : Noeud | null = null) {
+        super(NoeudsBase.Selection, index , parent)
         this.condition = condition
         this.ensemble = ensemble
     }
 
     estValide (){
+        if (this.ensemble == null){
+            return false
+        }
         return this.ensemble.estValide()
     }
 
@@ -18,7 +22,7 @@ export class Selection extends Noeud{
         let objet = {  
             type: this.type,
             condition: this.condition,
-            ensemble: JSON.parse(this.ensemble.toJSON())
+            ensemble: JSON.parse((this.ensemble != null) ? this.ensemble.toJSON() : "null"),
         }
         return JSON.stringify(objet)
     }
@@ -30,13 +34,33 @@ export class Selection extends Noeud{
         }
         chaine = chaine.slice(0, -2);
         chaine += "}"
-        chaine += "( "+ this.ensemble.toLatex() + " )"
+        chaine += "( "+ (this.ensemble != null) ? this.ensemble!.toLatex() : "NULL" + " )"
         return chaine
     }
     
     copy(): Noeud{
-        return new Selection(this.condition, this.ensemble.copy(), this.index)
+        return new Selection(
+            this.condition, 
+            (this.ensemble != null)?this.ensemble.copy():null, 
+            this.index,
+            this.parent            
+            )
+    }
+
+    deleteChild(index: Noeud): void {
+        if (this.ensemble === index){
+            this.ensemble = null
+        }
     }
     
+
+    fillArray(): Noeud[] {
+        let arr: Noeud[] = [];
+        if (this.ensemble != null){
+            arr = this.ensemble.fillArray();
+        }
+        arr[this.index] = this;
+        return arr;
+    }
 
 }

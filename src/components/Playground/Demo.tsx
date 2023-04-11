@@ -3,7 +3,7 @@ import { DndContext, pointerWithin } from '@dnd-kit/core';
 import { TrashIcon } from '@heroicons/react/24/outline'
 import { Draggable } from '../Dnd/Draggable';
 import { Droppable } from '../Dnd/Droppable';
-import { Noeuds, NoeudsBase, NoeudsGet } from '../../assets/classes/Noeuds';
+import { Noeuds, NoeudsBase, NoeudsGet, Noeud } from '../../assets/classes/Noeuds';
 
 
 // let c = ["id", "test"]
@@ -25,10 +25,13 @@ import { Noeuds, NoeudsBase, NoeudsGet } from '../../assets/classes/Noeuds';
 // console.log(dif.toJSON())
 type element = {id:number, type: Noeuds};
 export default function Demo(prop: any) {
-    let d : element[][] = [];
-    const [countDrop, setCountDrop] = useState(3); // nombre de dropable
-    const [countDrag, setCountDrag] = useState(3); // nombre de draggable
-    const [items, setItems] = useState(d);
+    let d : element[] = [];
+    const [items, setItems] = useState(d); // items dans le drop 1
+    const [count , setCount] = useState(0); // compteur pour les id
+    let f : Noeud | null = null;
+    const [racine, setRacine] = useState<Noeud | null>(f); // racine de l'arbre
+    let tab : Noeud[] = [];
+    const [tableau , setTableau] = useState(tab); // tableau des noeuds
     const dropListBase : String[] = [ "droppable-1", "droppable-2", "droppable-3"];
 
     console.log("Demo5")
@@ -157,24 +160,19 @@ export default function Demo(prop: any) {
         );
     }
 
+    // Fonction qui ajout un item dans la zone de drop 1
     function addNoeud(event: any) {
         // Récupérer le datatype du bouton cliqué
         const type : String = event.target.getAttribute("datatype");
         const newType = NoeudsGet.getNoeuds(type)
 
-        setCountDrag(countDrag + 1);
-        // Ajouter un item dans la zone de drop 1
+        // Ajouter un item dans la zone de drop 1   
         setItems(items => {
             let i = [...items];
-            for(let j = 0; j < items.length; j++){
-                if(j == 0){
-                    i[j] = [...items[j], {id: countDrag, type: newType}];
-                }   
-                else
-                    i[j] = [...items[j]];
-            }
+            i[count] = {id: count, type: newType};
             return i;
         });
+        setCount(count + 1);
     }
     
     function handleDragEnd(event: any) {
