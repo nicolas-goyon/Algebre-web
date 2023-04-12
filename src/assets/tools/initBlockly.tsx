@@ -25,30 +25,36 @@ Blockly.defineBlocksWithJsonArray([
   javascriptGenerator['selection'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\pi_{ ' + value_champs + ' }( \n' + statements_elements + '\n );\n';
+    var code = '\\sigma_{ ' + value_champs + ' }( ' + statements_elements + ' )';
     return code;
   };
   javascriptGenerator['renommage'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\pi_{ ' + value_champs + ' }( \n' + statements_elements + '\n );\n';
+    var code = '\\rho{ ' + value_champs + ' }( ' + statements_elements + ' )';
     return code;
   };
   javascriptGenerator['projection'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\pi_{ ' + value_champs + ' }( \n' + statements_elements + '\n );\n';
+    var code = '\\pi_{ ' + value_champs + ' }( ' + statements_elements + ' )';
     return code;
   };
   javascriptGenerator['ensemble'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'name', javascriptGenerator.ORDER_ATOMIC);
-    var code = value_champs;
+    var code = value_champs.split('(').join('');
+    code = code.split(')').join('');
     return code;
   };
+  javascriptGenerator['text'] = function(block: any) {
+    const textValue = block.getFieldValue('TEXT');
+    var code = textValue;
+    return [code, javascriptGenerator.ORDER_FUNCTION_CALL];
+  }
   javascriptGenerator['difference'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(\n' + statements_elements1 + '\n) \\\\ (\n' + statements_elements2 + '\n)\n';
+    var code = '(' + statements_elements1 + ') \/ (' + statements_elements2 + ')';
 
     return code;
   }
@@ -56,7 +62,7 @@ Blockly.defineBlocksWithJsonArray([
   javascriptGenerator['intersection'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(\n' + statements_elements1 + '\n) \\cup (\n' + statements_elements2 + '\n)\n';
+    var code = '(' + statements_elements1 + ') \\cup (' + statements_elements2 + ')';
     return code;
   }
   
@@ -64,19 +70,14 @@ Blockly.defineBlocksWithJsonArray([
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
     
-    var code = '(\n' + statements_elements1 + '\n) \\cap (\n' + statements_elements2 + '\n)\n';
+    var code = '(' + statements_elements1 + ') \\cap (' + statements_elements2 + ')';
     return code;
   }
   javascriptGenerator['produit'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(\n' + statements_elements1 + '\n) \\times (\n' + statements_elements2 + '\n)\n';
+    var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
     return code;
-  }
-  javascriptGenerator['text'] = function(block: any) {
-    const textValue = block.getFieldValue('TEXT');
-    var code = textValue;
-    return [code, javascriptGenerator.ORDER_FUNCTION_CALL];
   }
   javascriptGenerator['base'] = function(block: any) {
     var statements_elements = javascriptGenerator.statementToCode(block, 'nextStatement');

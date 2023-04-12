@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import Blockly from "blockly";
 import {javascriptGenerator} from 'blockly/javascript'
 import { options } from '../../assets/tools/initBlockly';
+import { MathJax } from 'better-react-mathjax';
 
 
 
 export default function Demo(prop: any) {
   const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
+  const [demoLatex, setDemoLatex] = useState<string>('');
   function updateCode() {
     if (blockWorkspace === undefined) {
       return;
@@ -18,7 +20,7 @@ export default function Demo(prop: any) {
   
     // Trouve le bloc "base".
     for (var i = 0; i < topBlocks.length; i++) {
-      if (topBlocks[i].type == 'base') {
+      if (topBlocks[i].type === 'base') {
         baseBlock = topBlocks[i];
         break;
       }
@@ -27,11 +29,12 @@ export default function Demo(prop: any) {
     // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
     if (baseBlock) {
       var firstChildBlock = baseBlock.nextConnection.targetBlock();
-      javascriptGenerator.init(blockWorkspace);
+      // console.log(firstChildBlock);
       var code = javascriptGenerator.blockToCode(firstChildBlock);
       // afficher le code dans la zone d'affichage
-      document.getElementById('latex')!.innerHTML = code;
-
+      if(code != null && code.length > 0){
+        setDemoLatex('$' + code + '$');
+      }
     }
   }
 
@@ -49,6 +52,7 @@ export default function Demo(prop: any) {
     } // fin si
     if(blockWorkspace !== undefined) {
       blockWorkspace.addChangeListener(updateCode);
+      javascriptGenerator.init(blockWorkspace);
       var workspace = blockWorkspace;
       var canvas = workspace.getCanvas();
       var x = Number(canvas.style.width) / 2;
@@ -66,11 +70,10 @@ export default function Demo(prop: any) {
       baseBlock.setDeletable(false);
 
     }
-    console.log("blockWorkspace: ", blockWorkspace);
   });
 
 
-
+  var latexString = '$\\frac{1}{2}$';
   return (
     <div>
     <div id="blocklyArea" className='w-full'>
@@ -78,25 +81,11 @@ export default function Demo(prop: any) {
     </div>
     <div>
       {/* Zone d'affichage du latex, zone ressemblant à une zone de code */}
-      <div id="latexDiv">
-        <code id="latex" className="block whitespace-pre overflow-x-scroll bg-black rounded-md text-white" ></code>
+      <div id="latexDiv" className='overflow-x-scroll bg-black rounded-md text-white'>
+        <MathJax dynamic id="latex">{demoLatex}</MathJax>
       </div>
     </div>
     </div>
   );    
 }
 
-
-
-
-// import React from 'react';
-// import { MathJax } from 'better-react-mathjax';
-
-// export default function Union(prop: any) {
-//     const latexString = "$\cup$"
-//     return (
-//         <div className="border-solid pointer-events-none select-none border-b-2 border-t-2 border-light-900  w-100 px-1">
-//             <MathJax inline dynamic>{latexString}</MathJax>
-//         </div>
-//     )
-// }
