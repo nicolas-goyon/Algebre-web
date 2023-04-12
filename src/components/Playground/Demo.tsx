@@ -1,113 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import Blockly from "blockly";
 import {javascriptGenerator} from 'blockly/javascript'
-import '../../assets/tools/initBlockly';
+import { options } from '../../assets/tools/initBlockly';
 
 
 
 export default function Demo(prop: any) {
-  function updateCode(event: any){
-    console.log("updateCode");
-    if(blockWorkspace !== undefined) {
-      var code = javascriptGenerator.workspaceToCode(blockWorkspace);
-      console.log(code);
+  const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
+  function updateCode() {
+    if (blockWorkspace === undefined) {
+      return;
+    }
+
+    var workspace = blockWorkspace;
+    var topBlocks = workspace.getTopBlocks(true);
+    var baseBlock = null;
+  
+    // Trouve le bloc "base".
+    for (var i = 0; i < topBlocks.length; i++) {
+      if (topBlocks[i].type == 'base') {
+        baseBlock = topBlocks[i];
+        break;
+      }
     }
   
+    // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
+    if (baseBlock) {
+      var firstChildBlock = baseBlock.nextConnection.targetBlock();
+      javascriptGenerator.init(blockWorkspace);
+      var code = javascriptGenerator.blockToCode(firstChildBlock);
+      console.log(code);
+    }
   }
 
-  const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
-
-  var toolbox = {
-    "kind":"categoryToolbox",
-    "contents": [
-      {
-        "kind": "category",
-        "name": "Unaire",
-        "contents": [
-          {
-            "kind": "block",
-            "type": "renommage"
-          },
-          {
-            "kind": "block",
-            "type": "selection"
-          },
-          {
-            "kind": "block",
-            "type": "projection"
-          },
-        ]
-      },
-
-      {
-        "kind": "category",
-        "name": "Binaire",
-        "contents": [
-          {
-            "kind": "block",
-            "type": "difference"
-          },
-          {
-            "kind": "block",
-            "type": "union"
-          },
-          {
-            "kind": "block",
-            "type": "intersection"
-          },          
-          {
-            "kind": "block",
-            "type": "produit"
-          },
-        ]
-      },
-
-      {
-        "kind": "category",
-        "name": "Autre",
-        "contents": [
-          {
-            "kind": "block",
-            "type": "ensemble"
-          },
-          {
-            "kind": "block",
-            "type": "text"
-          },
-          {
-            "kind": "block",
-            "type": "base"
-          },
-        ]
-      }
-    ]
-  };
-
-
-  var options = { 
-    toolbox : toolbox, 
-    collapse : false, 
-    comments : true, 
-    disable : true, 
-    maxBlocks : Infinity, 
-    trashcan : true, 
-    horizontalLayout : true, 
-    toolboxPosition : 'start', 
-    css : true, 
-    media : 'https://blockly-demo.appspot.com/static/media/', 
-    rtl : false, 
-    scrollbars : true, 
-    sounds : true, 
-    oneBasedIndex : true, 
-    zoom : {
-      controls : false, 
-      wheel : false, 
-      startScale : 1, 
-      maxScale : 3, 
-      minScale : 0.3, 
-      scaleSpeed : 1.2
-    }
-  };
 
   useEffect(() => {
     // Si le workspace n'est pas défini, on le crée
@@ -125,6 +50,9 @@ export default function Demo(prop: any) {
     }
     console.log("blockWorkspace: ", blockWorkspace);
   });
+
+
+  
   return (
     <div id="blocklyArea" className='w-full'>
       <div id="blocklyDiv" style={{ height: 600, width: '100%' }}></div>

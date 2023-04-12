@@ -21,7 +21,7 @@ Blockly.defineBlocksWithJsonArray([
     }
   ]);
 
-  
+
   javascriptGenerator['selection'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
@@ -84,3 +84,97 @@ Blockly.defineBlocksWithJsonArray([
     return code;
   }
 
+
+  var toolbox = {
+    "kind":"categoryToolbox",
+    "contents": [
+      {
+        "kind": "category",
+        "name": "Unaire",
+        "contents": [
+          {
+            "kind": "block",
+            "type": "renommage"
+          },
+          {
+            "kind": "block",
+            "type": "selection"
+          },
+          {
+            "kind": "block",
+            "type": "projection"
+          },
+        ]
+      },
+
+      {
+        "kind": "category",
+        "name": "Binaire",
+        "contents": [
+          {
+            "kind": "block",
+            "type": "difference"
+          },
+          {
+            "kind": "block",
+            "type": "union"
+          },
+          {
+            "kind": "block",
+            "type": "intersection"
+          },          
+          {
+            "kind": "block",
+            "type": "produit"
+          },
+        ]
+      },
+
+      {
+        "kind": "category",
+        "name": "Autre",
+        "contents": [
+          {
+            "kind": "block",
+            "type": "ensemble"
+          },
+          {
+            "kind": "block",
+            "type": "text"
+          },
+          {
+            "kind": "block",
+            "type": "base"
+          },
+        ]
+      }
+    ]
+  };
+
+
+  export var options = { 
+    toolbox : toolbox, 
+    collapse : false, 
+    comments : true, 
+    disable : true, 
+    maxBlocks : Infinity, 
+    trashcan : true, 
+    horizontalLayout : true, 
+    toolboxPosition : 'start', 
+    css : true, 
+    media : 'https://blockly-demo.appspot.com/static/media/', 
+    rtl : false, 
+    scrollbars : true, 
+    sounds : true, 
+    oneBasedIndex : true, 
+    zoom : {
+      controls : false, 
+      wheel : false, 
+      startScale : 1, 
+      maxScale : 3, 
+      minScale : 0.3, 
+      scaleSpeed : 1.2
+    }
+  };
+
+  
