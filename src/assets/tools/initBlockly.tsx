@@ -48,7 +48,7 @@ Blockly.defineBlocksWithJsonArray([
   javascriptGenerator['difference'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(\n' + statements_elements1 + '\n) \\\\ (\n' + statements_elements2 + '\n )\n';
+    var code = '(\n' + statements_elements1 + '\n) \\\\ (\n' + statements_elements2 + '\n)\n';
 
     return code;
   }
@@ -56,7 +56,7 @@ Blockly.defineBlocksWithJsonArray([
   javascriptGenerator['intersection'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(\n' + statements_elements1 + '\n) \\cup (\n' + statements_elements2 + '\n )\n';
+    var code = '(\n' + statements_elements1 + '\n) \\cup (\n' + statements_elements2 + '\n)\n';
     return code;
   }
   
@@ -64,13 +64,13 @@ Blockly.defineBlocksWithJsonArray([
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
     
-    var code = '(\n' + statements_elements1 + '\n) \\cap (\n' + statements_elements2 + '\n )\n';
+    var code = '(\n' + statements_elements1 + '\n) \\cap (\n' + statements_elements2 + '\n)\n';
     return code;
   }
   javascriptGenerator['produit'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
     var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(\n' + statements_elements1 + '\n) \\times (\n' + statements_elements2 + '\n )\n';
+    var code = '(\n' + statements_elements1 + '\n) \\times (\n' + statements_elements2 + '\n)\n';
     return code;
   }
   javascriptGenerator['text'] = function(block: any) {
@@ -141,11 +141,7 @@ Blockly.defineBlocksWithJsonArray([
           {
             "kind": "block",
             "type": "text"
-          },
-          {
-            "kind": "block",
-            "type": "base"
-          },
+          }
         ]
       }
     ]
@@ -154,7 +150,7 @@ Blockly.defineBlocksWithJsonArray([
 
   export var options = { 
     toolbox : toolbox, 
-    collapse : false, 
+    collapse : true, 
     comments : true, 
     disable : true, 
     maxBlocks : Infinity, 

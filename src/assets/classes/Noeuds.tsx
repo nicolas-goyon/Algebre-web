@@ -1,6 +1,15 @@
-import React from "react"
-import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit } from "../../components/Playground/NoeudsComponents"
+import { Ensemble } from "./Ensemble"
+import { Renommage } from "./Renommage"
+import { Selection } from "./Selection"
+import { Projection } from "./Projection"
+import { Union } from "./Union"
+import { Produit } from "./Produit"
+import { Intersection } from "./Intersection"
+import { Difference } from "./Difference"
+// import { Jointure } from "./Jointure"
 import { Noeud } from "./Noeud"
+
+
 
 export { Noeud } from "./Noeud"
 export { Ensemble } from "./Ensemble"
@@ -20,7 +29,6 @@ export const NoeudsBase = {
     // Noeud de base 
     Noeud:{
         name:"Noeud",
-        component: (<div></div>),
         children: 0,
         hasChamp: false,
         isBinary: false,
@@ -29,7 +37,6 @@ export const NoeudsBase = {
     // Noeuds avec 0 enfants
     Ensemble:{
         name:"Ensemble",
-        component: (<Ensemble/>),
         children: 0,
         hasChamp: true,
         isBinary: false,
@@ -39,7 +46,6 @@ export const NoeudsBase = {
     // Noeuds avec 1 enfant
     Renommage:{
         name:"Renommage",
-        component: (<Renommage/>),
         children: 1,
         hasChamp: true,
         isBinary: false,
@@ -47,7 +53,6 @@ export const NoeudsBase = {
     },
     Selection:{
         name:"Selection",
-        component: (<Selection/>),
         children: 1,
         hasChamp: true,
         isBinary: false,
@@ -55,7 +60,6 @@ export const NoeudsBase = {
     },
     Projection:{
         name:"Projection",
-        component: (<Projection/>),
         children: 1,
         hasChamp: true,
         isBinary: false,
@@ -65,7 +69,6 @@ export const NoeudsBase = {
     // Noeuds avec 2 enfants
     Union:{
         name:"Union",
-        component: (<Union/>),
         children: 2,
         hasChamp: false,
         isBinary: true,
@@ -73,7 +76,6 @@ export const NoeudsBase = {
     },
     Produit:{
         name:"Produit",
-        component: (<Produit/>),
         children: 2,
         hasChamp: false,
         isBinary: true,
@@ -81,7 +83,6 @@ export const NoeudsBase = {
     },
     Intersection:{
         name:"Intersection",
-        component: (<Intersection/>),
         children: 2,
         hasChamp: false,
         isBinary: true,
@@ -89,7 +90,6 @@ export const NoeudsBase = {
     },
     Difference:{
         name:"Difference",
-        component: (<Difference/>),
         children: 2,
         hasChamp: false,
         isBinary: true,
