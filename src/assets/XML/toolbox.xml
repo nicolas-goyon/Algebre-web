@@ -1,0 +1,19 @@
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+  <category name="Unaire">
+    <block type="projection"></block>
+    <block type="selection"></block>
+    <block type="renommage"></block>
+  </category>
+  <category name="Binaire">
+    <block type="difference"></block>
+    <block type="intersection"></block>
+    <block type="produit"></block>
+    <block type="union"></block>
+  </category>
+
+  <category name="Autre">
+    <block type="debut"></block>
+    <block type="ensemble"></block>
+    <block type="text"></block>
+  </category>
+</xml>

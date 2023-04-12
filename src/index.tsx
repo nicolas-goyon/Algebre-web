@@ -23,11 +23,9 @@ const config = {
 if (rootElement instanceof Element) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
-    <React.StrictMode>
       <MathJaxContext version={3} config={config}>
         <App />
       </MathJaxContext>
-    </React.StrictMode>
   );
 } else {
   throw new Error('Could not find root element');

@@ -67,5 +67,26 @@ export class Renommage extends Noeud{
         return arr;
     }
 
-
+    static toBlockly(): any {
+        return {
+            "type": "renommage",
+            "message0": "Renommage %1 Ensemble %2",
+            "args0": [
+              {
+                "type": "input_value",
+                "name": "Champs",
+                "check": "String"
+              },
+              {
+                "type": "input_statement",
+                "name": "ensemble",
+                "check": "Noeud"
+              }
+            ],
+            "previousStatement": "Noeud",
+            "colour": 120,
+            "tooltip": "",
+            "helpUrl": ""
+        }
+    }
 }

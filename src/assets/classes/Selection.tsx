@@ -3,9 +3,10 @@ import { Noeud } from "./Noeud.tsx";
 import { NoeudsBase } from "./Noeuds.tsx";
 
 export class Selection extends Noeud{
-    condition : [[champ:String, condition: String, valeur: String]];
+    // condition : [[champ:String, condition: String, valeur: String]];
+    condition: String;
     ensemble: Noeud | null;
-    constructor(condition: [[champ:String, condition: String, valeur: String]], ensemble: Noeud | null, index: number, parent : Noeud | null = null) {
+    constructor(condition: String/*condition: [[champ:String, condition: String, valeur: String]]*/, ensemble: Noeud | null, index: number, parent : Noeud | null = null) {
         super(NoeudsBase.Selection, index , parent)
         this.condition = condition
         this.ensemble = ensemble
@@ -29,9 +30,9 @@ export class Selection extends Noeud{
     
     toLatex(): String{
         let chaine = "\sigma_{"
-        for (let i in this.condition){
-            chaine += i[0] + i[1] + i[2] + ", "
-        }
+        // for (let i in this.condition){
+        //     chaine += i[0] + i[1] + i[2] + ", "
+        // }
         chaine = chaine.slice(0, -2);
         chaine += "}"
         chaine += "( "+ (this.ensemble != null) ? this.ensemble!.toLatex() : "NULL" + " )"
@@ -61,6 +62,29 @@ export class Selection extends Noeud{
         }
         arr[this.index] = this;
         return arr;
+    }
+
+    static toBlockly(): any{
+        return {
+            "type": "selection",
+            "message0": "Selection %1 Ensemble %2",
+            "args0": [
+              {
+                "type": "input_value",
+                "name": "Champs",
+                "check": "String"
+              },
+              {
+                "type": "input_statement",
+                "name": "ensemble",
+                "check": "Noeud"
+              }
+            ],
+            "previousStatement": "Noeud",
+            "colour": 120,
+            "tooltip": "",
+            "helpUrl": ""
+        }
     }
 
 }

@@ -65,4 +65,30 @@ export class Projection extends Noeud{
         arr[this.index] = this;
         return arr;
     }
+
+    
+
+    static toBlockly(): any{
+        return {
+            "type": "projection",
+            "message0": "Projection %1 Ensemble %2",
+            "args0": [
+              {
+                "type": "input_value",
+                "name": "Champs",
+                "check": "String"
+              },
+              {
+                "type": "input_statement",
+                "name": "Element",
+                "check": "Noeud"
+              }
+            ],
+            "previousStatement": "Noeud",
+            "colour": 120,
+            "tooltip": "",
+            "helpUrl": ""
+        }
+    }
+
 }

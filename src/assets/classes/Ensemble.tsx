@@ -38,5 +38,21 @@ export class Ensemble extends Noeud{
         return array
     }
 
-
+    static toBlockly(): any{
+        return {
+            "type": "ensemble",
+            "message0": "nom ensemble %1",
+            "args0": [
+              {
+                "type": "input_value",
+                "name": "name",
+                "check": "String"
+              }
+            ],
+            "previousStatement": "Noeud",
+            "colour": 120,
+            "tooltip": "",
+            "helpUrl": ""
+          }
+    }
 }

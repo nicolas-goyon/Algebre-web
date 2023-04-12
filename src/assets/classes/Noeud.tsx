@@ -39,4 +39,5 @@ export abstract class Noeud {
 
     abstract deleteChild(index: Noeud):void;
     abstract fillArray(): Noeud[];
+    // static abstract toBlockly(): any;
 }
