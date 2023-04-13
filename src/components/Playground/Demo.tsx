@@ -9,31 +9,42 @@ import { MathJax } from 'better-react-mathjax';
 export default function Demo(prop: any) {
   const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
   const [demoLatex, setDemoLatex] = useState<string>('');
-  function updateCode() {
+  function updateCode(event : Blockly.Events.Abstract) {
     if (blockWorkspace === undefined) {
       return;
     }
-
-    var workspace = blockWorkspace;
-    var topBlocks = workspace.getTopBlocks(true);
-    var baseBlock = null;
-  
-    // Trouve le bloc "base".
-    for (var i = 0; i < topBlocks.length; i++) {
-      if (topBlocks[i].type === 'base') {
-        baseBlock = topBlocks[i];
-        break;
+    if (event.type == Blockly.Events.BLOCK_DRAG){
+      var workspace = blockWorkspace;
+      // get blocs that have no parent
+      var topBlocks = workspace.getTopBlocks(false);
+      var blocks = workspace.getAllBlocks(false);
+      var baseBlock = null;
+      console.log("====================================");
+      console.log(topBlocks);
+      // Trouve le bloc "base".
+      for (var i = 0; i < blocks.length; i++) {
+        console.log(blocks[i].type);
       }
-    }
-  
-    // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
-    if (baseBlock) {
-      var firstChildBlock = baseBlock.nextConnection.targetBlock();
-      // console.log(firstChildBlock);
-      var code = javascriptGenerator.blockToCode(firstChildBlock);
-      // afficher le code dans la zone d'affichage
-      if(code != null && code.length > 0){
-        setDemoLatex('$' + code + '$');
+    
+
+      for (var i = 0; i < topBlocks.length; i++) {
+        // console.log(topBlocks[i].type);
+        if (topBlocks[i].type === 'base') {
+          baseBlock = topBlocks[i];
+          break;
+        }
+      
+      }
+    
+      // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
+      if (baseBlock) {
+        var firstChildBlock = baseBlock.nextConnection.targetBlock();
+        // console.log(firstChildBlock);
+        var code = javascriptGenerator.blockToCode(firstChildBlock);
+        // afficher le code dans la zone d'affichage
+        if(code != null && code.length > 0){
+          setDemoLatex('$' + code + '$');
+        }
       }
     }
   }
@@ -52,8 +63,8 @@ export default function Demo(prop: any) {
     } // fin si
     if(blockWorkspace !== undefined) {
       blockWorkspace.addChangeListener(updateCode);
-      javascriptGenerator.init(blockWorkspace);
       var workspace = blockWorkspace;
+      javascriptGenerator.init(workspace);
       var canvas = workspace.getCanvas();
       var x = Number(canvas.style.width) / 2;
       
@@ -62,13 +73,13 @@ export default function Demo(prop: any) {
       // Créer un bloc "base" et le placer au centre du workspace.
       var baseBlock = workspace.newBlock('base');
       baseBlock.initSvg();
+      // workspace.addTopBlock(baseBlock);
+      // console.log(baseBlock);
       baseBlock.render();
+      // console.log(baseBlock.on);
       baseBlock.moveBy(x, y);
 
-      // rendre le bloc "base" immobile et non supprimable.
-      baseBlock.setMovable(false);
-      baseBlock.setDeletable(false);
-
+      
     }
   });
 
