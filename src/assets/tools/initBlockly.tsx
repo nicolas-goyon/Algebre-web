@@ -12,7 +12,7 @@ Blockly.defineBlocksWithJsonArray([
     Intersection.toBlockly(),
     Produit.toBlockly(),
     {
-      "type": "base",
+      "type": "debut",
       "message0": "Début",
       "nextStatement": "Noeud",
       "colour": 60,
@@ -25,31 +25,32 @@ Blockly.defineBlocksWithJsonArray([
   javascriptGenerator['selection'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\sigma_{ ' + value_champs + ' }( ' + statements_elements + ' )';
+    var code = '\\sigma_{' + value_champs + '}(' + statements_elements + ')';
     return code;
   };
   javascriptGenerator['renommage'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\rho{ ' + value_champs + ' }( ' + statements_elements + ' )';
+    var code = '\\rho_{' + value_champs + ' }(' + statements_elements + ')';
     return code;
   };
   javascriptGenerator['projection'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
     var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\pi_{ ' + value_champs + ' }( ' + statements_elements + ' )';
+    var code = '\\pi_{' + value_champs + ' }(' + statements_elements + ')';
     return code;
   };
   javascriptGenerator['ensemble'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'name', javascriptGenerator.ORDER_ATOMIC);
-    var code = value_champs.split('(').join('');
-    code = code.split(')').join('');
+    var code = value_champs;
+    // var code = value_champs.split('(').join('');
+    // code = code.split(')').join('');
     return code;
   };
   javascriptGenerator['text'] = function(block: any) {
     const textValue = block.getFieldValue('TEXT');
     var code = textValue;
-    return [code, javascriptGenerator.ORDER_FUNCTION_CALL];
+    return [code, javascriptGenerator.ORDER_ATOMIC];
   }
   javascriptGenerator['difference'] = function(block: any) {
     var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
@@ -79,7 +80,7 @@ Blockly.defineBlocksWithJsonArray([
     var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
     return code;
   }
-  javascriptGenerator['base'] = function(block: any) {
+  javascriptGenerator['debut'] = function(block: any) {
     var statements_elements = javascriptGenerator.statementToCode(block, 'nextStatement');
     var code = statements_elements;
     return code;
@@ -161,12 +162,12 @@ Blockly.defineBlocksWithJsonArray([
     css : true, 
     media : 'https://blockly-demo.appspot.com/static/media/', 
     rtl : false, 
-    scrollbars : true, 
-    sounds : true, 
+    // scrollbars : true, 
+    sounds : false, 
     oneBasedIndex : true, 
     zoom : {
       controls : false, 
-      wheel : false, 
+      wheel : true, 
       startScale : 1, 
       maxScale : 3, 
       minScale : 0.3, 

@@ -3,33 +3,28 @@ import Blockly from "blockly";
 import {javascriptGenerator} from 'blockly/javascript'
 import { options } from '../../assets/tools/initBlockly';
 import { MathJax } from 'better-react-mathjax';
+import { on } from 'stream';
 
 
 
 export default function Demo(prop: any) {
   const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
   const [demoLatex, setDemoLatex] = useState<string>('');
+  const [firstLoad, setFirstLoad] = useState<boolean>(false);
   function updateCode(event : Blockly.Events.Abstract) {
     if (blockWorkspace === undefined) {
       return;
     }
-    if (event.type == Blockly.Events.BLOCK_DRAG){
+    // if (event.type == Blockly.Events.BLOCK_DRAG ){
       var workspace = blockWorkspace;
       // get blocs that have no parent
       var topBlocks = workspace.getTopBlocks(false);
-      var blocks = workspace.getAllBlocks(false);
       var baseBlock = null;
-      console.log("====================================");
-      console.log(topBlocks);
-      // Trouve le bloc "base".
-      for (var i = 0; i < blocks.length; i++) {
-        console.log(blocks[i].type);
-      }
-    
+      // Trouve le bloc "debut".   
 
       for (var i = 0; i < topBlocks.length; i++) {
-        // console.log(topBlocks[i].type);
-        if (topBlocks[i].type === 'base') {
+        console.log(topBlocks[i].type);
+        if (topBlocks[i].type === 'debut') {
           baseBlock = topBlocks[i];
           break;
         }
@@ -38,16 +33,47 @@ export default function Demo(prop: any) {
     
       // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
       if (baseBlock) {
-        var firstChildBlock = baseBlock.nextConnection.targetBlock();
         // console.log(firstChildBlock);
-        var code = javascriptGenerator.blockToCode(firstChildBlock);
+        var code = "";
+        // code = javascriptGenerator.blockToCode(baseBlock);
+        code = javascriptGenerator.blockToCode(baseBlock);
         // afficher le code dans la zone d'affichage
         if(code != null && code.length > 0){
           setDemoLatex('$' + code + '$');
         }
+        console.log(code)
       }
-    }
+    // }
   }
+  function onresize(e: any) {
+    const blocklyArea = document.getElementById('blocklyArea');
+    const blocklyDiv = document.getElementById('blocklyDiv');
+    if (!blocklyArea || !blocklyDiv) {
+      // One or both elements doesn't exist.  Maybe the blocklyDiv is
+      // hidden, or the divs haven't been created yet.
+      console.log("blocklyArea or blocklyDiv doesn't exist");
+      return;
+    }
+    if (blockWorkspace === undefined) {
+      console.log("blockWorkspace doesn't exist");
+      return;
+    }
+    // Compute the absolute coordinates and dimensions of blocklyArea.
+    let element : any = blocklyArea;
+    let x = 0;
+    let y = 0;
+    do {
+      x += element.offsetLeft;
+      y += element.offsetTop;
+      element = element.offsetParent;
+    } while (element);
+    // Position blocklyDiv over blocklyArea.
+    blocklyDiv.style.left = x + 'px';
+    blocklyDiv.style.top = y + 'px';
+    blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+    blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+    Blockly.svgResize(blockWorkspace);
+  };
 
 
   useEffect(() => {
@@ -61,34 +87,29 @@ export default function Demo(prop: any) {
       )
       console.log("blockWorkspace created");
     } // fin si
-    if(blockWorkspace !== undefined) {
+    if(blockWorkspace !== undefined && !firstLoad) {
+      setFirstLoad(true);
       blockWorkspace.addChangeListener(updateCode);
+      window.addEventListener('resize', onresize, false);
       var workspace = blockWorkspace;
       javascriptGenerator.init(workspace);
-      var canvas = workspace.getCanvas();
-      var x = Number(canvas.style.width) / 2;
-      
-      var y = Number(canvas.style.height) / 2;
-    
+      var x = 100.0;
+      var y = 100.0;
+      console.log(x, y);
       // Créer un bloc "base" et le placer au centre du workspace.
-      var baseBlock = workspace.newBlock('base');
+      var baseBlock = workspace.newBlock('debut');
       baseBlock.initSvg();
-      // workspace.addTopBlock(baseBlock);
-      // console.log(baseBlock);
       baseBlock.render();
-      // console.log(baseBlock.on);
       baseBlock.moveBy(x, y);
-
-      
     }
   });
 
+  var blocklyDivStyle = { height: 600, width: '100%' }
 
-  var latexString = '$\\frac{1}{2}$';
   return (
     <div>
     <div id="blocklyArea" className='w-full'>
-      <div id="blocklyDiv" style={{ height: 600, width: '100%' }}></div>
+      <div id="blocklyDiv" style={blocklyDivStyle}></div>
     </div>
     <div>
       {/* Zone d'affichage du latex, zone ressemblant à une zone de code */}
