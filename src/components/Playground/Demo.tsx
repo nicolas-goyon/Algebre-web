@@ -3,7 +3,6 @@ import Blockly from "blockly";
 import {javascriptGenerator} from 'blockly/javascript'
 import { options } from '../../assets/tools/initBlockly';
 import { MathJax } from 'better-react-mathjax';
-import { on } from 'stream';
 
 
 

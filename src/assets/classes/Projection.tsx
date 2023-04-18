@@ -80,7 +80,7 @@ export class Projection extends Noeud{
               },
               {
                 "type": "input_statement",
-                "name": "Element",
+                "name": "ensemble",
                 "check": "Noeud"
               }
             ],
