@@ -1,19 +1,27 @@
 import React from 'react';
-import Demo from "./Playground/Demo";
+import { createBrowserRouter, RouterProvider }  from 'react-router-dom';
+
+import Home from './Pages/Home';
+import Playground from './Pages/Playground';
 
 export default function Main(prop: any) {
 
 
+    const router = createBrowserRouter([
+        {
+          path: "/playground",
+          element: <Playground/>,
+        },
+        {
+            path: "/",
+            element: <Home/>,
+        }
+      ]);
+      
+
     return (
         <main>
-            <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-light">
-                <div className="min-h-3xl w-auto mx-auto py-20 text-center">
-                    <h1 className="text-8xl font-mono">
-                        Bienvenue dans le Playground
-                    </h1>
-                </div>
-                <Demo/>
-            </div>
+            <RouterProvider router={router} />
         </main>
     )
 
