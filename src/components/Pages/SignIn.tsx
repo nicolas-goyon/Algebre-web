@@ -3,6 +3,6 @@ import SignInForm  from '../Connection/SignInForm';
 
 export default function SignIn(){
     return (
-        <SignSection/>
+        <SignInForm/>
     )
 }

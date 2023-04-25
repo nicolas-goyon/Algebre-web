@@ -63,8 +63,8 @@ function Header() {
           </a>
         </Popover.Group>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/login" ref={loginButton} id="login-button" className="text-sm font-semibold leading-6 text-gray-900">
-            Log in <span aria-hidden="true">&rarr;</span>
+          <a href="/signin" ref={loginButton} id="login-button" className="text-sm font-semibold leading-6 text-gray-900">
+            Sign in <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
       </nav>

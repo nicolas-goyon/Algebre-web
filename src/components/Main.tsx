@@ -1,8 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider }  from 'react-router-dom';
 
-import Home from './Pages/Home';
-import Playground from './Pages/Playground';
+import { Home, Playground, SignIn, SignUp } from './Pages';
 
 export default function Main(prop: any) {
 
@@ -11,6 +10,14 @@ export default function Main(prop: any) {
         {
           path: "/playground",
           element: <Playground/>,
+        },
+        {
+            path: "/signin",
+            element: <SignIn/>,
+        },
+        {
+            path: "/signup",
+            element: <SignUp/>,
         },
         {
             path: "/",

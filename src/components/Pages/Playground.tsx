@@ -1,4 +1,5 @@
 import React from "react";
+import Demo from '../Playground/Demo';
 
 export default function Playground() {
     return (<div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-light">
@@ -7,5 +8,6 @@ export default function Playground() {
                     Bienvenue dans le Playground
                 </h1>
             </div>
+            <Demo/>
         </div>
 )};
