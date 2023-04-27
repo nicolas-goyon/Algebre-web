@@ -1,20 +1,36 @@
 import React, { useState } from 'react';
+import { inputValidator } from 'src/assets/tools/Utils';
+import { api } from 'src/assets/tools/ApiCenter';
+import { redirect } from 'react-router-dom';
+import { config } from "../../config";
+const passwordSize = 8;
 
 export default function SignUp() {
     const [isPasswordHidden, setPasswordHidden] = useState(true)
-
+    const [isPasswordConfirmHidden, setPasswordConfirmHidden] = useState(true)
 
     function checkEmailValid(event: React.FocusEvent<HTMLInputElement>) {
         const email = event.target.value;
+        // request api to check if email is available
         if (email.length > 0) {
-            console.log(email);
+            api.get(config.apiUrl + '/auth/checkEmail/'+email)
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log("OK");
+                }
+                else if (response.status === 401) {
+                    console.log("Email already used");
+                }
+            }).catch((error) => {
+                console.log("Error " + error);
+            });
         }
     }
 
     function checkUsernameValid(event: React.FocusEvent<HTMLInputElement>) {
         const username = event.target.value;
         if (username.length > 0) {
-            console.log(username);
+            console.log(username); // TODO : check if username is available
         }
     }
 
@@ -25,10 +41,41 @@ export default function SignUp() {
             console.log("OK");
         }
     }
+
+    function passwordCaracteristicsOk(password: string): boolean {
+        return password.length >= passwordSize
+    }
+
+    function createAccount(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+        const email = document.getElementsByTagName("input").namedItem("email")?.value;
+        const username = document.getElementsByTagName("input").namedItem("username")?.value;
+        const password = document.getElementsByTagName("input").namedItem("password")?.value;
+        const passwordConfirm = document.getElementsByTagName("input").namedItem("passwordConfirm")?.value;
+        if (email && username && password && passwordConfirm && passwordCaracteristicsOk(password)) {
+            if (password === passwordConfirm) {
+                api.post(config.apiUrl + '/auth/signup', {
+                    email: email,
+                    username: username,
+                    password: password
+                }).then((response) => {
+                    if (response.status === 201) {
+                        console.log("OK");
+                        // redirect to home page
+                        window.location.href = '/';
+                    }
+                    else if (response.status === 401) {
+                        console.log("Email already used");
+                    }
+                }).catch((error) => {
+                    console.log("Error " + error);
+                });
+            }
+        }
+    }
     
-    function displayPasswordIcon(){
+    function displayPasswordIcon( passwordBoolean: boolean){
         return (
-            isPasswordHidden ? (
+            passwordBoolean ? (
                 <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -60,17 +107,18 @@ export default function SignUp() {
                         <label className="font-medium">
                             Email
                         </label>
-                        <svg className="w-6 h-6 text-gray-400 absolute left-3 inset-y-0 my-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
-                        </svg>
                         <input
                             id="email"
-                            onBlur={checkEmailValid}
+                            onBlur={(e) => {checkEmailValid(e); inputValidator(e)}}
                             type="email"
+                            autoComplete='email'
                             required
                             placeholder="Enter your email"
                             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                         />
+                        <span className="validationText flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1" style={{display:'none'}}>
+                            Email is required
+                        </span>
                     </div>
                     <div>
                         <label className="font-medium">
@@ -78,51 +126,69 @@ export default function SignUp() {
                         </label>
                         <input
                             id="username"
-                            onBlur={checkUsernameValid}
+                            onBlur={(e) => {checkUsernameValid(e); inputValidator(e)}}
                             type="text"
+                            autoComplete='username'
                             required
                             className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                         />
+                        <span className="validationText flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1" style={{display:'none'}}>
+                            Username is required
+                        </span>
                     </div>
-                    <div>
-                        <label className="text-gray-600">
+                    <div className=''>
+                        <label className="font-medium">
                             Password
                         </label>
-                        <div className="relative max-w-xs mt-2">
+                        <div className='relative'>
                             <button className="text-gray-400 absolute right-3 inset-y-0 my-auto active:text-gray-600"
                                 onClick={() => setPasswordHidden(!isPasswordHidden)}
                             >
-                                {displayPasswordIcon()}
+                                {displayPasswordIcon(isPasswordHidden)}
                             </button>
                             <input
                                 id="password"
                                 type={isPasswordHidden ? "password" : "text"}
-                                onBlur={checkPasswordValid}
+                                onBlur={(e) => {checkPasswordValid(e); inputValidator(e)}}
+                                autoComplete="new-password"
                                 placeholder="Enter your password"
                                 className="w-full pr-12 pl-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                             />
-                        </div>
+                            <span className="validationText flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1" style={{display:'none'}}>
+                                Password is required
+                            </span>
+                        </div >
                     </div >
-                    <div>
+                    <div className=''>
                         <label className="font-medium">
-                            Confirm Password
+                            Confirm password
                         </label>
-                        <input
-                            id="passwordConfirm"
-                            onBlur={checkPasswordValid}
-                            type="password"
-                            required
-                            className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                        />
-
+                        <div className='relative'>
+                            <button className="text-gray-400 absolute right-3 inset-y-0 my-auto active:text-gray-600"
+                                onClick={() => setPasswordHidden(!isPasswordConfirmHidden)}
+                            >
+                                {displayPasswordIcon(isPasswordConfirmHidden)}
+                            </button>
+                            <input
+                                id="passwordConfirm"
+                                type={isPasswordConfirmHidden ? "password" : "text"}
+                                onBlur={(e) => {checkPasswordValid(e); inputValidator(e)}}
+                                autoComplete="passwordConfirm"
+                                placeholder="Enter your password"
+                                className="w-full pr-12 pl-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                            />
+                            <span className="validationText flex items-center font-medium tracking-wide text-red-500 text-xs mt-1 ml-1" style={{display:'none'}}>
+                                Confirm password is required
+                            </span>
+                        </div>
                     </div>
-                    <button
+                    <button onClick={createAccount}
                         className="w-full px-4 py-2 text-white font-medium bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-600 rounded-lg duration-150"
                     >
                         Sign Up
                     </button>
                     <div className="text-center">
-                        <a href="javascript:void(0)" className="hover:text-indigo-600">Forgot password?</a>
+                        <a href="#" className="hover:text-indigo-600">Forgot password?</a>
                     </div>
                 </form>
             </div>

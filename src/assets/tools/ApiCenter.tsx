@@ -1,29 +1,41 @@
-import { loadJson } from "./Utils";
+import { getCookie } from "./Utils";
 
 export class ApiClass {
-    private instancce : ApiClass | null = null;
-    private url : string = "";
-    private constructor() {
-        if (this.instancce) {
-            return this.instancce;
+    private static instance : ApiClass | null = null;
+    public constructor() {
+        if (ApiClass.instance) {
+            return ApiClass.instance;
         }
-        this.instancce = this;
+        ApiClass.instance = this;
     }
-
-    public static async getInstancce() {
-        const api = new ApiClass();
-        api.url = await loadJson("config.json").then((data:any) => data.url);
-        return api;
-    }
-
     public async request(path: string, method: string, body: any) {
+        function updateTokenApi(xhr: XMLHttpRequest) {
+            if (xhr.response == null){
+                return;
+            }
+            const token = xhr.response.token;
+            if (token)
+                document.cookie = `token=${token}`;
+            
+        }
+
         return new Promise<any>((resolve, reject) => {
             const xhr = new XMLHttpRequest();
-            xhr.open(method, this.url + path);
+            xhr.open(method, path);
+            xhr.setRequestHeader("Content-Type", "application/json");
+
+            const token = getCookie("token");
+            if (token)
+                xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
             xhr.responseType = "json";
-            xhr.onload = () => resolve(xhr.response);
+            xhr.onload = () =>{
+                updateTokenApi(xhr);
+                return resolve(xhr)
+            };
             xhr.onerror = () => reject(xhr.statusText);
-            xhr.send(body);
+            xhr.send(JSON.stringify(body));
+            console.log(JSON.stringify(body));
         });
     }
 
@@ -44,3 +56,5 @@ export class ApiClass {
     }
 
 }
+
+export const api = new ApiClass();

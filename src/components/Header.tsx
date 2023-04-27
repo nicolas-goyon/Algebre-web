@@ -11,7 +11,9 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
-import SignModal from './SignModal'
+import { api } from 'src/assets/tools/ApiCenter';
+import { getCookie } from 'src/assets/tools/Utils';
+import { config } from 'src/config';
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -30,9 +32,23 @@ function classNames(...classes : String[]) {
 }
 
 function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const loginButton = useRef(null)
-  return (
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const loginButton = useRef(null)
+
+    // if token is present, request user data
+    // if not, show login button
+    const token = getCookie("token");
+    if (token) {
+        api.get(config.apiUrl + "/users/me").then((res) => {
+            console.log(res.data);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
+
+
+
+    return (
     <header className="bg-white border-b-2">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
