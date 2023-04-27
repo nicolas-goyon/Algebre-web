@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Fragment, useState, useRef } from 'react'
 import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react'
 import {
@@ -11,9 +11,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
-import { api } from 'src/assets/tools/ApiCenter';
-import { getCookie } from 'src/assets/tools/Utils';
-import { config } from 'src/config';
+import { ProfileDropDown } from './ProfileDropDown';
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -31,22 +29,14 @@ function classNames(...classes : String[]) {
   return classes.filter(Boolean).join(' ')
 }
 
+
+
+
+
+
 function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const loginButton = useRef(null)
-
-    // if token is present, request user data
-    // if not, show login button
-    const token = getCookie("token");
-    if (token) {
-        api.get(config.apiUrl + "/users/me").then((res) => {
-            console.log(res.data);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }
-
-
 
     return (
     <header className="bg-white border-b-2">
@@ -78,10 +68,12 @@ function Header() {
             Playground
           </a>
         </Popover.Group>
+        {/*  */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-          <a href="/signin" ref={loginButton} id="login-button" className="text-sm font-semibold leading-6 text-gray-900">
-            Sign in <span aria-hidden="true">&rarr;</span>
-          </a>
+            <ProfileDropDown 
+                class="hidden lg:block"
+                loginButton={loginButton}
+            />
         </div>
       </nav>
       {/* SI c'est sur tel */}
@@ -168,7 +160,6 @@ function Header() {
         </Dialog.Panel>
       </Dialog>
       {/* FIN si c'est sur tel */}
-      {/* <SignModal openButton={loginButton} /> */}
     </header>
   )
 }
