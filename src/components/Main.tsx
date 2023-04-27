@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider }  from 'react-router-dom';
 
-import { Home, Playground, SignIn, SignUp } from './Pages';
+import { Home, Logout, Playground, SignIn, SignUp } from './Pages';
 
 export default function Main(prop: any) {
 
@@ -18,6 +18,10 @@ export default function Main(prop: any) {
         {
             path: "/signup",
             element: <SignUp/>,
+        },
+        {
+            path: "/logout",
+            element: <Logout/>,
         },
         {
             path: "/",

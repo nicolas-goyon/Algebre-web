@@ -35,7 +35,6 @@ export class ApiClass {
             };
             xhr.onerror = () => reject(xhr.statusText);
             xhr.send(JSON.stringify(body));
-            console.log(JSON.stringify(body));
         });
     }
 
