@@ -122,28 +122,30 @@ export default function Demo(prop: any) {
   useEffect(() => {
     // Si le workspace n'est pas défini, on le crée
     if (blockWorkspace === undefined) {
-      setBlockWorkspace(
-        blockWorkspace => Blockly.inject(
-          'blocklyDiv',
-          options
+        setBlockWorkspace(
+            blockWorkspace => Blockly.inject(
+                'blocklyDiv',
+                options
+            )
         )
-      )
-      console.log("blockWorkspace created");
+        console.log("blockWorkspace created");
     } // fin si
     if(blockWorkspace !== undefined && !firstLoad) {
-      setFirstLoad(true);
-      blockWorkspace.addChangeListener(updateCode);
-      window.addEventListener('resize', onresize, false);
-      var workspace = blockWorkspace;
-      javascriptGenerator.init(workspace);
-      var x = 100.0;
-      var y = 100.0;
-      console.log(x, y);
-      // Créer un bloc "base" et le placer au centre du workspace.
-      var baseBlock = workspace.newBlock('debut');
-      baseBlock.initSvg();
-      baseBlock.render();
-      baseBlock.moveBy(x, y);
+        setFirstLoad(true);
+        blockWorkspace.addChangeListener(updateCode);
+        window.addEventListener('resize', onresize, false);
+        var workspace = blockWorkspace;
+        javascriptGenerator.init(workspace);
+        var x = 100.0;
+        var y = 100.0;
+        console.log(x, y);
+        // Créer un bloc "base" et le placer au centre du workspace.
+        var baseBlock = workspace.newBlock('debut');
+        baseBlock.initSvg();
+        baseBlock.setDeletable(false);
+        baseBlock.setMovable(false);
+        baseBlock.render();
+        baseBlock.moveBy(x, y);
     }
   });
 
