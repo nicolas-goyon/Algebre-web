@@ -3,6 +3,8 @@ import Blockly from "blockly";
 import {javascriptGenerator} from 'blockly/javascript'
 import { options } from '../../assets/tools/initBlockly';
 import { MathJax } from 'better-react-mathjax';
+import { api } from 'src/assets/tools/ApiCenter';
+import { config } from 'src/config';
 
 
 
@@ -14,36 +16,32 @@ export default function Demo(prop: any) {
     if (blockWorkspace === undefined) {
       return;
     }
-    // if (event.type == Blockly.Events.BLOCK_DRAG ){
-      var workspace = blockWorkspace;
-      // get blocs that have no parent
-      var topBlocks = workspace.getTopBlocks(false);
-      var baseBlock = null;
-      // Trouve le bloc "debut".   
+    var workspace = blockWorkspace;
+    // get blocs that have no parent
+    var topBlocks = workspace.getTopBlocks(false);
+    var baseBlock = null;
+    // Trouve le bloc "debut".   
 
-      for (var i = 0; i < topBlocks.length; i++) {
-        console.log(topBlocks[i].type);
+    for (var i = 0; i < topBlocks.length; i++) {
         if (topBlocks[i].type === 'debut') {
-          baseBlock = topBlocks[i];
-          break;
+            baseBlock = topBlocks[i];
+            break;
         }
-      
-      }
     
-      // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
-      if (baseBlock) {
-        // console.log(firstChildBlock);
+    }
+
+    // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
+    if (baseBlock) {
         var code = "";
-        // code = javascriptGenerator.blockToCode(baseBlock);
         code = javascriptGenerator.blockToCode(baseBlock);
         // afficher le code dans la zone d'affichage
         if(code != null && code.length > 0){
-          setDemoLatex('$' + code + '$');
+            setDemoLatex('$' + code + '$');
         }
-        console.log(code)
-      }
-    // }
+    }
   }
+
+  
   function onresize(e: any) {
     const blocklyArea = document.getElementById('blocklyArea');
     const blocklyDiv = document.getElementById('blocklyDiv');
@@ -73,6 +71,52 @@ export default function Demo(prop: any) {
     blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
     Blockly.svgResize(blockWorkspace);
   };
+
+  function saveWorkspace(e: any){
+    if (blockWorkspace === undefined) {
+      return;
+    }
+    var workspace = blockWorkspace;
+    // save the workspace to JSON format and print to console
+    const state = serializer.save(workspace);
+    console.log("saveWorkspace", state);
+    // Request api to save the workspace
+    const data = {
+        "workspace": JSON.stringify(state),
+    }
+    api.post(config.apiUrl +'/workspace/save', data)
+    .then((res) => {
+        console.log("Workspace saved");
+        console.log(res);
+    })
+    .catch((err) => {
+        console.log("Workspace not saved");
+        console.log(err);
+    });
+
+  }
+
+    function loadWorkspace(e: any){
+        // Request api to load the workspace
+        api.get(config.apiUrl +'/workspace/load')
+        .then((res) => {
+            console.log("Workspace loaded");
+            console.log(res);
+            if (blockWorkspace === undefined) {
+                return;
+            }
+            var workspace = blockWorkspace;
+            
+            // load the workspace from JSON format
+            workspace.clear();
+            serializer.load(res.response.workspace, workspace);
+        })
+        .catch((err) => {
+            console.log("Workspace not loaded");
+            console.log(err);
+        });
+    }
+
 
 
   useEffect(() => {
@@ -104,18 +148,29 @@ export default function Demo(prop: any) {
   });
 
   var blocklyDivStyle = { height: 600, width: '100%' }
+  const serializer = new Blockly.serialization.blocks.BlockSerializer();
+
+  var demoSavedWorkspace =  "{\"languageVersion\":0,\"blocks\":[{\"type\":\"debut\",\"id\":\"{GEA7nxgv#*Sf6aoJ|:|\",\"x\":100,\"y\":100,\"next\":{\"block\":{\"type\":\"difference\",\"id\":\"6r@FzCtTN8r;2w}fUytK\",\"inputs\":{\"ensemble1\":{\"block\":{\"type\":\"produit\",\"id\":\"z@9tv~i6QL)sFH_I)B8,\"}}}}}}]}";
 
   return (
     <div>
-    <div id="blocklyArea" className='w-full'>
-      <div id="blocklyDiv" style={blocklyDivStyle}></div>
-    </div>
-    <div>
-      {/* Zone d'affichage du latex, zone ressemblant à une zone de code */}
-      <div id="latexDiv" className='overflow-x-scroll bg-black rounded-md text-white'>
-        <MathJax dynamic id="latex">{demoLatex}</MathJax>
-      </div>
-    </div>
+        <div id="blocklyArea" className='w-full'>
+        <div id="blocklyDiv" style={blocklyDivStyle}></div>
+        </div>
+        <div>
+        {/* Zone d'affichage du latex, zone ressemblant à une zone de code */}
+        <div id="latexDiv" className='overflow-x-scroll bg-black rounded-md text-white'>
+            <MathJax dynamic id="latex">{demoLatex}</MathJax>
+        </div>
+        </div>
+        {/* Save button */}
+        <div className='flex justify-center'>
+            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={saveWorkspace}>Save</button>
+        </div>
+        {/* load button */}
+        <div className='flex justify-center'>
+            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={loadWorkspace}>Load</button>
+        </div>
     </div>
   );    
 }

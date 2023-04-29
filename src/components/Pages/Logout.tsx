@@ -22,4 +22,4 @@ export default function Logout(prop: any) {
         </div>
     )
     
-    } 
+} 
