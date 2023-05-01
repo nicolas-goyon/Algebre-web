@@ -12,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 import ProfileDropDown from './Profile/ProfileDropDown';
+import { DevWarning } from './Alertes/DevWarning';
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -61,8 +62,8 @@ function Header() {
           <a href="/exercices" className="text-sm font-semibold leading-6 text-gray-900">
             Exercices
           </a>
-          <a href="#" className="text-sm font-semibold leading-6 text-gray-900">
-            TBA
+          <a href="/workspaces" className="text-sm font-semibold leading-6 text-gray-900">
+            Mes Workspaces
           </a>
           <a href="/playground" className="text-sm font-semibold leading-6 text-gray-900">
             Playground
@@ -76,6 +77,7 @@ function Header() {
             />
         </div>
       </nav>
+      <DevWarning />
       {/* SI c'est sur tel */}
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
         <div className="fixed inset-0 z-10" />

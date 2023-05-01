@@ -5,9 +5,7 @@ import { config } from 'src/config';
 
 export default
  function SignIn() {
-    const [isPasswordHidden, setPasswordHidden] = useState(true)
-    // TODO : make function for password icon
-    
+    const [isPasswordHidden, setPasswordHidden] = useState(true)// TODO : make function for password icon
 
     // Request to check email and password
     async function checkEmailPassword(event: React.FormEvent<HTMLFormElement>) {
@@ -17,23 +15,27 @@ export default
         const email = emailElement.value;
         const passwordElement = document.getElementById("password") as HTMLInputElement;
         const password = passwordElement.value;
-        if (email && password) {
-            api.post(config.apiUrl + '/auth/login', {
-                email: email,
-                password: password
-            })
-            .then((response) => {
-                if (response.status === 201) {
-                    console.log("OK");
-                    window.location.href = '/';
-                }
-                else if (response.status === 401) {
-                    console.log("Email or password incorrect");
-                }
-            }).catch((error) => {
-                console.log("Error " + error);
-            });
+
+        if(!email || !password){
+            console.log("Email or password incorrect");
+            return;
         }
+
+        api.post(config.apiUrl + '/auth/login', {
+            email: email,
+            password: password
+        })
+        .then((response) => {
+            if (response.status === 201) {
+                console.log("OK");
+                window.location.href = '/';
+            }
+            else if (response.status === 401) {
+                console.log("Email or password incorrect");
+            }
+        }).catch((error) => {
+            console.log("Error " + error);
+        });
     }
 
 

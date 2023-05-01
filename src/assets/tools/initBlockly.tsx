@@ -2,7 +2,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit } from '../../assets/classes/Noeuds';
 import * as Blockly from "blockly";
 
-// export const sampleGenerator : Blockly.CodeGenerator = new Blockly.Generator('Algebre')
+export const sampleGenerator : any = new Blockly.Generator('Algebre')
 
 Blockly.defineBlocksWithJsonArray([
     Renommage.toBlockly(),
@@ -88,71 +88,81 @@ Blockly.defineBlocksWithJsonArray([
     return code;
   }
 
-    // sampleGenerator['renommage'] = function(block: any) {
-    //     var value_champs = sampleGenerator.statementToCode(block, 'Champs');
-    //     var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
-    //     var code = '\\rho_{' + value_champs + ' }(' + statements_elements + ')';
-    //     return code;
-    // };
-    // sampleGenerator['selection'] = function(block: any) {
-    //     var value_champs = sampleGenerator.statementToCode(block, 'Champs');
-    //     var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
-    //     var code = '\\sigma_{' + value_champs + '}(' + statements_elements + ')';
-    //     return code;
-    // };
+    sampleGenerator['renommage'] = function(block: any) {
+        console.log("renommage");
+        var value_champs = sampleGenerator.statementToCode(block, 'Champs');
+        var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
+        var code = '\\rho_{' + value_champs + ' }(' + statements_elements + ')';
+        return code;
+    };
+    sampleGenerator['selection'] = function(block: any) {
+        console.log("selection");
+        var value_champs = sampleGenerator.statementToCode(block, 'Champs');
+        var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
+        var code = '\\sigma_{' + value_champs + '}(' + statements_elements + ')';
+        return code;
+    };
 
-    // sampleGenerator['projection'] = function(block: any) {
-    //     var value_champs = sampleGenerator.statementToCode(block, 'Champs');
-    //     var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
-    //     var code = '\\pi_{' + value_champs + ' }(' + statements_elements + ')';
-    //     return code;
-    // };
+    sampleGenerator['projection'] = function(block: any) {
+        console.log("projection");
+        var value_champs = sampleGenerator.statementToCode(block, 'Champs');
+        var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
+        var code = '\\pi_{' + value_champs + ' }(' + statements_elements + ')';
+        return code;
+    };
 
-    // sampleGenerator['ensemble'] = function(block: any) {
-    //     var value_champs = sampleGenerator.statementToCode(block, 'name');
-    //     var code = value_champs;
-    //     return code;
-    // };
+    sampleGenerator['ensemble'] = function(block: any) {
+        console.log("ensemble");
+        var value_champs = sampleGenerator.statementToCode(block, 'name');
+        var code = value_champs;
+        return code;
+    };
 
-    // sampleGenerator['text'] = function(block: any) {
-    //     const textValue = block.getFieldValue('TEXT');
-    //     var code = textValue;
-    //     return code;
-    // }
+    sampleGenerator['text'] = function(block: any) {
+        console.log("text");
+        const textValue = block.getFieldValue('TEXT');
+        var code = textValue;
+        return code;
+    }
 
-    // sampleGenerator['difference'] = function(block: any) {
-    //     var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
-    //     var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
-    //     var code = '(' + statements_elements1 + ') \/ (' + statements_elements2 + ')';
-    //     return code;
-    // }
+    sampleGenerator['difference'] = function(block: any) {
+        console.log("difference");
+        var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \/ (' + statements_elements2 + ')';
+        return code;
+    }
 
-    // sampleGenerator['intersection'] = function(block: any) {
-    //     var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
-    //     var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
-    //     var code = '(' + statements_elements1 + ') \\cup (' + statements_elements2 + ')';
-    //     return code;
-    // }
+    sampleGenerator['intersection'] = function(block: any) {
+        console.log("intersection");
+        var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\cup (' + statements_elements2 + ')';
+        return code;
+    }
 
-    // sampleGenerator['union'] = function(block: any) {
-    //     var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
-    //     var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
-    //     var code = '(' + statements_elements1 + ') \\cap (' + statements_elements2 + ')';
-    //     return code;
-    // }
+    sampleGenerator['union'] = function(block: any) {
+        console.log("union");
+        var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\cap (' + statements_elements2 + ')';
+        return code;
+    }
 
-    // sampleGenerator['produit'] = function(block: any) {
-    //     var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
-    //     var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
-    //     var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
-    //     return code;
-    // }
+    sampleGenerator['produit'] = function(block: any) {
+        console.log("produit");
+        var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
+        return code;
+    }
 
-    // sampleGenerator['debut'] = function(block: any) {
-    //     var statements_elements = sampleGenerator.statementToCode(block, 'nextStatement');
-    //     var code = statements_elements;
-    //     return code;
-    // }
+    sampleGenerator['debut'] = function(block: any) {
+        console.log("debut");
+        var statements_elements = sampleGenerator.statementToCode(block, 'nextStatement');
+        var code = statements_elements;
+        return code;
+    }
 
 
 

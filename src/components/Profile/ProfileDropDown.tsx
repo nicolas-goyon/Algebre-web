@@ -4,6 +4,8 @@ import { config } from 'src/config';
 import React, { useEffect, useRef, useState } from 'react';
 import UserButton from './UserButton';
 
+
+
 // Profile Dropdown
 export default function ProfileDropDown(props: any){
 
@@ -14,33 +16,31 @@ export default function ProfileDropDown(props: any){
             Sign in <span aria-hidden="true">&rarr;</span>
           </a>
    )
+
+    async function getUserInfo(){
+        const token = getCookie("token");
+        if (token === undefined || token === null || token === ""){
+            console.log("token not present ");
+            return;
+        }
+        
+        await api
+        .get(config.apiUrl + "/users/me")
+        .then((res) => {
+            console.log("users me Ok status ");
+            if (res.status === 401)
+                return;
+            
+            let pseudo = res.response.pseudo;
+            let email = res.response.email;
+            setInfo( <UserButton pseudo={pseudo} email={email} class="hidden lg:block" /> )
+        }).catch((err) => {
+            console.log(err);
+        });
+    }
     
     useEffect(() => {
-        if (!rendered) {
-            setRendered(true)
-            const token = getCookie("token");
-            if (token !== "") {
-                api.get(config.apiUrl + "/users/me").then((res) => {
-                    console.log("users me Ok status ");
-                    if (res.status === 401)
-                        return;
-                    let pseudo = res.response.pseudo;
-                    let email = res.response.email;
-                    setInfo(
-                        <UserButton
-                            pseudo={pseudo}
-                            email={email}
-                            class="hidden lg:block"
-                        />
-                    )
-                }).catch((err) => {
-                    console.log(err);
-                });
-            }
-            else {
-                console.log("token not present ");
-            }
-        }
+        getUserInfo();
     }, [])
     
     return (info);

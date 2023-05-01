@@ -11,20 +11,23 @@ export default function SignUp() {
 
     function checkEmailValid(event: React.FocusEvent<HTMLInputElement>) {
         const email = event.target.value;
-        // request api to check if email is available
-        if (email.length > 0) {
-            api.get(config.apiUrl + '/auth/checkEmail/'+email)
-            .then((response) => {
-                if (response.status === 200) {
-                    console.log("OK");
-                }
-                else if (response.status === 401) {
-                    console.log("Email already used");
-                }
-            }).catch((error) => {
-                console.log("Error " + error);
-            });
+
+        if(email.length === 0){
+            return;
         }
+
+        // request api to check if email is available
+        api.get(config.apiUrl + '/auth/checkEmail/'+email)
+        .then((response) => {
+            if (response.status === 200) {
+                console.log("OK");
+            }
+            else if (response.status === 401) {
+                console.log("Email already used");
+            }
+        }).catch((error) => {
+            console.log("Error " + error);
+        });
     }
 
     function checkUsernameValid(event: React.FocusEvent<HTMLInputElement>) {
@@ -51,28 +54,37 @@ export default function SignUp() {
         const username = document.getElementsByTagName("input").namedItem("username")?.value;
         const password = document.getElementsByTagName("input").namedItem("password")?.value;
         const passwordConfirm = document.getElementsByTagName("input").namedItem("passwordConfirm")?.value;
-        if (email && username && password && passwordConfirm && passwordCaracteristicsOk(password)) {
-            if (password === passwordConfirm) {
-                api.post(config.apiUrl + '/auth/signup', {
-                    email: email,
-                    username: username,
-                    password: password
-                }).then((response) => {
-                    if (response.status === 201) {
-                        console.log("OK");
-                        // redirect to home page
-                        window.location.href = '/';
-                    }
-                    else if (response.status === 401) {
-                        console.log("Email already used");
-                    }
-                }).catch((error) => {
-                    console.log("Error " + error);
-                });
-            }
+        
+        if (!(email && username && password && passwordConfirm && passwordCaracteristicsOk(password))) {
+            console.log("Email or username or password incorrect");
+            return;
         }
+
+        if (password !== passwordConfirm) {
+            console.log("Password and password confirmation are not the same");
+            return;
+        }
+
+        api.post(config.apiUrl + '/auth/signup', {
+            email: email,
+            username: username,
+            password: password
+        }).then((response) => {
+            if (response.status === 201) {
+                console.log("OK");
+                // redirect to home page
+                window.location.href = '/';
+            }
+            else if (response.status === 401) {
+                console.log("Email already used");
+            }
+        }).catch((error) => {
+            console.log("Error " + error);
+        });
     }
     
+
+
     function displayPasswordIcon( passwordBoolean: boolean){
         return (
             passwordBoolean ? (
