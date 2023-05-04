@@ -41,7 +41,7 @@ export class Ensemble extends Noeud{
     static toBlockly(): any{
         return {
             "type": "ensemble",
-            "message0": "nom ensemble %1",
+            "message0": "nom relation %1",
             "args0": [
               {
                 "type": "input_value",

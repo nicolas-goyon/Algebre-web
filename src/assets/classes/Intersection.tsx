@@ -67,7 +67,7 @@ export class Intersection extends Noeud{
     static toBlockly(): any {
         return {
             "type": "intersection",
-            "message0": "intersection ensemble1 %1 ensemble2 %2",
+            "message0": "intersection Relation 1 %1 Relation 2 %2",
             "args0": [
               {
                 "type": "input_statement",

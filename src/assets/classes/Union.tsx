@@ -68,7 +68,7 @@ export class Union extends Noeud{
     static toBlockly(): any {
         return {
             "type": "union",
-            "message0": "union ensemble1 %1 ensemble2 %2",
+            "message0": "union Relation 1 %1 Relation 2 %2",
             "args0": [
               {
                 "type": "input_statement",

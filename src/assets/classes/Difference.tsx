@@ -69,7 +69,7 @@ export class Difference extends Noeud{
     static toBlockly(): any {
         return {
             "type": "difference",
-            "message0": "difference ensemble1 %1 ensemble2 %2",
+            "message0": "difference Relation 1 %1 Relation 2 %2",
             "args0": [
               {
                 "type": "input_statement",

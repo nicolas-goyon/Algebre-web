@@ -71,7 +71,7 @@ export class Projection extends Noeud{
     static toBlockly(): any{
         return {
             "type": "projection",
-            "message0": "Projection %1 Ensemble %2",
+            "message0": "Projection %1 Relation %2",
             "args0": [
               {
                 "type": "input_value",

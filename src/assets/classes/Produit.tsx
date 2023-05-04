@@ -65,7 +65,7 @@ export class Produit extends Noeud{
     static toBlockly(): any {
         return {
             "type": "produit",
-            "message0": "produit ensemble1 %1 ensemble2 %2",
+            "message0": "produit Relation 1 %1 Relation 2 %2",
             "args0": [
               {
                 "type": "input_statement",

@@ -70,7 +70,7 @@ export class Renommage extends Noeud{
     static toBlockly(): any {
         return {
             "type": "renommage",
-            "message0": "Renommage %1 Ensemble %2",
+            "message0": "Renommage %1 Relation %2",
             "args0": [
               {
                 "type": "input_value",
