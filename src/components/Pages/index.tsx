@@ -3,5 +3,6 @@ import Playground from './Playground';
 import SignIn from './SignIn';
 import SignUp from './SignUp';
 import Logout from './Logout';
-import WorkspaceList from './WorkspaceList';
-export { Home, Playground, SignIn, SignUp, Logout, WorkspaceList };
+import Workspaces from './Workspaces';
+import Workspace, { loader as WorspaceLoader} from './Workspace';
+export { Home, Playground, SignIn, SignUp, Logout, Workspaces, Workspace, WorspaceLoader };

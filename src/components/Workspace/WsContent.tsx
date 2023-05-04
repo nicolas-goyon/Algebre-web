@@ -8,10 +8,12 @@ import { config } from 'src/config';
 
 
 
-export default function Demo(prop: any) {
+export default function WsContent(prop: any) {
     const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
     const [demoLatex, setDemoLatex] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(false);
+    var blocklyDivStyle = { height: 600, width: '100%' }
+    const serializer = new Blockly.serialization.blocks.BlockSerializer();
 
     
     function updateCode(event : Blockly.Events.Abstract) {
@@ -97,9 +99,9 @@ export default function Demo(prop: any) {
 
     }
 
-    function loadWorkspace(e: any){
+    function loadWorkspace(id : number | null){
         // Request api to load the workspace
-        api.get(config.apiUrl +'/workspace/load')
+        api.get(config.apiUrl +'/workspace/load/' + id)
         .then((res) => {
             console.log("Workspace loaded");
             console.log(res);
@@ -150,10 +152,12 @@ export default function Demo(prop: any) {
             baseBlock.render();
             baseBlock.moveBy(x, y);
         }
+
+        if( blockWorkspace !== undefined &&  prop !== undefined && prop.id !== undefined && prop.id !== null && !firstLoad){
+            loadWorkspace(prop.id);
+        }
     }, [blockWorkspace, firstLoad]);
 
-    var blocklyDivStyle = { height: 600, width: '100%' }
-    const serializer = new Blockly.serialization.blocks.BlockSerializer();
     
     return (
         <div>
@@ -169,10 +173,6 @@ export default function Demo(prop: any) {
             {/* Save button */}
             <div className='flex justify-center'>
                 <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={saveWorkspace}>Save</button>
-            </div>
-            {/* load button */}
-            <div className='flex justify-center'>
-                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={loadWorkspace}>Load</button>
             </div>
         </div>
     );    

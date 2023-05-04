@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { Fragment, useState, useRef } from 'react'
-import { Dialog, Disclosure, Popover, Transition } from '@headlessui/react'
+import React, { useState , useRef } from 'react';
+import { Dialog, Disclosure, Popover } from '@headlessui/react'
 import {
   ArrowPathIcon,
   Bars3Icon,

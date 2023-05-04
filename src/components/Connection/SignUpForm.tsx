@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { inputValidator } from 'src/assets/tools/Utils';
 import { api } from 'src/assets/tools/ApiCenter';
-import { redirect } from 'react-router-dom';
 import { config } from "../../config";
 const passwordSize = 8;
 
@@ -177,7 +176,7 @@ export default function SignUp() {
                         </label>
                         <div className='relative'>
                             <button className="text-gray-400 absolute right-3 inset-y-0 my-auto active:text-gray-600"
-                                onClick={() => setPasswordHidden(!isPasswordConfirmHidden)}
+                                onClick={() => setPasswordConfirmHidden(!isPasswordConfirmHidden)}
                             >
                                 {displayPasswordIcon(isPasswordConfirmHidden)}
                             </button>

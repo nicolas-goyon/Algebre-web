@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React /*, { useState }*/ from 'react';
 import {api} from 'src/assets/tools/ApiCenter';
 import { inputValidator } from 'src/assets/tools/Utils';
 import { config } from 'src/config';
 
 export default
  function SignIn() {
-    const [isPasswordHidden, setPasswordHidden] = useState(true)// TODO : make function for password icon
+    // const [isPasswordHidden, setPasswordHidden] = useState(true)// TODO : make function for password icon
 
     // Request to check email and password
     async function checkEmailPassword(event: React.FormEvent<HTMLFormElement>) {

@@ -1,7 +1,7 @@
 import { api } from 'src/assets/tools/ApiCenter';
 import { getCookie } from 'src/assets/tools/Utils';
 import { config } from 'src/config';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserButton from './UserButton';
 
 
@@ -9,7 +9,7 @@ import UserButton from './UserButton';
 // Profile Dropdown
 export default function ProfileDropDown(props: any){
 
-    const [rendered, setRendered] = useState(false)
+    // const [rendered, setRendered] = useState(false)
 
     const [info, setInfo] = useState(
         <a href="/signin" ref={props.loginButton} id="login-button" className="text-sm font-semibold leading-6 text-gray-900">
