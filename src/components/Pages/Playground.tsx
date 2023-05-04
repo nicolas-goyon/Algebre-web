@@ -1,5 +1,5 @@
 import React from "react";
-import Demo from '../Playground/Demo';
+import WsContent from "../Workspace/WsContent";
 
 export default function Playground() {
     return (
@@ -9,6 +9,6 @@ export default function Playground() {
                 Bienvenue dans le Playground
             </h1>
         </div>
-        <Demo/>
+        <WsContent noSave noLoad />
     </div>
 )};

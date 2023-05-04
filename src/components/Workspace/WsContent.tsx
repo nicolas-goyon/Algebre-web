@@ -78,7 +78,11 @@ export default function WsContent(prop: any) {
         Blockly.svgResize(blockWorkspace);
     };
 
-    function saveWorkspace(e: any){
+    function saveWorkspace(e: any){ 
+        if(prop.noSave === false || prop.noSave === undefined){
+            return;
+        }
+
         if (blockWorkspace === undefined) {
             return;
         }
@@ -86,6 +90,7 @@ export default function WsContent(prop: any) {
         const state = serializer.save(workspace);
         const data = {
             "workspace": JSON.stringify(state),
+            "workspaceId": prop.id,
         }
         api.post(config.apiUrl +'/workspace/save', data)
         .then((res) => {
@@ -100,6 +105,10 @@ export default function WsContent(prop: any) {
     }
 
     function loadWorkspace(id : number | null){
+        if(prop.noLoad === true){
+            return;
+        }
+
         // Request api to load the workspace
         api.get(config.apiUrl +'/workspace/load/' + id)
         .then((res) => {
@@ -153,7 +162,7 @@ export default function WsContent(prop: any) {
             baseBlock.moveBy(x, y);
         }
 
-        if( blockWorkspace !== undefined &&  prop !== undefined && prop.id !== undefined && prop.id !== null && !firstLoad){
+        if( blockWorkspace !== undefined &&  prop !== undefined && prop.id !== undefined && prop.id !== null && !firstLoad && (prop.noLoad === false || prop.noLoad === undefined )){
             loadWorkspace(prop.id);
         }
     }, [blockWorkspace, firstLoad]);
@@ -171,9 +180,12 @@ export default function WsContent(prop: any) {
             </div>
             </div>
             {/* Save button */}
-            <div className='flex justify-center'>
-                <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={saveWorkspace}>Save</button>
-            </div>
+            {prop.noSave === undefined || prop.noSave === false ?
+                <div className='flex justify-center'>
+                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={saveWorkspace}>Save</button>
+                </div>
+            : null
+            }
         </div>
     );    
 }

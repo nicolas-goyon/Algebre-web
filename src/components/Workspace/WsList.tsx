@@ -51,7 +51,7 @@ export default function WsList(prop: any) {
                 ))
         console.log(dataRaw);
         let newData = (
-            <div id="WorkspaceList" className="flex flex-wrap justify-center">
+            <div id="WorkspaceList" className="flex flex-wrap justify-center gap-4">
                 {dataRaw.map((item, index) => (<WsListComponent id={item.id} title={item.title} key={index}/>))}
             </div>
         )

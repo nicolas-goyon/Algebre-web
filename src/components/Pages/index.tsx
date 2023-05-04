@@ -5,4 +5,5 @@ import SignUp from './SignUp';
 import Logout from './Logout';
 import Workspaces from './Workspaces';
 import Workspace, { loader as WorspaceLoader} from './Workspace';
-export { Home, Playground, SignIn, SignUp, Logout, Workspaces, Workspace, WorspaceLoader };
+import CreateWorkspace from './CreateWorkspace';
+export { Home, Playground, SignIn, SignUp, Logout, Workspaces, Workspace, WorspaceLoader, CreateWorkspace };

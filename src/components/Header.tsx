@@ -12,6 +12,7 @@ import {
 import { ChevronDownIcon, PhoneIcon, PlayCircleIcon } from '@heroicons/react/20/solid'
 import ProfileDropDown from './Profile/ProfileDropDown';
 import { DevWarning } from './Alertes/DevWarning';
+import { getCookie } from 'src/assets/tools/Utils';
 
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
@@ -38,6 +39,9 @@ function Header() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const loginButton = useRef(null)
 
+    const token = getCookie("token");
+
+
     return (
     <header className="bg-white border-b-2">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8" aria-label="Global">
@@ -61,9 +65,12 @@ function Header() {
           <a href="/exercices" className="text-sm font-semibold leading-6 text-gray-900">
             Exercices
           </a>
-          <a href="/workspaces" className="text-sm font-semibold leading-6 text-gray-900">
-            Mes Workspaces
-          </a>
+          { !(token === undefined || token === null || token === "") ?
+            <a href="/workspaces" className="text-sm font-semibold leading-6 text-gray-900">
+                Mes Workspaces
+            </a>
+          : null
+          }
           <a href="/playground" className="text-sm font-semibold leading-6 text-gray-900">
             Playground
           </a>
