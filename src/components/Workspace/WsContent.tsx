@@ -1,14 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import Blockly from "blockly";
-import {javascriptGenerator} from 'blockly/javascript'
-import { options, sampleGenerator } from '../../assets/tools/initBlockly';
+import { options, javascriptGen, sampleGenerator } from '../../assets/tools/initBlockly';
 import { MathJax } from 'better-react-mathjax';
 import { api } from 'src/assets/tools/ApiCenter';
 import { config } from 'src/config';
+import Table from '../Utils/Table';
+import CsvInput from '../Input/CsvInput';
+import csvReader from 'src/assets/tools/CsvUtils';
 
 
 
 export default function WsContent(prop: any) {
+    // TODO : remove
+    const dummyTableColumnNames = [
+        "Nom",
+        "Prénom",
+        "Age",
+    ];
+
+    const dummyTableData = [
+        ["Doe", "John", "42"],
+        ["Doe", "Jane", "43"],
+        ["Dark", "John", "32"],
+        ["Dark", "Jane", "33"],
+        ["Lenon", "John", "22"],
+    ];
+    const [inputArray, setInputArray] = useState(
+        [
+            {
+                title: "table1",
+                data: dummyTableData,
+                columnNames: dummyTableColumnNames,
+                isShrinkable: true,
+            },
+            {
+                title: "table2",
+                data: dummyTableData,
+                columnNames: dummyTableColumnNames,
+                isShrinkable: true,
+            },
+            {
+                title: "table3",
+                data: dummyTableData,
+                columnNames: dummyTableColumnNames,
+                isShrinkable: false,
+            }
+        ]
+    );
     const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
     const [demoLatex, setDemoLatex] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(false);
@@ -38,13 +76,17 @@ export default function WsContent(prop: any) {
         
         // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
         var code = "";
-        code = javascriptGenerator.blockToCode(baseBlock);
+        code = javascriptGen.blockToCode(baseBlock);
         let code2 = sampleGenerator.blockToCode(baseBlock);
+        console.log(code);
         console.log("test"); // TODO : remove
         console.log(code2); // TODO : remove
         // afficher le code dans la zone d'affichage
         if(code != null && code.length > 0){
             setDemoLatex('$' + code + '$');
+        }
+        else if (code.length === 0){
+            setDemoLatex('');
         }
     }   
 
@@ -79,11 +121,13 @@ export default function WsContent(prop: any) {
     };
 
     function saveWorkspace(e: any){ 
-        if(prop.noSave === false || prop.noSave === undefined){
+        if(prop.noSave === true){
+            console.log("Workspace can not be saved");
             return;
         }
 
         if (blockWorkspace === undefined) {
+            console.log("blockWorkspace doesn't exist");
             return;
         }
         var workspace = blockWorkspace;
@@ -95,7 +139,17 @@ export default function WsContent(prop: any) {
         api.post(config.apiUrl +'/workspace/save', data)
         .then((res) => {
             console.log("Workspace saved");
-            console.log(res);
+            // Change the button color to green then back to normal after 1 second
+            var button = document.getElementById("saveButton");
+            if (button === null || button === undefined) { return; }
+            // Set the button color to green
+            button.classList.add("bg-success");
+            setTimeout(() => {
+                if (button === null || button === undefined) { return; }
+                // Set the button color to normal
+                button.classList.remove("bg-success");
+            }
+                , 2000);
         })
         .catch((err) => {
             console.log("Workspace not saved");
@@ -150,7 +204,8 @@ export default function WsContent(prop: any) {
             blockWorkspace.addChangeListener(updateCode);
             window.addEventListener('resize', onresize, false);
             var workspace = blockWorkspace;
-            javascriptGenerator.init(workspace);
+            javascriptGen.init(workspace);
+            sampleGenerator.init(workspace);
             var x = 100.0;
             var y = 100.0;
             // Créer un bloc "base" et le placer au centre du workspace.
@@ -167,7 +222,28 @@ export default function WsContent(prop: any) {
         }
     }, [blockWorkspace, firstLoad]);
 
-    
+
+    function addTableau(text: string, name: string){
+        let [headers, tableau] = csvReader(text);
+        if(tableau === null || tableau === undefined || headers === null || headers === undefined){
+            return;
+        }
+
+        const inputArea = document.getElementById('inputArea');
+        if (!inputArea) {
+            console.log("inputArea doesn't exist");
+            return;
+        }
+        const myData = {
+            title: name,
+            data: tableau,
+            columnNames: headers,
+            isShrinkable: true,
+        }
+
+        setInputArray(inputArray => [...inputArray, myData]);
+    }
+
     return (
         <div>
             <div id="blocklyArea" className='w-full'>
@@ -182,10 +258,31 @@ export default function WsContent(prop: any) {
             {/* Save button */}
             {prop.noSave === undefined || prop.noSave === false ?
                 <div className='flex justify-center'>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded' onClick={saveWorkspace}>Save</button>
+                    <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveWorkspace}>Save</button>
                 </div>
             : null
             }
+            {/* Zone d'ajout de fichier csv pour ajouter de nouveaux tableaux */}
+            {/* TODO : remove */}
+            <div className='flex justify-center'>
+                <div className='w-2/3'>
+                    <CsvInput callBack={addTableau}/>
+                </div>
+            </div>
+
+            {/* Tableau de données */}
+            {/* Deux colonnes, l'une faisant 2/3 et l'autre 1/3 : plusieurs tables les unes au dessus des autres avec un titre dans la première et qu'une seule table avec le titre résultat dans la seconde */}
+            {/* TODO : remove */}
+            <div id="dataArea" className='flex justify-center'>
+                <div id="inputArea" className='w-2/3'>
+                    {inputArray.map((input, index) => (
+                        <Table key={index} columnNames={input.columnNames} data={input.data} title={input.title} isShrinkable={input.isShrinkable}/>
+                    ))}
+                </div> 
+                <div id="resultArea" className='w-1/3'>
+                    <Table columnNames={dummyTableColumnNames} data={dummyTableData} title="Résultat" />
+                </div> 
+            </div>  
         </div>
     );    
 }

@@ -21,35 +21,31 @@ export default function WsList(prop: any) {
     const [first, setFirst] = useState<boolean>(false);
 
     useEffect( () => {
-        console.log(first);
-        if (!first) {
-            setFirst(true);
-            const token = getCookie("token");
-            if (token !== "") {
-                api.get(config.apiUrl + "/workspace/all")
-                .then((res) => {
-                    console.log("Récupération des workspaces ok");
-                    processRequestSuccess(res);
-                }).catch((err) => {
-                    console.log(err);
-                });
-            }
-        }
-        
+        if (first)
+            return;
+
+        setFirst(true);
+        const token = getCookie("token");
+        if (token === "" || token === undefined)
+            return;
+
+        api.get(config.apiUrl + "/workspace/all")
+        .then((res) => {
+            console.log("Récupération des workspaces ok");
+            processRequestSuccess(res);
+        }).catch((err) => {
+            console.log(err);
+        });
     }, [])
 
     function processRequestSuccess(res : any){
         if (res.status === 401)
         return;
 
-
-
         let dataRaw : {id:string, title:string}[] = [];
-        console.log(res.response);
         dataRaw = res.response.map((item: any) => (
                     {id: item.id, title: item.title}
                 ))
-        console.log(dataRaw);
         let newData = (
             <div id="WorkspaceList" className="flex flex-wrap justify-center gap-4">
                 {dataRaw.map((item, index) => (<WsListComponent id={item.id} title={item.title} key={index}/>))}

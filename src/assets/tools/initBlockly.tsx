@@ -1,8 +1,10 @@
 import {javascriptGenerator} from 'blockly/javascript';
 import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit } from '../../assets/classes/Noeuds';
 import * as Blockly from "blockly";
-
-export const sampleGenerator : any = new Blockly.Generator('Algebre')
+import MyGenerator from './MyGen';
+export const sampleGenerator : any = MyGenerator;
+// export const sampleGenerator : any = new Blockly.Generator('Algebre')
+export const javascriptGen : any = javascriptGenerator;
 
 Blockly.defineBlocksWithJsonArray([
     Renommage.toBlockly(),
@@ -23,6 +25,9 @@ Blockly.defineBlocksWithJsonArray([
     }
   ]);
 
+  /* -------------------------------------------------------------------------- */
+  /*                            JAVASCRIPT GENERATOR                            */
+  /* -------------------------------------------------------------------------- */
 
   javascriptGenerator['selection'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
@@ -45,8 +50,6 @@ Blockly.defineBlocksWithJsonArray([
   javascriptGenerator['ensemble'] = function(block: any) {
     var value_champs = javascriptGenerator.valueToCode(block, 'name', javascriptGenerator.ORDER_ATOMIC);
     var code = value_champs;
-    // var code = value_champs.split('(').join('');
-    // code = code.split(')').join('');
     return code;
   };
   javascriptGenerator['text'] = function(block: any) {
@@ -88,6 +91,17 @@ Blockly.defineBlocksWithJsonArray([
     return code;
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                          FIN JAVASCRIPT GENERATOR                          */
+  /* -------------------------------------------------------------------------- */
+
+
+
+  
+  /* -------------------------------------------------------------------------- */
+  /*                              CUSTOM GENERATOR                              */
+  /* -------------------------------------------------------------------------- */
+
     sampleGenerator['renommage'] = function(block: any) {
         console.log("renommage");
         var value_champs = sampleGenerator.statementToCode(block, 'Champs');
@@ -112,21 +126,19 @@ Blockly.defineBlocksWithJsonArray([
     };
 
     sampleGenerator['ensemble'] = function(block: any) {
-        console.log("ensemble");
-        var value_champs = sampleGenerator.statementToCode(block, 'name');
+        var value_champs = sampleGenerator.valueToCode(block, 'name', javascriptGenerator.ORDER_ATOMIC);
+        console.log(value_champs);
         var code = value_champs;
         return code;
     };
 
     sampleGenerator['text'] = function(block: any) {
-        console.log("text");
         const textValue = block.getFieldValue('TEXT');
         var code = textValue;
-        return code;
+        return [code, javascriptGenerator.ORDER_ATOMIC];
     }
 
     sampleGenerator['difference'] = function(block: any) {
-        console.log("difference");
         var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
         var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
         var code = '(' + statements_elements1 + ') \/ (' + statements_elements2 + ')';
@@ -134,7 +146,6 @@ Blockly.defineBlocksWithJsonArray([
     }
 
     sampleGenerator['intersection'] = function(block: any) {
-        console.log("intersection");
         var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
         var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
         var code = '(' + statements_elements1 + ') \\cup (' + statements_elements2 + ')';
@@ -142,7 +153,6 @@ Blockly.defineBlocksWithJsonArray([
     }
 
     sampleGenerator['union'] = function(block: any) {
-        console.log("union");
         var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
         var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
         var code = '(' + statements_elements1 + ') \\cap (' + statements_elements2 + ')';
@@ -150,19 +160,21 @@ Blockly.defineBlocksWithJsonArray([
     }
 
     sampleGenerator['produit'] = function(block: any) {
-        console.log("produit");
         var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
         var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
-        var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
+        var code = '[' + statements_elements1 + '] \\times [' + statements_elements2 + ']';
         return code;
     }
 
     sampleGenerator['debut'] = function(block: any) {
-        console.log("debut");
         var statements_elements = sampleGenerator.statementToCode(block, 'nextStatement');
         var code = statements_elements;
         return code;
     }
+
+    /* -------------------------------------------------------------------------- */
+    /*                           FIN DU CUSTOM GENERATOR                          */
+    /* -------------------------------------------------------------------------- */
 
 
 
