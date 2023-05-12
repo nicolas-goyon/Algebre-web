@@ -82,7 +82,7 @@ export class Selection extends Noeud{
             ],
             "previousStatement": "Noeud",
             "colour": 120,
-            "tooltip": "",
+            "tooltip": "Selectionne les tuples de la relation qui respectent la condition",
             "helpUrl": ""
         }
     }

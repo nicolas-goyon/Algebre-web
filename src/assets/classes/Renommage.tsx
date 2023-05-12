@@ -85,7 +85,7 @@ export class Renommage extends Noeud{
             ],
             "previousStatement": "Noeud",
             "colour": 120,
-            "tooltip": "",
+            "tooltip": "Renomme les champs d'une relation",
             "helpUrl": ""
         }
     }

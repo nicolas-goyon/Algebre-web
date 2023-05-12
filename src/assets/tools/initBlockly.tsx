@@ -1,9 +1,8 @@
 import {javascriptGenerator} from 'blockly/javascript';
-import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit } from '../../assets/classes/Noeuds';
+import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit, Jointure } from '../../assets/classes/Noeuds';
 import * as Blockly from "blockly";
 import MyGenerator from './MyGen';
 export const sampleGenerator : any = MyGenerator;
-// export const sampleGenerator : any = new Blockly.Generator('Algebre')
 export const javascriptGen : any = javascriptGenerator;
 
 Blockly.defineBlocksWithJsonArray([
@@ -15,6 +14,7 @@ Blockly.defineBlocksWithJsonArray([
     Union.toBlockly(),
     Intersection.toBlockly(),
     Produit.toBlockly(),
+    Jointure.toBlockly(),
     {
       "type": "debut",
       "message0": "Début",
@@ -25,71 +25,79 @@ Blockly.defineBlocksWithJsonArray([
     }
   ]);
 
-  /* -------------------------------------------------------------------------- */
-  /*                            JAVASCRIPT GENERATOR                            */
-  /* -------------------------------------------------------------------------- */
+    /* -------------------------------------------------------------------------- */
+    /*                            JAVASCRIPT GENERATOR                            */
+    /* -------------------------------------------------------------------------- */
 
-  javascriptGenerator['selection'] = function(block: any) {
-    var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
-    var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\sigma_{' + value_champs + '}(' + statements_elements + ')';
-    return code;
-  };
-  javascriptGenerator['renommage'] = function(block: any) {
-    var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
-    var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\rho_{' + value_champs + ' }(' + statements_elements + ')';
-    return code;
-  };
-  javascriptGenerator['projection'] = function(block: any) {
-    var value_champs = javascriptGenerator.valueToCode(block, 'Champs', javascriptGenerator.ORDER_ATOMIC);
-    var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
-    var code = '\\pi_{' + value_champs + ' }(' + statements_elements + ')';
-    return code;
-  };
-  javascriptGenerator['ensemble'] = function(block: any) {
-    var value_champs = javascriptGenerator.valueToCode(block, 'name', javascriptGenerator.ORDER_ATOMIC);
-    var code = value_champs;
-    return code;
-  };
-  javascriptGenerator['text'] = function(block: any) {
-    const textValue = block.getFieldValue('TEXT');
-    var code = textValue;
-    return [code, javascriptGenerator.ORDER_ATOMIC];
-  }
-  javascriptGenerator['difference'] = function(block: any) {
-    var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
-    var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(' + statements_elements1 + ') \/ (' + statements_elements2 + ')';
+    javascriptGenerator['selection'] = function(block: any) {
+        var value_champs = javascriptGenerator.statementToCode(block, 'Champs');
+        var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
+        var code = '\\sigma_{' + value_champs + '}(' + statements_elements + ')';
+        return code;
+    };
+    javascriptGenerator['renommage'] = function(block: any) {
+        var value_champs = javascriptGenerator.statementToCode(block, 'Champs');
+        var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
+        var code = '\\rho_{' + value_champs + ' }(' + statements_elements + ')';
+        return code;
+    };
+    javascriptGenerator['projection'] = function(block: any) {
+        var value_champs = javascriptGenerator.statementToCode(block, 'Champs');
+        var statements_elements = javascriptGenerator.statementToCode(block, 'ensemble');
+        var code = '\\pi_{' + value_champs + '}(' + statements_elements + ')';
+        return code;
+    };
+    javascriptGenerator['ensemble'] = function(block: any) {
+        var value_champs = javascriptGenerator.statementToCode(block, 'name');
+        var code = value_champs;
+        return code;
+    };
+    javascriptGenerator['text'] = function(block: any) {
+        const textValue = block.getFieldValue('TEXT');
+        // escape backslashes, slashes, single quotes and double quotes, underscores
+        const code = textValue.replace(/\\/g, '\\\\').replace(/\//g, '\\/').replace(/'/g, '\\\'').replace(/"/g, '\\"').replace(/_/g, '\\_');
+        return code;
+    }
+    javascriptGenerator['difference'] = function(block: any) {
+        var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \/ (' + statements_elements2 + ')';
 
-    return code;
-  }
-  
-  javascriptGenerator['intersection'] = function(block: any) {
-    var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
-    var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(' + statements_elements1 + ') \\cup (' + statements_elements2 + ')';
-    return code;
-  }
-  
-  javascriptGenerator['union'] = function(block: any) {
-    var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
-    var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
+        return code;
+    }
     
-    var code = '(' + statements_elements1 + ') \\cap (' + statements_elements2 + ')';
-    return code;
-  }
-  javascriptGenerator['produit'] = function(block: any) {
-    var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
-    var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
-    var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
-    return code;
-  }
-  javascriptGenerator['debut'] = function(block: any) {
-    var statements_elements = javascriptGenerator.statementToCode(block, 'nextStatement');
-    var code = statements_elements;
-    return code;
-  }
+    javascriptGenerator['intersection'] = function(block: any) {
+        var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\cup (' + statements_elements2 + ')';
+        return code;
+    }
+    
+    javascriptGenerator['union'] = function(block: any) {
+        var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
+        
+        var code = '(' + statements_elements1 + ') \\cap (' + statements_elements2 + ')';
+        return code;
+    }
+    javascriptGenerator['produit'] = function(block: any) {
+        var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\times (' + statements_elements2 + ')';
+        return code;
+    }
+    javascriptGenerator['debut'] = function(block: any) {
+        var statements_elements = javascriptGenerator.statementToCode(block, 'nextStatement');
+        var code = statements_elements;
+        return code;
+    }
+    javascriptGenerator['jointure'] = function(block: any) {
+        var value_champs = javascriptGenerator.statementToCode(block, 'Champs');
+        var statements_elements1 = javascriptGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = javascriptGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\bowtie_{' + value_champs + '} (' + statements_elements2 + ')';
+        return code;
+    };
 
   /* -------------------------------------------------------------------------- */
   /*                          FIN JAVASCRIPT GENERATOR                          */
@@ -103,14 +111,12 @@ Blockly.defineBlocksWithJsonArray([
   /* -------------------------------------------------------------------------- */
 
     sampleGenerator['renommage'] = function(block: any) {
-        console.log("renommage");
         var value_champs = sampleGenerator.statementToCode(block, 'Champs');
         var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
         var code = '\\rho_{' + value_champs + ' }(' + statements_elements + ')';
         return code;
     };
     sampleGenerator['selection'] = function(block: any) {
-        console.log("selection");
         var value_champs = sampleGenerator.statementToCode(block, 'Champs');
         var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
         var code = '\\sigma_{' + value_champs + '}(' + statements_elements + ')';
@@ -118,7 +124,6 @@ Blockly.defineBlocksWithJsonArray([
     };
 
     sampleGenerator['projection'] = function(block: any) {
-        console.log("projection");
         var value_champs = sampleGenerator.statementToCode(block, 'Champs');
         var statements_elements = sampleGenerator.statementToCode(block, 'ensemble');
         var code = '\\pi_{' + value_champs + ' }(' + statements_elements + ')';
@@ -126,16 +131,17 @@ Blockly.defineBlocksWithJsonArray([
     };
 
     sampleGenerator['ensemble'] = function(block: any) {
-        var value_champs = sampleGenerator.valueToCode(block, 'name', javascriptGenerator.ORDER_ATOMIC);
-        console.log(value_champs);
+        var value_champs = sampleGenerator.statementToCode(block, 'name');
         var code = value_champs;
         return code;
     };
 
     sampleGenerator['text'] = function(block: any) {
         const textValue = block.getFieldValue('TEXT');
-        var code = textValue;
-        return [code, javascriptGenerator.ORDER_ATOMIC];
+        const code = "\"" + textValue + "\"";
+        // escape backslashes, slashes, single quotes and double quotes, underscores
+        // const code = textValue.replace(/\\/g, '\\\\').replace(/\//g, '\\/').replace(/'/g, '\\\'').replace(/"/g, '\\"').replace(/_/g, '\\_');
+        return code;
     }
 
     sampleGenerator['difference'] = function(block: any) {
@@ -171,7 +177,13 @@ Blockly.defineBlocksWithJsonArray([
         var code = statements_elements;
         return code;
     }
-
+    sampleGenerator['jointure'] = function(block: any) {
+        var value_champs = sampleGenerator.statementToCode(block, 'Champs');
+        var statements_elements1 = sampleGenerator.statementToCode(block, 'ensemble1');
+        var statements_elements2 = sampleGenerator.statementToCode(block, 'ensemble2');
+        var code = '(' + statements_elements1 + ') \\bowtie_{' + value_champs + '} (' + statements_elements2 + ')';
+        return code;
+    };
     /* -------------------------------------------------------------------------- */
     /*                           FIN DU CUSTOM GENERATOR                          */
     /* -------------------------------------------------------------------------- */
@@ -221,6 +233,10 @@ Blockly.defineBlocksWithJsonArray([
             "kind": "block",
             "type": "produit"
           },
+          {
+            "kind": "block",
+            "type": "jointure"
+          }
         ]
       },
 

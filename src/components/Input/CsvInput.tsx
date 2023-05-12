@@ -22,7 +22,6 @@ export default function CsvInput(prop: any){
                 return;
             }
             if (callBack !== undefined) {
-                console.log(text);
                 callBack(text, file.name);
             }
         };

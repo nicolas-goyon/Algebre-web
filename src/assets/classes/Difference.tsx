@@ -84,7 +84,7 @@ export class Difference extends Noeud{
             ],
             "previousStatement": "Noeud",
             "colour": 120,
-            "tooltip": "",
+            "tooltip": "Relation 1 - relation 2",
             "helpUrl": ""
           }
     }

@@ -80,7 +80,7 @@ export class Produit extends Noeud{
             ],
             "previousStatement": "Noeud",
             "colour": 120,
-            "tooltip": "",
+            "tooltip": "Relation 1 x Relation 2 : Produit cartésien de deux relations",
             "helpUrl": ""
           }
     }

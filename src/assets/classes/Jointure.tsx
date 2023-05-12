@@ -1,12 +1,13 @@
 import { arrayMerge } from "../tools/ArraysTools.tsx";
 import { Noeud } from "./Noeud.tsx";
 import { NoeudsBase } from "./Noeuds.tsx";
-export class Intersection extends Noeud{
+
+export class Jointure extends Noeud{
     ensemble1: Noeud | null;
     ensemble2: Noeud | null;
 
-    constructor(ensemble1: Noeud | null, ensemble2: Noeud | null , index: number, parent : Noeud | null = null) {
-        super(NoeudsBase.Intersection, index)
+    constructor (ensemble1: Noeud | null, ensemble2: Noeud | null , index: number, parent : Noeud | null = null) {
+        super(NoeudsBase.Jointure, index)
         this.ensemble1 = ensemble1
         this.ensemble2 = ensemble2
     }
@@ -25,16 +26,16 @@ export class Intersection extends Noeud{
             ensemble2: JSON.parse((this.ensemble2 != null) ? this.ensemble2.toJSON() : "null"),
         }
         return JSON.stringify(objet)
-    }
-    
+    }   
+
     toLatex():String{
-        let chaine = "( "+ (this.ensemble1 != null) ? this.ensemble1!.toLatex() : "NULL" + " )\ \\cap ( " +(this.ensemble2 != null) ? this.ensemble2!.toLatex() : "NULL" + " )"
+        let chaine = "( "+ (this.ensemble1 != null) ? this.ensemble1!.toLatex() : "NULL" + " )\ \\bowtie ( " +(this.ensemble2 != null) ? this.ensemble2!.toLatex() : "NULL" + " )"
         return chaine
         
     }
-    
+
     copy(): Noeud{
-        return new Intersection(
+        return new Jointure(
             (this.ensemble1 != null)?this.ensemble1.copy():null,
             (this.ensemble2 != null)?this.ensemble2.copy():null,
             this.index,
@@ -59,31 +60,43 @@ export class Intersection extends Noeud{
         if (this.ensemble2 != null){
             array = arrayMerge(array, this.ensemble2.fillArray())
         }
-        array[this.index] = this;
         return array
     }
 
+    replaceChild(index: Noeud, replacement: Noeud): void {
+        if (this.ensemble1 === index){
+            this.ensemble1 = replacement
+        }
+        if (this.ensemble2 === index){
+            this.ensemble2 = replacement
+        }
+    }
 
-    static toBlockly(): any {
+    static toBlockly(): any{
         return {
-            "type": "intersection",
-            "message0": "intersection Relation 1 %1 Relation 2 %2",
+            "type": "jointure",
+            "message0": "Jointure %1 %2 %3",
             "args0": [
-              {
-                "type": "input_statement",
-                "name": "ensemble1",
-                "check": "Noeud"
-              },
-              {
-                "type": "input_statement",
-                "name": "ensemble2",
-                "check": "Noeud"
-              }
+                {
+                  "type": "input_value",
+                  "name": "Champs",
+                  "check": "String"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "ensemble1",
+                    "check": "Noeud"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "ensemble2",
+                    "check": "Noeud"
+                }
             ],
             "previousStatement": "Noeud",
-            "colour": 120,
-            "tooltip": "Relation 1 ∩ Relation 2",
+            "colour": 230,
+            "tooltip": "Représente une jointure entre deux ensembles",
             "helpUrl": ""
-          }
+        }
     }
 }

@@ -89,7 +89,7 @@ MyGenerator.ORDER_ASSIGNMENT = 16;       // = += -= **= *= /= %= <<= >>= ...
 MyGenerator.ORDER_YIELD = 17;            // yield
 MyGenerator.ORDER_COMMA = 18;            // ,
 MyGenerator.ORDER_NONE = 99;             // (...)
-
+MyGenerator.INDENT = '';
 /**
  * List of outer-inner pairings that do NOT require parentheses.
  * @type {!Array<!Array<number>>}
@@ -140,7 +140,6 @@ MyGenerator.init = function(workspace : Workspace) {
   } else {
     this.nameDB_.reset();
   }
-
   this.nameDB_.setVariableMap(workspace.getVariableMap());
   this.nameDB_.populateVariables(workspace);
   this.nameDB_.populateProcedures(workspace);
@@ -240,7 +239,7 @@ MyGenerator.scrub_ = function(block : Block, code : string, opt_thisOnly : boole
     let comment = block.getCommentText();
     if (comment) {
       comment = wrap(comment, this.COMMENT_WRAP - 3); // FIXME : correct type
-      commentCode += this.prefixLines(comment + '\n', '// ');
+      commentCode += this.prefixLines(comment + '\n', '');
     }
     // Collect comments for all value arguments.
     // Don't collect comments for nested statements.
@@ -254,7 +253,7 @@ MyGenerator.scrub_ = function(block : Block, code : string, opt_thisOnly : boole
         if (childBlock) {
           comment = this.allNestedComments(childBlock);
           if (comment) {
-            commentCode += this.prefixLines(comment, '// ');
+            commentCode += this.prefixLines(comment, '');
           }
         }
       }

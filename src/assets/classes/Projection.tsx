@@ -86,7 +86,7 @@ export class Projection extends Noeud{
             ],
             "previousStatement": "Noeud",
             "colour": 120,
-            "tooltip": "",
+            "tooltip": "Selectionne certains champs d'une relation",
             "helpUrl": ""
         }
     }

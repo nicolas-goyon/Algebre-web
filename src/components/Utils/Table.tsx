@@ -85,6 +85,7 @@ export default function Table(props : any) {
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {data.map((row : any) => (
+
                                     <tr key={row}>
                                         {columns.map((column : any, index: number) => (
                                             <td

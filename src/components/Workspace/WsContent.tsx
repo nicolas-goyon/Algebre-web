@@ -7,8 +7,15 @@ import { config } from 'src/config';
 import Table from '../Utils/Table';
 import CsvInput from '../Input/CsvInput';
 import csvReader from 'src/assets/tools/CsvUtils';
+import MyGenerator from 'src/assets/tools/MyGen';
+import test from 'src/assets/Tests/WorkspaceRelationTest';
 
-
+type WsData = {
+    title: string,
+    data: string[][],
+    columnNames: string[],
+    isShrinkable: boolean,
+}
 
 export default function WsContent(prop: any) {
     // TODO : remove
@@ -25,62 +32,23 @@ export default function WsContent(prop: any) {
         ["Dark", "Jane", "33"],
         ["Lenon", "John", "22"],
     ];
-    const [inputArray, setInputArray] = useState(
-        [
-            {
-                title: "table1",
-                data: dummyTableData,
-                columnNames: dummyTableColumnNames,
-                isShrinkable: true,
-            },
-            {
-                title: "table2",
-                data: dummyTableData,
-                columnNames: dummyTableColumnNames,
-                isShrinkable: true,
-            },
-            {
-                title: "table3",
-                data: dummyTableData,
-                columnNames: dummyTableColumnNames,
-                isShrinkable: false,
-            }
-        ]
-    );
+    const [inputArray, setInputArray] = useState<WsData[]>([]);
     const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
     const [demoLatex, setDemoLatex] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(false);
+    const [result, setResult] = useState<string>('');;
     var blocklyDivStyle = { height: 600, width: '100%' }
     const serializer = new Blockly.serialization.blocks.BlockSerializer();
 
     
     function updateCode(event : Blockly.Events.Abstract) {
-        if (blockWorkspace === undefined) {
-            return;
-        }
-        var workspace = blockWorkspace;
-        // get blocs that have no parent
-        var topBlocks = workspace.getTopBlocks(false);
-        var baseBlock = null;
-        // Trouve le bloc "debut".   
-
-        for (var i = 0; i < topBlocks.length; i++) {
-            if (topBlocks[i].type === 'debut') {
-                baseBlock = topBlocks[i];
-                break;
-            }
-        }
-        if(baseBlock === null){
-            return;
-        }
-        
+        const baseBlock = getDebut();
         // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
         var code = "";
         code = javascriptGen.blockToCode(baseBlock);
         let code2 = sampleGenerator.blockToCode(baseBlock);
-        console.log(code);
         console.log("test"); // TODO : remove
-        console.log(code2); // TODO : remove
+        console.log(code); // TODO : remove
         // afficher le code dans la zone d'affichage
         if(code != null && code.length > 0){
             setDemoLatex('$' + code + '$');
@@ -144,10 +112,14 @@ export default function WsContent(prop: any) {
             if (button === null || button === undefined) { return; }
             // Set the button color to green
             button.classList.add("bg-success");
+            // Set the button color on hover to green
+            button.classList.add("hover:bg-success");
             setTimeout(() => {
                 if (button === null || button === undefined) { return; }
                 // Set the button color to normal
                 button.classList.remove("bg-success");
+                // Set the button color on hover to normal
+                button.classList.remove("hover:bg-success");
             }
                 , 2000);
         })
@@ -167,7 +139,6 @@ export default function WsContent(prop: any) {
         api.get(config.apiUrl +'/workspace/load/' + id)
         .then((res) => {
             console.log("Workspace loaded");
-            console.log(res);
             if(res.status !== 200){
                 return;
             }
@@ -205,6 +176,7 @@ export default function WsContent(prop: any) {
             window.addEventListener('resize', onresize, false);
             var workspace = blockWorkspace;
             javascriptGen.init(workspace);
+            javascriptGen.INDENT = '';
             sampleGenerator.init(workspace);
             var x = 100.0;
             var y = 100.0;
@@ -215,15 +187,22 @@ export default function WsContent(prop: any) {
             baseBlock.setMovable(false);
             baseBlock.render();
             baseBlock.moveBy(x, y);
+
+            if (prop.id === null) {
+                return;
+            }
+            loadWorkspace(prop.id);
+            console.log("================");
+            test();
+            console.log("================");
         }
 
-        if( blockWorkspace !== undefined &&  prop !== undefined && prop.id !== undefined && prop.id !== null && !firstLoad && (prop.noLoad === false || prop.noLoad === undefined )){
-            loadWorkspace(prop.id);
-        }
+
     }, [blockWorkspace, firstLoad]);
 
 
     function addTableau(text: string, name: string){
+        // TODO : Check if name is already used
         let [headers, tableau] = csvReader(text);
         if(tableau === null || tableau === undefined || headers === null || headers === undefined){
             return;
@@ -244,6 +223,33 @@ export default function WsContent(prop: any) {
         setInputArray(inputArray => [...inputArray, myData]);
     }
 
+    function getDebut(): Blockly.Block | null{
+        if (blockWorkspace === undefined) {
+            return null;
+        }
+        // get blocs that have no parent
+        var topBlocks = blockWorkspace.getTopBlocks(false);
+        var baseBlock = null;
+        // Trouve le bloc "debut".   
+
+        for (var i = 0; i < topBlocks.length; i++) {
+            if (topBlocks[i].type === 'debut') {
+                baseBlock = topBlocks[i];
+                break;
+            }
+        }
+        return baseBlock;
+    }
+
+    function executeCode(){
+        const debut = getDebut();
+        var code = MyGenerator.blockToCode(debut);
+        // console.log(code);
+        setResult(result => code);
+        // var myFunction = new Function(code);
+        // myFunction();
+    }
+
     return (
         <div>
             <div id="blocklyArea" className='w-full'>
@@ -262,8 +268,17 @@ export default function WsContent(prop: any) {
                 </div>
             : null
             }
+            {/* Execute button */}
+            <div className='flex justify-center'>
+                <button id="executeButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={executeCode}>Execute</button>
+            </div>
+            {/* Zone d'affichage du résultat */}
+            <div id="resultArea" className='flex justify-center'>
+                <div id="resultDiv" className='overflow-x-scroll bg-black rounded-md text-white'>
+                    {result}
+                </div>
+            </div>
             {/* Zone d'ajout de fichier csv pour ajouter de nouveaux tableaux */}
-            {/* TODO : remove */}
             <div className='flex justify-center'>
                 <div className='w-2/3'>
                     <CsvInput callBack={addTableau}/>
@@ -272,7 +287,6 @@ export default function WsContent(prop: any) {
 
             {/* Tableau de données */}
             {/* Deux colonnes, l'une faisant 2/3 et l'autre 1/3 : plusieurs tables les unes au dessus des autres avec un titre dans la première et qu'une seule table avec le titre résultat dans la seconde */}
-            {/* TODO : remove */}
             <div id="dataArea" className='flex justify-center'>
                 <div id="inputArea" className='w-2/3'>
                     {inputArray.map((input, index) => (

@@ -6,7 +6,7 @@ import { Union } from "./Union"
 import { Produit } from "./Produit"
 import { Intersection } from "./Intersection"
 import { Difference } from "./Difference"
-// import { Jointure } from "./Jointure"
+import { Jointure } from "./Jointure"
 import { Noeud } from "./Noeud"
 
 
@@ -22,7 +22,7 @@ export { Union } from "./Union"
 export { Produit } from "./Produit"
 export { Intersection } from "./Intersection"
 export { Difference } from "./Difference"
-// export { Jointure } from "./Jointure"
+export { Jointure } from "./Jointure"
 
 
 export const NoeudsBase = {
@@ -96,15 +96,13 @@ export const NoeudsBase = {
         class: Difference
     },
 
-    // Jointures
-    // Jointure:{
-    //     name:"Jointure",
-    //     component: (<Jointure/>),
-    //     children: 2,
-    //     hasChamp: false,
-    //     isBinary: true,
-    //     class: Jointure
-    // },
+    Jointure:{
+        name:"Jointure",
+        children: 2,
+        hasChamp: false,
+        isBinary: true,
+        class: Jointure
+    },
 }
 
 export class NoeudsGet{
@@ -128,6 +126,8 @@ export class NoeudsGet{
                 return NoeudsBase.Intersection
             case "Difference":
                 return NoeudsBase.Difference
+            case "Jointure":
+                return NoeudsBase.Jointure
             default:
                 return NoeudsBase.Noeud
         }

@@ -83,7 +83,7 @@ export class Union extends Noeud{
             ],
             "previousStatement": "Noeud",
             "colour": 120,
-            "tooltip": "",
+            "tooltip": "Renvoie l'union de deux relations",
             "helpUrl": ""
           }
     }
