@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import Blockly from "blockly";
-import { options, javascriptGen, sampleGenerator } from '../../assets/tools/initBlockly';
+import { options, javascriptGen, sampleGenerator as LatexGenerator } from '../../assets/tools/initBlockly';
 import { MathJax } from 'better-react-mathjax';
+import Relation from 'src/assets/classes/Relation';
 import { api } from 'src/assets/tools/ApiCenter';
 import { config } from 'src/config';
 import Table from '../Utils/Table';
 import CsvInput from '../Input/CsvInput';
 import csvReader from 'src/assets/tools/CsvUtils';
-import MyGenerator from 'src/assets/tools/MyGen';
+import {transpile} from "typescript";
 import test from 'src/assets/Tests/WorkspaceRelationTest';
+import WorkspaceRelations from 'src/assets/classes/WorkspaceRelation';
 
 type WsData = {
     title: string,
-    data: string[][],
+    data: any[],
     columnNames: string[],
     isShrinkable: boolean,
 }
@@ -26,17 +28,23 @@ export default function WsContent(prop: any) {
     ];
 
     const dummyTableData = [
-        ["Doe", "John", "42"],
-        ["Doe", "Jane", "43"],
-        ["Dark", "John", "32"],
-        ["Dark", "Jane", "33"],
-        ["Lenon", "John", "22"],
+        { Nom: "Doe", Prénom: "John", Age: "42" },
+        { Nom: "Doe", Prénom: "Jane", Age: "43" },
+        { Nom: "Dark", Prénom: "John", Age: "32" },
+        { Nom: "Dark", Prénom: "Jane", Age: "33" },
+        { Nom: "Lenon", Prénom: "John", Age: "22" },
     ];
     const [inputArray, setInputArray] = useState<WsData[]>([]);
     const [blockWorkspace, setBlockWorkspace] = useState<Blockly.WorkspaceSvg>();
     const [demoLatex, setDemoLatex] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(false);
     const [result, setResult] = useState<string>('');;
+    const [resultTable, setResultTable] = useState<WsData>({
+        title: 'Result',
+        data: dummyTableData,
+        columnNames: dummyTableColumnNames,
+        isShrinkable: false,
+    });
     var blocklyDivStyle = { height: 600, width: '100%' }
     const serializer = new Blockly.serialization.blocks.BlockSerializer();
 
@@ -44,11 +52,11 @@ export default function WsContent(prop: any) {
     function updateCode(event : Blockly.Events.Abstract) {
         const baseBlock = getDebut();
         // Si le bloc "base" est trouvé, récupère le premier bloc enfant et commence la compilation à partir de là.
-        var code = "";
-        code = javascriptGen.blockToCode(baseBlock);
-        let code2 = sampleGenerator.blockToCode(baseBlock);
-        console.log("test"); // TODO : remove
-        console.log(code); // TODO : remove
+        
+        // let code2 = javascriptGen.blockToCode(baseBlock);
+        let code = LatexGenerator.blockToCode(baseBlock);
+        // console.log("test"); // TODO : remove
+        // console.log(code2); // TODO : remove
         // afficher le code dans la zone d'affichage
         if(code != null && code.length > 0){
             setDemoLatex('$' + code + '$');
@@ -56,7 +64,7 @@ export default function WsContent(prop: any) {
         else if (code.length === 0){
             setDemoLatex('');
         }
-    }   
+    }
 
   
     function onresize(e: any) {
@@ -171,13 +179,14 @@ export default function WsContent(prop: any) {
             )
         } // fin si
         if(blockWorkspace !== undefined && !firstLoad) {
+            WorkspaceRelations.clearInstance();
             setFirstLoad(true);
             blockWorkspace.addChangeListener(updateCode);
             window.addEventListener('resize', onresize, false);
             var workspace = blockWorkspace;
             javascriptGen.init(workspace);
             javascriptGen.INDENT = '';
-            sampleGenerator.init(workspace);
+            LatexGenerator.init(workspace);
             var x = 100.0;
             var y = 100.0;
             // Créer un bloc "base" et le placer au centre du workspace.
@@ -192,9 +201,9 @@ export default function WsContent(prop: any) {
                 return;
             }
             loadWorkspace(prop.id);
-            console.log("================");
-            test();
-            console.log("================");
+            // console.log("================");
+            // test();
+            // console.log("================");
         }
 
 
@@ -213,10 +222,25 @@ export default function WsContent(prop: any) {
             console.log("inputArea doesn't exist");
             return;
         }
+        const dataRelation : any[]  = [];
+        for(let i = 0; i < tableau.length; i++){
+            const row = tableau[i];
+            const newRow : any = {};
+            for(let j = 0; j < headers.length; j++){
+                const header = headers[j];
+                newRow[header] = row[j];
+            }
+            dataRelation.push(newRow);
+        }
+        console.log(dataRelation);
+        const newRelation = new Relation(name, dataRelation, headers);
+        WorkspaceRelations.addTable(newRelation);
+
+        
         const myData = {
             title: name,
-            data: tableau,
-            columnNames: headers,
+            data: newRelation.getData(),
+            columnNames: newRelation.getColumnNames(),
             isShrinkable: true,
         }
 
@@ -243,12 +267,32 @@ export default function WsContent(prop: any) {
 
     function executeCode(){
         const debut = getDebut();
-        var code = MyGenerator.blockToCode(debut);
-        // console.log(code);
+        var code = javascriptGen.blockToCode(debut);
+        executeAlgebra(code);
         setResult(result => code);
-        // var myFunction = new Function(code);
-        // myFunction();
     }
+    function executeAlgebra(code: string){
+        console.log("Execute Algebra Start");
+        try {
+            const cleanCode = transpile(code);
+            const resultat : Relation = Function('WorkspaceRelations', 'return ' + cleanCode )(WorkspaceRelations);
+            console.log(resultat.getData());
+            setResultTable(resultTable => {
+                let res = {
+                    title: "Resultat",
+                    data: resultat.getData(),
+                    columnNames: resultat.getColumnNames(),
+                    isShrinkable: true,
+                }
+                return res;
+            })
+            return resultat;
+        } catch (error) {
+            alert(error);
+        }
+        console.log("Execute Algebra End");
+    }
+
 
     return (
         <div>
@@ -294,7 +338,7 @@ export default function WsContent(prop: any) {
                     ))}
                 </div> 
                 <div id="resultArea" className='w-1/3'>
-                    <Table columnNames={dummyTableColumnNames} data={dummyTableData} title="Résultat" />
+                    <Table columnNames={resultTable.columnNames} data={resultTable.data} title={resultTable.title} isShrinkable={resultTable.isShrinkable}/>
                 </div> 
             </div>  
         </div>

@@ -21,9 +21,11 @@ export default function CsvInput(prop: any){
             if (text === undefined) {
                 return;
             }
-            if (callBack !== undefined) {
-                callBack(text, file.name);
+            if (callBack === undefined) {
+                return;
             }
+            const filename = file.name.split(".")[0];
+            callBack(text, filename);
         };
         reader.readAsText(file);
     }

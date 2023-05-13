@@ -18,7 +18,7 @@ export default class Relation {
         return this.columnNames;
     }
   
-    public changeColumnName(oldName: string, newName: string): void {
+    public changeColumnName(oldName: string, newName: string): Relation {
       const columnNames = this.getColumnNames();
       const index = columnNames.indexOf(oldName);
       if (index >= 0) {
@@ -28,9 +28,10 @@ export default class Relation {
           delete row[oldName];
         });
       }
+      return this;
     }
 
-    public selectColumns(columnNames: string[]): void {
+    public selectColumns(columnNames: string[]): Relation {
         this.data = this.data.map((row) => {
             const newRow: Record<string, any> = {};
             columnNames.forEach((columnName) => {
@@ -39,33 +40,37 @@ export default class Relation {
             return newRow;
         });
         this.columnNames = columnNames;
+        return this;
     }
 
     public getData(): any[] {
         return this.data;
     }
   
-    public removeColumn(name: string): void {
-      const index = this.getColumnNames().indexOf(name);
-      if (index >= 0) {
-        this.data.forEach((row) => {
-          delete row[name];
-        });
-      }
+    public removeColumn(name: string): Relation {
+        const index = this.getColumnNames().indexOf(name);
+        if (index >= 0) {
+            this.data.forEach((row) => {
+            delete row[name];
+            });
+        }
 
         this.columnNames = this.columnNames.filter((columnName) => columnName !== name);
+        return this;
     }
   
     public clone(): Relation {
       return new Relation(this.name, JSON.parse(JSON.stringify(this.data)), JSON.parse(JSON.stringify(this.columnNames)));
     }
   
-    public removeRowsWithCheck(columnName: string, checkFn: (value: any) => boolean): void {
-      this.selectRowsWithCheck(columnName, (value) => !checkFn(value));
+    public removeRowsWithCheck( checkFn: (value:  Record<string, any>) => boolean): Relation {
+        this.selectRowsWithCheck((value) => !checkFn(value));
+        return this;
     }
 
-    public selectRowsWithCheck(columnName: string, checkFn: (value: any) => boolean): void {
-        this.data = this.data.filter((row) => checkFn(row[columnName]));
+    public selectRowsWithCheck(checkFn: (value: Record<string, any>) => boolean): Relation {
+        this.data = this.data.filter((row) => checkFn(row));
+        return this;
     }
 
   
@@ -73,7 +78,7 @@ export default class Relation {
       console.table(this.data);
     }
 
-    public addRow(row: Record<string, any>): void {
+    public addRow(row: Record<string, any>): Relation {
         const hasDuplicate = this.data.some((r) => {
           return Object.keys(row).every((key) => r[key] === row[key]);
         });
@@ -81,14 +86,16 @@ export default class Relation {
         if (!hasDuplicate) {
           this.data.push(row);
         }
+        return this;
     }
 
     public getName(): string {
         return this.name;
     }
 
-    public setName(name: string): void {
+    public setName(name: string): Relation {
         this.name = name;
+        return this;
     }
 
     public equals(relation: Relation): boolean {
@@ -104,13 +111,14 @@ export default class Relation {
         return true;
     }
 
-    public renameColumns(oldNames: string[], newNames: string[]): void {
+    public renameColumns(oldNames: string[], newNames: string[]): Relation {
         oldNames.forEach((oldName, index) => {
             this.changeColumnName(oldName, newNames[index]);
         });
+        return this;
     }
 
-    public join(relation: Relation, checkFn: (row1: Record<string, any>, row2: Record<string, any>) => boolean) {
+    public join(relation: Relation, checkFn: (row1: Record<string, any>, row2: Record<string, any>) => boolean) : Relation {
         // concat all column names with the relation name to avoid conflicts
         const columnNames = this.columnNames.map((columnName) => this.name + '.' + columnName);
         const relationColumnNames = relation.columnNames.map((columnName) => relation.name + '.' + columnName);
@@ -132,9 +140,10 @@ export default class Relation {
         this.data = newdata;
         this.columnNames = columnNames;
         this.name = this.name + ' join ' + relation.name;
+        return this;
     }
 
-    public union(relation: Relation): void {
+    public union(relation: Relation): Relation {
         // check if column names are the same and in the same order
         if (this.columnNames.length !== relation.columnNames.length) {
             throw new Error('Cannot union relations with different number of columns');
@@ -154,9 +163,10 @@ export default class Relation {
         this.data = newdataWithoutDuplicates;
         this.columnNames = this.columnNames;
         this.name = this.name + ' union ' + relation.name;
+        return this;
     }
 
-    public intersection(relation: Relation): void {
+    public intersection(relation: Relation): Relation {
         // check if column names are the same and in the same order
         if (this.columnNames.length !== relation.columnNames.length) {
             throw new Error('Cannot intersect relations with different number of columns');
@@ -178,9 +188,10 @@ export default class Relation {
         this.data = newdata;
         this.columnNames = this.columnNames;
         this.name = this.name + ' intersect ' + relation.name;
+        return this;
     }
 
-    public difference(relation: Relation): void {
+    public difference(relation: Relation): Relation {
         // check if column names are the same and in the same order
         if (this.columnNames.length !== relation.columnNames.length) {
             throw new Error('Cannot difference relations with different number of columns');
@@ -202,14 +213,14 @@ export default class Relation {
         this.data = newdata;
         this.columnNames = this.columnNames;
         this.name = this.name + ' difference ' + relation.name;
+        return this;
     }
 
-    public product(relation: Relation): void {
+    public product(relation: Relation): Relation {
         // concat all column names with the relation name to avoid conflicts
         const newColumnNames = this.columnNames.map((thiscolumnName) => this.name + '.' + thiscolumnName);
         const relationColumnNames = relation.columnNames.map((relationCN) => relation.name + '.' + relationCN);
         newColumnNames.push(...relationColumnNames);
-        console.log(newColumnNames);
         const newdata: Record<string, any>[] = [];
         this.data.forEach((row1) => {
             relation.data.forEach((row2) => {
@@ -224,5 +235,6 @@ export default class Relation {
         this.data = newdata;
         this.columnNames = newColumnNames;
         this.name = this.name + ' product ' + relation.name;
+        return this;
     }
 }

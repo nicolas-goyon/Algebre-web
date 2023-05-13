@@ -1,4 +1,5 @@
 import React, { useId } from "react";
+import { v4 } from "uuid";
 
 export default function Table(props : any) {
     const columns = props.columnNames;
@@ -72,9 +73,9 @@ export default function Table(props : any) {
                                 : null
                                 }
                                 <tr>
-                                    {columns.map((column : any) => (
+                                    {columns.map((column : string) => (
                                         <th
-                                            key={column}
+                                            key={column + v4()}
                                             scope="col"
                                             className="px-6 py-3 text-xs font-medium tracking-wider text-left text-gray-500 uppercase"
                                         >
@@ -86,13 +87,13 @@ export default function Table(props : any) {
                             <tbody className="divide-y divide-gray-200">
                                 {data.map((row : any) => (
 
-                                    <tr key={row}>
-                                        {columns.map((column : any, index: number) => (
+                                    <tr key={row + v4()}>
+                                        {columns.map((column : string, index: number) => (
                                             <td
-                                                key={column}
+                                                key={column + v4()}
                                                 className="px-6 py-4 text-sm text-gray-800 whitespace-nowrap"
                                             >
-                                                {row[index]}
+                                                {row[column]}
                                             </td>
                                         ))}
                                     </tr>

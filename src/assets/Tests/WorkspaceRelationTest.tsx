@@ -1,5 +1,5 @@
 import Relation from "../classes/Relation";
-import WorkspaceRelation from "../classes/WorkspaceRelation";
+import WorkspaceRelations from "../classes/WorkspaceRelation";
 
 export default function test(){
     const Etudiant = [
@@ -26,24 +26,23 @@ export default function test(){
     ];
     const NoteRelation = new Relation("Note", Note, ['id', 'idEtudiant', 'idCours', 'note']);
 
-    WorkspaceRelation.clearInstance();
-    const WorkspaceRelationInstance = WorkspaceRelation.getInstance();
-    WorkspaceRelationInstance.addTable(EtudiantRelation);
-    WorkspaceRelationInstance.addTable(CoursRelation);
-    WorkspaceRelationInstance.addTable(NoteRelation);
+    WorkspaceRelations.clearInstance();
+    WorkspaceRelations.addTable(EtudiantRelation);
+    WorkspaceRelations.addTable(CoursRelation);
+    WorkspaceRelations.addTable(NoteRelation);
 
-    console.log(WorkspaceRelationInstance.getTables());
+    console.log(WorkspaceRelations.getTables());
 
     // Test if get tables return a clone
     console.log("=== Clone ===");
-    const clone = WorkspaceRelationInstance.getTableByName("Etudiant");
+    const clone = WorkspaceRelations.getTableByName("Etudiant");
     console.log('getTables return a clone:', clone !== undefined && clone !== EtudiantRelation && clone.equals(EtudiantRelation));
 
     // Code for an selection block 
     console.log("=== Selection ===");
-    let etudiant = WorkspaceRelationInstance.getTableByName("Etudiant");
+    let etudiant = WorkspaceRelations.getTableByName("Etudiant");
     if(etudiant){
-        etudiant.selectRowsWithCheck("age", (age) => age > 25);
+        etudiant.selectRowsWithCheck((row) => row["age"] > 25);
         console.log('Selection (age > 25) :');
         etudiant.print();
     }
@@ -54,12 +53,12 @@ export default function test(){
 
     // Check if the selection is a clone
     console.log("=== Clone after Selectio ===");
-    const clone2 = WorkspaceRelationInstance.getTableByName("Etudiant");
+    const clone2 = WorkspaceRelations.getTableByName("Etudiant");
     console.log('getTables return a clone:', clone2 !== undefined && clone2 !== EtudiantRelation && clone2.equals(EtudiantRelation) && !clone2.equals(etudiant));
 
     // Code for an projection block
     console.log("=== Projection ===");
-    let cours = WorkspaceRelationInstance.getTableByName("Cours");
+    let cours = WorkspaceRelations.getTableByName("Cours");
     if(cours){
         cours.selectColumns(['name', 'coef'])
         console.log('Projection (name, coef) :');
@@ -72,7 +71,7 @@ export default function test(){
     
     // Code for a Rename block
     console.log("=== Rename ===");
-    let note = WorkspaceRelationInstance.getTableByName("Note");
+    let note = WorkspaceRelations.getTableByName("Note");
     if(note){
         note.renameColumns(['idEtudiant', 'idCours'], ['idE', 'idC']);
         console.log('Rename (idEtudiant -> idE, idCours -> idC) :');
@@ -85,8 +84,8 @@ export default function test(){
 
     // Code for a Join block
     console.log("=== Join ===");
-    etudiant = WorkspaceRelationInstance.getTableByName("Etudiant");
-    note = WorkspaceRelationInstance.getTableByName("Note"); 
+    etudiant = WorkspaceRelations.getTableByName("Etudiant");
+    note = WorkspaceRelations.getTableByName("Note"); 
     if(etudiant && note){
         etudiant.join(note, (etudiant, note) => etudiant.id === note.idEtudiant);
         console.log('Join (idEtudiant -> idEtudiant, idCours -> idCours) :');
@@ -99,11 +98,11 @@ export default function test(){
 
     // Code for a Union block
     console.log("=== Union ===");
-    etudiant = WorkspaceRelationInstance.getTableByName("Etudiant");
-    let etudiant2 = WorkspaceRelationInstance.getTableByName("Etudiant");
+    etudiant = WorkspaceRelations.getTableByName("Etudiant");
+    let etudiant2 = WorkspaceRelations.getTableByName("Etudiant");
     if(etudiant && etudiant2){
-        etudiant.selectRowsWithCheck("age", (age) => age > 25);
-        etudiant2.selectRowsWithCheck("age", (age) => age <= 25);
+        etudiant.selectRowsWithCheck((row) => row["age"] > 25);
+        etudiant2.selectRowsWithCheck((row) => row["age"] <= 25);
         etudiant.union(etudiant2);
         console.log('Union :');
         etudiant.print();
@@ -111,11 +110,11 @@ export default function test(){
 
     // Code for a Intersection block
     console.log("=== Intersection ===");
-    etudiant = WorkspaceRelationInstance.getTableByName("Etudiant");
-    etudiant2 = WorkspaceRelationInstance.getTableByName("Etudiant");
+    etudiant = WorkspaceRelations.getTableByName("Etudiant");
+    etudiant2 = WorkspaceRelations.getTableByName("Etudiant");
     if(etudiant && etudiant2){
-        etudiant.selectRowsWithCheck("age", (age) => age >= 25);
-        etudiant2.selectRowsWithCheck("age", (age) => age <= 25);
+        etudiant.selectRowsWithCheck((row) => row["age"] >= 25);
+        etudiant2.selectRowsWithCheck((row) => row["age"] <= 25);
         etudiant.intersection(etudiant2);
         console.log('Intersection :');
         etudiant.print();
@@ -123,11 +122,11 @@ export default function test(){
     
     // Code for a Difference block
     console.log("=== Difference ===");
-    etudiant = WorkspaceRelationInstance.getTableByName("Etudiant");
-    etudiant2 = WorkspaceRelationInstance.getTableByName("Etudiant");
+    etudiant = WorkspaceRelations.getTableByName("Etudiant");
+    etudiant2 = WorkspaceRelations.getTableByName("Etudiant");
     if(etudiant && etudiant2){
-        etudiant.selectRowsWithCheck("age", (age) => age >= 25);
-        etudiant2.selectRowsWithCheck("age", (age) => age <= 25);
+        etudiant.selectRowsWithCheck((row) => row["age"] >= 25);
+        etudiant2.selectRowsWithCheck((row) => row["age"] <= 25);
         etudiant.difference(etudiant2);
         console.log('Difference :');
         etudiant.print();
@@ -135,13 +134,20 @@ export default function test(){
 
     // Code for a Product block
     console.log("=== Product ===");
-    etudiant = WorkspaceRelationInstance.getTableByName("Etudiant");
-    cours = WorkspaceRelationInstance.getTableByName("Cours");
+    etudiant = WorkspaceRelations.getTableByName("Etudiant");
+    cours = WorkspaceRelations.getTableByName("Cours");
     if(etudiant && cours){
         etudiant.product(cours);
         console.log('Product :');
         etudiant.print();
     }
+
+    // Code for a Division block
+    // TODO :
+
+    // Perso test
+    console.log("=== Perso ===");
+    WorkspaceRelations.getTableByName("Etudiant").difference(WorkspaceRelations.getTableByName("Etudiant").selectRowsWithCheck((row: Record<string, any>) => { return row["age"] == 25; })).print();
 
 
 
