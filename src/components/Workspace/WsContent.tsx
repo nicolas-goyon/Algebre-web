@@ -107,10 +107,13 @@ export default function WsContent(prop: any) {
             return;
         }
         var workspace = blockWorkspace;
+
+        /* ----------------------------- SAVE WORKSPACE ----------------------------- */
         const state = serializer.save(workspace);
         const data = {
             "workspace": JSON.stringify(state),
             "workspaceId": prop.id,
+            "name": "Mon espace de travail"
         }
         api.post(config.apiUrl +'/workspace/save', data)
         .then((res) => {
@@ -135,18 +138,16 @@ export default function WsContent(prop: any) {
             console.log("Workspace not saved");
             console.log(err);
         });
-
     }
 
     function loadWorkspace(id : number | null){
-        if(prop.noLoad === true){
+        if(prop.noLoad){
             return;
         }
 
         // Request api to load the workspace
         api.get(config.apiUrl +'/workspace/load/' + id)
         .then((res) => {
-            console.log("Workspace loaded");
             if(res.status !== 200){
                 return;
             }
@@ -157,8 +158,10 @@ export default function WsContent(prop: any) {
             var workspace = blockWorkspace;
             
             // load the workspace from JSON format
+            let state = JSON.parse(res.response.workspace);
             workspace.clear();
-            serializer.load(res.response.workspace, workspace);
+            serializer.load(state, workspace);
+            console.log("Workspace loaded");
         })
         .catch((err) => {
             console.log("Workspace not loaded");
@@ -166,6 +169,78 @@ export default function WsContent(prop: any) {
         });
     }
 
+
+    function saveRelations(e: any){
+        if(prop.noSave === true){
+            console.log("Relations can not be saved");
+            return;
+        }
+
+        if (blockWorkspace === undefined) {
+            console.log("blockWorkspace doesn't exist");
+            return;
+        }
+        
+
+        /* ----------------------------- SAVE RELATIONS ----------------------------- */
+        const relations = WorkspaceRelations.getTables();
+        relations.forEach((relation : Relation) => {
+            const data = {
+                "id": prop.id,
+                "content": JSON.stringify(relation),
+                "name": relation.name
+            }
+            api.post(config.apiUrl +'/relation/save', data)
+            .then((res) => {
+                console.log("Relation saved for " + relation.name + " table");
+            })
+            .catch((err) => {
+                console.log("Relation not saved");
+                console.log(err);
+            });
+        });
+    }
+
+    function loadRelations(id : number | null){
+        if(prop.noLoad){
+            return;
+        }
+
+        // Request api to load the relations
+        api.get(config.apiUrl +'/relation/getAllById/' + id)
+        .then((res) => {
+            if(res.status !== 200){
+                return;
+            }
+            let newInputArray : any[] = [];
+            WorkspaceRelations.clearInstance();
+            const relations = res.response.relations
+            relations.forEach((relation : any) => {
+                console.log(relation);
+                const relationParse = JSON.parse(relation.content);
+                const headers = relationParse.columnNames;
+                const name = relation.name;
+                const data = relationParse.data
+
+                const newRelation = new Relation(name, data, headers);
+                WorkspaceRelations.addTable(newRelation);
+        
+                const myData = {
+                    title: name,
+                    data: newRelation.getData(),
+                    columnNames: newRelation.getColumnNames(),
+                    isShrinkable: true,
+                }
+        
+                newInputArray.push(myData);
+            });
+            setInputArray(newInputArray);
+        })
+        .catch((err) => {
+            console.log("Relations not loaded");
+            console.log(err);
+        });
+    }
 
 
     useEffect(() => {
@@ -201,9 +276,7 @@ export default function WsContent(prop: any) {
                 return;
             }
             loadWorkspace(prop.id);
-            // console.log("================");
-            // test();
-            // console.log("================");
+            loadRelations(prop.id);
         }
 
 
@@ -307,9 +380,14 @@ export default function WsContent(prop: any) {
             </div>
             {/* Save button */}
             {prop.noSave === undefined || prop.noSave === false ?
-                <div className='flex justify-center'>
-                    <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveWorkspace}>Save</button>
-                </div>
+                <>
+                    <div className='flex justify-center'>
+                        <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveWorkspace}>Save Workspace</button>
+                    </div>
+                    <div className='flex justify-center'>
+                        <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveRelations}>Save Relations</button>
+                    </div>
+                </>
             : null
             }
             {/* Execute button */}

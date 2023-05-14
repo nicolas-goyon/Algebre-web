@@ -1,11 +1,11 @@
 
 export default class Relation {
-    private name: string;
+    private _name: string;
     private data: any[];
     private columnNames: string[];
   
     constructor(name: string, data: any[], columnNames?: string[]) {
-        this.name = name;
+        this._name = name;
         this.data = data;
         this.columnNames = columnNames || (data.length > 0 ? Object.keys(data[0]) : []);
     }
@@ -46,6 +46,14 @@ export default class Relation {
     public getData(): any[] {
         return this.data;
     }
+
+    public get name(): string {
+        return this._name;
+    }
+    private set name(name: string) {
+        this._name = name;
+    }
+
   
     public removeColumn(name: string): Relation {
         const index = this.getColumnNames().indexOf(name);

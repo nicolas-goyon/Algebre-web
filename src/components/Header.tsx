@@ -1,5 +1,6 @@
 import React, { useState , useRef } from 'react';
 import { Dialog, Disclosure, Popover } from '@headlessui/react'
+import { v4 } from 'uuid';
 import {
   ArrowPathIcon,
   Bars3Icon,
@@ -122,7 +123,7 @@ function Header() {
                       <Disclosure.Panel className="mt-2 space-y-2">
                         {[...products, ...callsToAction].map((item) => (
                           <Disclosure.Button
-                            key={item.name}
+                            key={item.name + v4()}
                             as="a"
                             href={item.href}
                             className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"

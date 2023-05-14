@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { v4 } from 'uuid';
 
 export default function UserButton(props: any) {
     const [etat, setEtat] = useState(false)
@@ -40,8 +41,8 @@ export default function UserButton(props: any) {
             <ul className={`bg-white top-12 right-0 mt-5 space-y-5 lg:absolute lg:border lg:rounded-md lg:text-sm lg:w-52 lg:shadow-md lg:space-y-0 lg:mt-0 ${etat ? '' : 'lg:hidden'}`}>
                 {
                     navigation.map((option,index) =>{return (
-                        <li>
-                            <a key={ index } className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5" href={option.path}>
+                        <li key={v4()}>
+                            <a key={ index + v4()} className="block text-gray-600 lg:hover:bg-gray-50 lg:p-2.5" href={option.path}>
                                 {option.title}
                             </a>
                         </li>
