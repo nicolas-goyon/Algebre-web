@@ -12,7 +12,7 @@ export default function Logout(prop: any) {
         return (<div></div>);
     }
 
-    api.get(config.apiUrl + "/users/logout")
+    api.get(config.apiUrl + "/auth/logout")
     .then((res) => {
         console.log("Log out Ok");
     }).catch((err) => {

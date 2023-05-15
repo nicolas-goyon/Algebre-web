@@ -54,6 +54,12 @@ export class ApiClass {
         return this.request(path, "DELETE", null);
     }
 
+    public async patch(path: string, body: any) {
+        return this.request(path, "PATCH", body);
+    }
+
+    
+
 }
 
 export const api = new ApiClass();

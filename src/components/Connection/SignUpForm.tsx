@@ -16,7 +16,7 @@ export default function SignUp() {
         }
 
         // request api to check if email is available
-        api.get(config.apiUrl + '/auth/checkEmail/'+email)
+        api.get(config.apiUrl + '/auth/check/email/'+email)
         .then((response) => {
             if (response.status === 200) {
                 console.log("OK");

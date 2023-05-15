@@ -25,7 +25,7 @@ export default function ProfileDropDown(props: any){
         }
         
         await api
-        .get(config.apiUrl + "/users/me")
+        .get(config.apiUrl + "/users/")
         .then((res) => {
             console.log("users me Ok status ");
             if (res.status === 401)

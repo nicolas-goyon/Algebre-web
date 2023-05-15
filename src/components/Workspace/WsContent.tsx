@@ -115,7 +115,7 @@ export default function WsContent(prop: any) {
             "workspaceId": prop.id,
             "name": "Mon espace de travail"
         }
-        api.post(config.apiUrl +'/workspace/save', data)
+        api.patch(config.apiUrl +'/workspace/', data)
         .then((res) => {
             console.log("Workspace saved");
             // Change the button color to green then back to normal after 1 second
@@ -146,7 +146,7 @@ export default function WsContent(prop: any) {
         }
 
         // Request api to load the workspace
-        api.get(config.apiUrl +'/workspace/load/' + id)
+        api.get(config.apiUrl +'/workspace/' + id)
         .then((res) => {
             if(res.status !== 200){
                 return;
@@ -190,7 +190,7 @@ export default function WsContent(prop: any) {
                 "content": JSON.stringify(relation),
                 "name": relation.name
             }
-            api.post(config.apiUrl +'/relation/save', data)
+            api.patch(config.apiUrl +'/relation/', data)
             .then((res) => {
                 console.log("Relation saved for " + relation.name + " table");
             })
@@ -207,7 +207,7 @@ export default function WsContent(prop: any) {
         }
 
         // Request api to load the relations
-        api.get(config.apiUrl +'/relation/getAllById/' + id)
+        api.get(config.apiUrl +'/relation/' + id)
         .then((res) => {
             if(res.status !== 200){
                 return;

@@ -29,7 +29,7 @@ export default function WsList(prop: any) {
         if (token === "" || token === undefined)
             return;
 
-        api.get(config.apiUrl + "/workspace/all")
+        api.get(config.apiUrl + "/workspace/")
         .then((res) => {
             console.log("Récupération des workspaces ok");
             processRequestSuccess(res);
@@ -43,7 +43,7 @@ export default function WsList(prop: any) {
         return;
 
         let dataRaw : {id:string, title:string}[] = [];
-        dataRaw = res.response.map((item: any) => (
+        dataRaw = res.response.workspace.map((item: any) => (
                     {id: item.id, title: item.title}
                 ))
         let newData = (
