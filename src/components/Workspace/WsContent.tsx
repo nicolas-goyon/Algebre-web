@@ -277,6 +277,9 @@ export default function WsContent(prop: any) {
             }
             loadWorkspace(prop.id);
             loadRelations(prop.id);
+            console.log("===================================");
+            test();
+            console.log("===================================");
         }
 
 

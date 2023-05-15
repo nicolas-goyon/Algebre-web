@@ -7,6 +7,7 @@ import { Produit } from "./Produit"
 import { Intersection } from "./Intersection"
 import { Difference } from "./Difference"
 import { Jointure } from "./Jointure"
+import { Division } from "./Division"
 import { Noeud } from "./Noeud"
 
 
@@ -23,7 +24,7 @@ export { Produit } from "./Produit"
 export { Intersection } from "./Intersection"
 export { Difference } from "./Difference"
 export { Jointure } from "./Jointure"
-
+export { Division } from "./Division"
 
 export const NoeudsBase = {
     // Noeud de base 
@@ -103,6 +104,13 @@ export const NoeudsBase = {
         isBinary: true,
         class: Jointure
     },
+    Division:{
+        name:"Division",
+        children: 2,
+        hasChamp: false,
+        isBinary: true,
+        class: Division
+    }
 }
 
 export class NoeudsGet{

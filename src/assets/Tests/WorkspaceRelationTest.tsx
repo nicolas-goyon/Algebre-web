@@ -22,7 +22,7 @@ export default function test(){
         { id: 3, idEtudiant: 1, idCours: 3, note: 12 },
         { id: 4, idEtudiant: 2, idCours: 1, note: 14 },
         { id: 5, idEtudiant: 2, idCours: 2, note: 16 },
-        { id: 6, idEtudiant: 2, idCours: 3, note: 18 },
+        // { id: 6, idEtudiant: 2, idCours: 3, note: 18 },
     ];
     const NoteRelation = new Relation("Note", Note, ['id', 'idEtudiant', 'idCours', 'note']);
 
@@ -121,7 +121,7 @@ export default function test(){
     }
     
     // Code for a Difference block
-    console.log("=== Difference ===");
+    // console.log("=== Difference ===");
     etudiant = WorkspaceRelations.getTableByName("Etudiant");
     etudiant2 = WorkspaceRelations.getTableByName("Etudiant");
     if(etudiant && etudiant2){
@@ -142,13 +142,28 @@ export default function test(){
         etudiant.print();
     }
 
-    // Code for a Division block
-    // TODO :
 
     // Perso test
     console.log("=== Perso ===");
     WorkspaceRelations.getTableByName("Etudiant").difference(WorkspaceRelations.getTableByName("Etudiant").selectRowsWithCheck((row: Record<string, any>) => { return row["age"] == 25; })).print();
 
 
+    // code for the division block
+    console.log("=== Division ===");
+    note = WorkspaceRelations.getTableByName("Note");
+    note.changeColumnName("idEtudiant", "id");
+    note.changeColumnName("idCours", "idC");
+    note.selectColumns(["id", "idC"]);
 
+    cours = WorkspaceRelations.getTableByName("Cours");
+    cours.changeColumnName("id", "idC");
+    cours.selectColumns(["idC"]);
+    
+    let division = note.division(cours);
+    if(division){
+        division.print();
+    }
+    else {
+        console.log("Division impossible");
+    }
 }

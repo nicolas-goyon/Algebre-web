@@ -1,4 +1,4 @@
-
+import { compareRecords } from "../tools/Utils";
 export default class Relation {
     private _name: string;
     private data: any[];
@@ -28,6 +28,7 @@ export default class Relation {
           delete row[oldName];
         });
       }
+      this.removeDuplicateRows();
       return this;
     }
 
@@ -40,6 +41,7 @@ export default class Relation {
             return newRow;
         });
         this.columnNames = columnNames;
+        this.removeDuplicateRows();
         return this;
     }
 
@@ -64,6 +66,7 @@ export default class Relation {
         }
 
         this.columnNames = this.columnNames.filter((columnName) => columnName !== name);
+        this.removeDuplicateRows();
         return this;
     }
   
@@ -125,19 +128,57 @@ export default class Relation {
         });
         return this;
     }
+    public renameColumnsFn(changeFn: (columnName: string) => string): Relation {
+        this.columnNames.forEach((columnName) => {
+            this.changeColumnName(columnName, changeFn(columnName));
+        });
+        return this;
+    }
+
+    public unifyColumnsOrder(relation: Relation): Relation {
+        // check if all column names are in both relations
+        const newColumnNames = relation.columnNames.filter((columnName) => this.columnNames.includes(columnName));
+        if (newColumnNames.length !== this.columnNames.length || newColumnNames.length !== relation.columnNames.length) {
+            throw new Error('Cannot unify columns order of relations with different columns');
+        }
+        this.data = this.data.map((row) => {
+            const newRow: Record<string, any> = {};
+            newColumnNames.forEach((columnName) => {
+                newRow[columnName] = row[columnName];
+            });
+            return newRow;
+        });
+
+        this.columnNames = newColumnNames;
+        return this;
+    }
+
+    public removeDuplicateRows(): Relation {
+        const newdata: Record<string, any>[] = [];
+        this.data.forEach((row) => {
+            const hasDuplicate = newdata.some((r) => {
+                return compareRecords(r, row);
+            });
+            if (!hasDuplicate) {
+                newdata.push(row);
+            }
+        });
+        this.data = newdata;
+        return this;
+    }
 
     public join(relation: Relation, checkFn: (row1: Record<string, any>, row2: Record<string, any>) => boolean) : Relation {
         // concat all column names with the relation name to avoid conflicts
-        const columnNames = this.columnNames.map((columnName) => this.name + '.' + columnName);
+        const newcolumnNames = this.columnNames.map((columnName) => this.name + '.' + columnName);
         const relationColumnNames = relation.columnNames.map((columnName) => relation.name + '.' + columnName);
-        columnNames.push(...relationColumnNames);
+        newcolumnNames.push(...relationColumnNames);
         
         const newdata: Record<string, any>[] = [];
         this.data.forEach((row1) => {
             relation.data.forEach((row2) => {
                 if (checkFn(row1, row2)) {
                     const newRow: Record<string, any> = {};
-                    columnNames.forEach((columnName) => {
+                    newcolumnNames.forEach((columnName) => {
                         const [relationName, name] = columnName.split('.');
                         newRow[columnName] = relationName === this.name ? row1[name] : row2[name];
                     });
@@ -146,7 +187,7 @@ export default class Relation {
             });
         });
         this.data = newdata;
-        this.columnNames = columnNames;
+        this.columnNames = newcolumnNames;
         this.name = this.name + ' join ' + relation.name;
         return this;
     }
@@ -165,11 +206,10 @@ export default class Relation {
         const newdata = this.data.concat(relation.data);
         // remove duplicates
         const newdataWithoutDuplicates = newdata.filter((row, index) => {
-            return newdata.findIndex((r) => JSON.stringify(r) === JSON.stringify(row)) === index;
+            return newdata.findIndex((r) => compareRecords(r, row)) === index;
         });
         
         this.data = newdataWithoutDuplicates;
-        this.columnNames = this.columnNames;
         this.name = this.name + ' union ' + relation.name;
         return this;
     }
@@ -188,13 +228,12 @@ export default class Relation {
         const newdata: Record<string, any>[] = [];
         this.data.forEach((row1) => {
             relation.data.forEach((row2) => {
-                if (JSON.stringify(row1) === JSON.stringify(row2)) {
+                if (compareRecords(row1, row2)) {
                     newdata.push(row1);
                 }
             });
         });
         this.data = newdata;
-        this.columnNames = this.columnNames;
         this.name = this.name + ' intersect ' + relation.name;
         return this;
     }
@@ -202,6 +241,7 @@ export default class Relation {
     public difference(relation: Relation): Relation {
         // check if column names are the same and in the same order
         if (this.columnNames.length !== relation.columnNames.length) {
+            console.log(this.columnNames, relation.columnNames);
             throw new Error('Cannot difference relations with different number of columns');
         }
         this.columnNames.forEach((columnName, index) => {
@@ -212,14 +252,14 @@ export default class Relation {
 
         const newdata: Record<string, any>[] = [];
         this.data.forEach((row1) => {
-            relation.data.forEach((row2) => {
-                if (JSON.stringify(row1) !== JSON.stringify(row2)) {
-                    newdata.push(row1);
-                }
+            const allDifferent = relation.data.every((row2) => {
+                return !compareRecords(row1, row2);
             });
+            if (allDifferent) {
+                newdata.push(row1);
+            }
         });
         this.data = newdata;
-        this.columnNames = this.columnNames;
         this.name = this.name + ' difference ' + relation.name;
         return this;
     }
@@ -244,5 +284,31 @@ export default class Relation {
         this.columnNames = newColumnNames;
         this.name = this.name + ' product ' + relation.name;
         return this;
+    }
+
+    public division(relation: Relation): Relation {
+        let r = this.clone();
+        let s = relation.clone();
+        // get column names that are not in the relation
+        const newColumnNames = this.columnNames.filter((columnName) => {
+            return !relation.columnNames.includes(columnName);
+        });
+
+        let allCombinations = r.clone().selectColumns(newColumnNames).product(s.clone()); // Make pi_a(R) x S
+        // Remove the first part of the column names "relationName." of allCombination
+        allCombinations = allCombinations.renameColumnsFn((columnName) => {
+            return columnName.split('.')[1];
+        });
+        allCombinations = allCombinations.unifyColumnsOrder(r.clone()); // Clean up
+
+        allCombinations = allCombinations.difference(r.clone()); // make (pi_a(R)xS) - R
+        const result = r.selectColumns(newColumnNames).clone().difference(allCombinations.selectColumns(newColumnNames)); // make 
+
+        this.data = result.data;
+        this.columnNames = result.columnNames;
+        this.name = this.name + ' division ' + relation.name;
+        return this;
+
+
     }
 }

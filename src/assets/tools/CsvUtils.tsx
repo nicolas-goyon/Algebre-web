@@ -1,5 +1,5 @@
 export default function csvReader(text: string) : [string[], string[][]] {
-    const endOfLine = '\r\n';
+    const endOfLine = '\n';
     const separator = ',';
     let lines = text.split(endOfLine);
     let result : string[][] = [];

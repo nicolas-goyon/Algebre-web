@@ -16,3 +16,20 @@ export function getCookie(name: string) {
     const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
     return cookieValue ? cookieValue.pop() : '';
 }
+
+export function compareMaps(map1 : Map<any, any>, map2 : Map<any, any>) {
+    const arr1 = Array.from(map1);
+    const arr2 = Array.from(map2);
+    arr1.sort();
+    arr2.sort();
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+}
+
+export function compareRecords(record1 : Record<string, any>, record2 : Record<string, any>) {
+    const arr1 = Object.entries(record1);
+    const arr2 = Object.entries(record2);
+    arr1.sort();
+    arr2.sort();
+    return JSON.stringify(arr1) === JSON.stringify(arr2);
+}
+  
