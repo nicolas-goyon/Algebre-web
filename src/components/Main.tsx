@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider }  from 'react-router-dom';
 
-import { Home, Logout, Playground, SignIn, SignUp, Workspaces, Workspace, WorspaceLoader, CreateWorkspace } from './Pages';
+import { Home, Logout, Playground, SignIn, SignUp, Workspaces, Workspace, WorspaceLoader, CreateWorkspace, Exercicedemo, Exerciceliste } from './Pages';
 
 
 export default function Main(prop: any) {
@@ -36,6 +36,14 @@ export default function Main(prop: any) {
         {
             path: "/createWorkspace",
             element: <CreateWorkspace/>,
+        },
+        {
+            path: "/exercicedemo",
+            element: <Exercicedemo/>,
+        },
+        {
+            path: "/exerciceliste",
+            element: <Exerciceliste/>,
         },
         {
             path: "/",

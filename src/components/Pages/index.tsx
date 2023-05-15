@@ -6,4 +6,6 @@ import Logout from './Logout';
 import Workspaces from './Workspaces';
 import Workspace, { loader as WorspaceLoader} from './Workspace';
 import CreateWorkspace from './CreateWorkspace';
-export { Home, Playground, SignIn, SignUp, Logout, Workspaces, Workspace, WorspaceLoader, CreateWorkspace };
+import Exercicedemo from './Exercicedemo';
+import Exerciceliste from './Exercicesliste';
+export { Home, Playground, SignIn, SignUp, Logout, Workspaces, Workspace, WorspaceLoader, CreateWorkspace, Exercicedemo, Exerciceliste };
