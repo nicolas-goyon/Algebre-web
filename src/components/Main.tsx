@@ -29,7 +29,7 @@ export default function Main(prop: any) {
             element: <Workspaces/>,
         },
         {
-            path: "/workspace/:workspaceId",
+            path: "/workspaces/:workspaceId",
             element: <Workspace/>,
             loader: WorspaceLoader,
         },
@@ -38,11 +38,11 @@ export default function Main(prop: any) {
             element: <CreateWorkspace/>,
         },
         {
-            path: "/exercicedemo",
+            path: "/exercices/:exerciceId",
             element: <Exercicedemo/>,
         },
         {
-            path: "/exerciceliste",
+            path: "/exercices",
             element: <Exerciceliste/>,
         },
         {

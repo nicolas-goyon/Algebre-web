@@ -15,6 +15,17 @@ import ProfileDropDown from './Profile/ProfileDropDown';
 import { DevWarning } from './Alertes/DevWarning';
 import { getCookie } from 'src/assets/tools/Utils';
 
+type MenuItemType = {
+    name: string,
+    href: string,
+    current: boolean,
+}
+
+let menuTabs: Array<MenuItemType> = [
+    { name: 'Exercices', href: '/exercices', current: true },
+    { name: 'Playground', href: '/playground', current: false },
+]
+
 const products = [
   { name: 'Analytics', description: 'Get a better understanding of your traffic', href: '#', icon: ChartPieIcon },
   { name: 'Engagement', description: 'Speak directly to your customers', href: '#', icon: CursorArrowRaysIcon },
@@ -42,6 +53,22 @@ function Header() {
 
     const token = getCookie("token");
 
+    if (!(token === undefined || token === null || token === "")){
+        menuTabs.push({ name: 'Workspaces', href: '/workspaces', current: false });
+    }
+
+    // get the current page
+    let currentPath: string = window.location.pathname;
+    // get the first part of the path
+    currentPath = currentPath.split("/")[1];
+    menuTabs.forEach((item) => {
+        if (item.href === ("/" + currentPath)){
+            item.current = true;
+        }
+        else{
+            item.current = false;
+        }
+    });
 
     return (
     <header className="bg-white border-b-2">
@@ -63,18 +90,21 @@ function Header() {
           </button>
         </div>
         <Popover.Group className="hidden lg:flex lg:gap-x-12">
-          <a href="/exercices" className="text-sm font-semibold leading-6 text-gray-900">
-            Exercices
-          </a>
-          { !(token === undefined || token === null || token === "") ?
-            <a href="/workspaces" className="text-sm font-semibold leading-6 text-gray-900">
-                Mes Workspaces
+            { menuTabs.map((item) => {
+            // Current underlined item
+            let classeData = "text-sm font-semibold leading-6 text-gray-900";
+            if (item.current){
+                classeData += " border-b-2 border-indigo-500";
+            }
+
+
+
+            return (
+            <a href={item.href} key={v4()} className={classeData}>
+                {item.name}
             </a>
-          : null
-          }
-          <a href="/playground" className="text-sm font-semibold leading-6 text-gray-900">
-            Playground
-          </a>
+            )
+            })}
         </Popover.Group>
         {/*  */}
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -110,7 +140,7 @@ function Header() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Disclosure as="div" className="-mx-3">
+                {/* <Disclosure as="div" className="-mx-3">
                   {({ open }) => (
                     <>
                       <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 hover:bg-gray-50">
@@ -147,10 +177,7 @@ function Header() {
                 >
                   Marketplace
                 </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
+                <a href="#" className="-mx-3 block rounded-lg py-2 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                   Company
                 </a>
               </div>
@@ -161,7 +188,16 @@ function Header() {
                   ref={loginButton} 
                 >
                   Log in
-                </a>
+                </a> */}
+                {
+                    menuTabs.map((item) => {
+                    
+                        return (
+                            <a href={item.href} className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" ref={loginButton} >
+                                Log in
+                            </a>
+                        )
+                })}
                 
               </div>
             </div>
