@@ -9,7 +9,7 @@ import Table from '../Utils/Table';
 import CsvInput from '../Input/CsvInput';
 import csvReader from 'src/assets/tools/CsvUtils';
 import {transpile} from "typescript";
-import test from 'src/assets/Tests/WorkspaceRelationTest';
+// import test from 'src/assets/Tests/WorkspaceRelationTest';
 import WorkspaceRelations from 'src/assets/classes/WorkspaceRelation';
 
 type WsData = {
@@ -55,8 +55,8 @@ export default function WsContent(prop: any) {
         
         // let code2 = javascriptGen.blockToCode(baseBlock);
         let code = LatexGenerator.blockToCode(baseBlock);
-        // console.log("test"); // TODO : remove
-        // console.log(code2); // TODO : remove
+        const state = serializer.save(blockWorkspace!);
+        console.log(JSON.stringify(state));
         // afficher le code dans la zone d'affichage
         if(code != null && code.length > 0){
             setDemoLatex('$' + code + '$');
@@ -277,9 +277,9 @@ export default function WsContent(prop: any) {
             }
             loadWorkspace(prop.id);
             loadRelations(prop.id);
-            console.log("===================================");
-            test();
-            console.log("===================================");
+            // console.log("===================================");
+            // test();
+            // console.log("===================================");
         }
 
 

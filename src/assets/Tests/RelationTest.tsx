@@ -1,5 +1,6 @@
 import Relation from '../classes/Relation';
 
+
 // Define a simple test function that creates a relation with some data and performs some operations
 async function test(): Promise<void> {
   // Create a new relation with some data
@@ -19,7 +20,7 @@ async function test(): Promise<void> {
   console.log('Data after adding rows:', relation.getData());
 
   // Test removeRowsWithCheck method
-  relation.removeRowsWithCheck('name', (value : any) => value === 'John');
+  relation.removeRowsWithCheck((row : any) => row.name === 'John');
   console.log('Data after removing rows:', relation.getData());
 
   // Test removeColumn method
@@ -42,6 +43,7 @@ async function test(): Promise<void> {
 
   // Test print method
     relation.print();
+
 }
 
 // Call the test function and handle any errors that occur

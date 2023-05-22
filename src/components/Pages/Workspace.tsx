@@ -9,7 +9,7 @@ export async function loader({ params } : any) {
     return params.workspaceId;
 }
 
-export default function Workspace() : JSX.Element {
+export function Workspace() : JSX.Element {
     const workspace : any = useLoaderData();
     const token = getCookie("token");
     if (token === undefined || token === null || token === ""){
@@ -19,8 +19,6 @@ export default function Workspace() : JSX.Element {
 
 
     return (
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-light">
-            <WsContent id={workspace}/>
-        </div>
+        <WsContent id={workspace}/>
     )
 }

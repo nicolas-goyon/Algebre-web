@@ -1,8 +1,12 @@
 import React from 'react'
 import Table from '../Utils/Table';
+import ReactMarkdown from 'react-markdown'
+import rehypeHighlight from 'rehype-highlight'
+import remarkGfm from 'remark-gfm'
+import 'github-markdown-css/github-markdown-light.css'
 
 
-export default function Exercicedemo() : JSX.Element {
+export function Exercicedemo(): JSX.Element {
     const dummyTableColumnNames = [
         "Nom",
         "Prénom",
@@ -21,8 +25,15 @@ export default function Exercicedemo() : JSX.Element {
     //     window.location.href = "/signin";
     //     return <div></div>;
     // }
+    const markdown = `
+# Exercice 1 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eu leo in justo sollicitudin iaculis. Donec maximus mi ut faucibus consectetur. Sed consectetur tellus quis urna aliquam, id condimentum elit tincidunt. Integer auctor lacus et velit iaculis, vel eleifend libero consectetur. Sed non fermentum arcu. Nunc euismod leo felis, a eleifend arcu ullamcorper in. Proin convallis consequat libero ac tempus. Mauris eu ex vitae nisl vulputate lobortis a nec purus.
+Example markdown:
+\`\`\`js
+const markdown = "Hello World";
+\`\`\``;
     return (
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-light">
+        <>
             {/* Zone de description de l'exercice, Titre en une ligne en haut, puis un div séparé en deux, à gauche un ennoncé, à droite le tableau de data attendu */}
             <div className="flex flex-col">
                 <div className="flex flex-row">
@@ -33,24 +44,28 @@ export default function Exercicedemo() : JSX.Element {
                 </div>
                 <div className="flex flex-row">
                     <div className="flex flex-row">
-                            {/* Div ennonce  */}
-                            <div className="bg-gray-200 p-4 w-2/3">
-                                <p className="text-lg text-gray-800">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eu leo in justo sollicitudin iaculis. Donec maximus mi ut faucibus consectetur. Sed consectetur tellus quis urna aliquam, id condimentum elit tincidunt. Integer auctor lacus et velit iaculis, vel eleifend libero consectetur. Sed non fermentum arcu. Nunc euismod leo felis, a eleifend arcu ullamcorper in. Proin convallis consequat libero ac tempus. Mauris eu ex vitae nisl vulputate lobortis a nec purus.
-                                </p>
-                            </div>
-                            {/* Div resultat attendu */}
-                            <div className="bg-gray-100 p-4 w-1/3">
-                                <Table columnNames={dummyTableColumnNames} data={dummyTableData} title={"Résultat attendu"} isShrinkable={true}/>
-                            </div>
+                        {/* Div ennonce  */}
+                        <div className="bg-gray-200 p-4 w-2/3 markdown-body">
+                            <ReactMarkdown components={{ h1: "h2" }} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} children={markdown} />
+                        </div>
+
+                        {/* Div resultat attendu */}
+                        <div className="bg-gray-100 p-4 w-1/3">
+                            <Table columnNames={dummyTableColumnNames} data={dummyTableData} title={"Résultat attendu"} isShrinkable={true} />
+                        </div>
 
                     </div>
                 </div>
             </div>
             {/* Zone de code */}
             <div className="flex flex-col h-56 bg-dark">
-
+                {/* Texte centré et gros */}
+                <div className="flex flex-row justify-center items-center h-full">
+                    <h1 className="text-4xl font-mono text-light">
+                        TBA
+                    </h1>
+                </div>
             </div>
-        </div>
+        </>
     )
 }

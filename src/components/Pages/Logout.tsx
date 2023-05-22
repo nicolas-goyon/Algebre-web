@@ -3,7 +3,7 @@ import { api } from 'src/assets/tools/ApiCenter';
 import { getCookie } from 'src/assets/tools/Utils';
 import { config } from 'src/config';
 
-export default function Logout(prop: any) {
+export function Logout(prop: any) {
     const token = getCookie("token");
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
 

@@ -36,7 +36,7 @@ export default function WsList(prop: any) {
         }).catch((err) => {
             console.log(err);
         });
-    }, [])
+    }, [first, data]);
 
     function processRequestSuccess(res : any){
         if (res.status === 401)

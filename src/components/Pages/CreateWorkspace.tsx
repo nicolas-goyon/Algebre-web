@@ -1,16 +1,27 @@
 import React from 'react'
 import { getCookie } from 'src/assets/tools/Utils';
-import WsContent from '../Workspace/WsContent';
+import { config } from 'src/config.js'
+import { api } from 'src/assets/tools/ApiCenter';
 
-export default function CreateWorkspace() : JSX.Element {
+
+export function CreateWorkspace(): JSX.Element {
     const token = getCookie("token");
-    if (token === undefined || token === null || token === ""){
+    if (token === undefined || token === null || token === "") {
         window.location.href = "/signin";
         return <div></div>;
     }
-    return (
-        <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-light">
-            <WsContent noLoad />
-        </div>
-    )
+
+    api.post(config.apiUrl + "/workspace", {})
+        .then((response) => {
+            console.log(response);
+            window.location.href = "/workspaces/" + response.response.id;
+        }).catch((error) => {
+            console.log(error);
+        });
+
+
+
+    // TODO : créer un workspace à partir de l'api et rediriger vers la page du workspace
+    // FIXME : ne pas afficher de contenu de workspace
+    return (<></>)
 }

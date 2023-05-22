@@ -1,7 +1,7 @@
 import React from 'react';
-import { createBrowserRouter, RouterProvider }  from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, useLocation } from 'react-router-dom';
 
-import { Home, Logout, Playground, SignIn, SignUp, Workspaces, Workspace, WorspaceLoader, CreateWorkspace, Exercicedemo, Exerciceliste } from './Pages';
+import { Home, Logout, Playground, SignIn, SignUp, Workspaces, Workspace, WorspaceLoader, CreateWorkspace, Exercicedemo, Exerciceliste, CreateExercice } from './Pages';
 
 
 export default function Main(prop: any) {
@@ -9,52 +9,63 @@ export default function Main(prop: any) {
 
     const router = createBrowserRouter([
         {
-          path: "/playground",
-          element: <Playground/>,
+            path: "/playground",
+            element: <Playground />,
         },
         {
             path: "/signin",
-            element: <SignIn/>,
+            element: <SignIn />,
         },
         {
             path: "/signup",
-            element: <SignUp/>,
+            element: <SignUp />,
         },
         {
             path: "/logout",
-            element: <Logout/>,
+            element: <Logout />,
         },
         {
-            path:"/workspaces",
-            element: <Workspaces/>,
+            path: "/workspaces",
+            element: <Workspaces />,
         },
         {
             path: "/workspaces/:workspaceId",
-            element: <Workspace/>,
+            element: <Workspace />,
             loader: WorspaceLoader,
         },
         {
             path: "/createWorkspace",
-            element: <CreateWorkspace/>,
+            element: <CreateWorkspace />,
         },
         {
             path: "/exercices/:exerciceId",
-            element: <Exercicedemo/>,
+            element: <Exercicedemo />,
         },
         {
             path: "/exercices",
-            element: <Exerciceliste/>,
+            element: <Exerciceliste />,
+        },
+        {
+            path: "/createExercice",
+            element: <CreateExercice />,
         },
         {
             path: "/",
-            element: <Home/>,
+            element: <Home />,
         }
-      ]);
-      
+    ]);
+
+    const noFrameRoutes = ["/signin", "/signup", "/logout"];
 
     return (
         <main>
-            <RouterProvider router={router} />
+            {noFrameRoutes.includes(useLocation().pathname) ? 
+                <RouterProvider router={router} /> 
+            : 
+                <div className="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 bg-light">
+                    <RouterProvider router={router} />
+                </div>
+            }
         </main>
     )
 

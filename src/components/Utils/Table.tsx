@@ -42,14 +42,13 @@ export default function Table(props : any) {
             const row = rows[i];
             row.classList.toggle('hidden');
         }
-
     }
 
     return (
         <div className="flex flex-col">
             <div className="overflow-x-auto">
                 <div className="p-1.5 w-full inline-block align-middle">
-                    <div className="overflow-hidden border rounded-lg">
+                    <div className="overflow-scroll border rounded-lg">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 {title !== undefined ?
