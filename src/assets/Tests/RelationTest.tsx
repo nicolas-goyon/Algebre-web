@@ -36,10 +36,6 @@ async function test(): Promise<void> {
   console.log('Column names after changing column name:', relation.getColumnNames());
   console.log('Data after changing column name:', relation.getData());
 
-  // Test sendToCsv and loadFromCsv methods
-  await relation.sendToCsv('test.csv');
-//   const loadedDataset = await Relation.loadFromCsv('test.csv');
-//   console.log('Data loaded from CSV:', loadedDataset.getData());
 
   // Test print method
     relation.print();

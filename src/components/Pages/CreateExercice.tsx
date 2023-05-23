@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { getCookie } from 'src/assets/tools/Utils';
+import { getCookie } from '../../assets/tools/Utils';
 import ReactMarkdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 import remarkGfm from 'remark-gfm'
@@ -9,9 +9,15 @@ import Title from '../Utils/Title';
 
 
 export function CreateExercice(): JSX.Element {
+    const [firstRender, setFirstRender] = React.useState(true);
     useEffect(() => {
+        if (!firstRender) {
+            return;
+        }
+        
+        setFirstRender(false);
         insertDefaultMarkdown();
-    });
+    }, []);
     const baseMarkdown = `# Titre
 # Sous-titre
 # Sous-sous titre

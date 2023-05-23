@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import { Bars3Icon, CogIcon, UserCircleIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import ProfileDropDown from '../Profile/ProfileDropDown';
 import { DevWarning } from '../Alertes/DevWarning';
-import { getCookie } from 'src/assets/tools/Utils';
+import { getCookie } from '../../assets/tools/Utils';
 
 type MenuItemType = {
     name: string,

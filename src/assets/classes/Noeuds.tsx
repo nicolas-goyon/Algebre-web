@@ -11,20 +11,7 @@ import { Division } from "./Division"
 import { Noeud } from "./Noeud"
 
 
-
-export { Noeud } from "./Noeud"
-export { Ensemble } from "./Ensemble"
-
-export { Renommage } from "./Renommage"
-export { Selection } from "./Selection"
-export { Projection } from "./Projection"
-
-export { Union } from "./Union"
-export { Produit } from "./Produit"
-export { Intersection } from "./Intersection"
-export { Difference } from "./Difference"
-export { Jointure } from "./Jointure"
-export { Division } from "./Division"
+export { Noeud, Ensemble, Renommage, Selection, Projection, Union, Produit, Intersection, Difference, Jointure, Division }
 
 export const NoeudsBase = {
     // Noeud de base 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { inputValidator } from 'src/assets/tools/Utils';
-import { api } from 'src/assets/tools/ApiCenter';
+import { inputValidator } from '../../assets/tools/Utils';
+import { api } from '../../assets/tools/ApiCenter';
 import { config } from "../../config";
 const passwordSize = 8;
 

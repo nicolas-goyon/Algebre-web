@@ -1,6 +1,6 @@
-import { api } from 'src/assets/tools/ApiCenter';
-import { getCookie } from 'src/assets/tools/Utils';
-import { config } from 'src/config';
+import { api } from '../../assets/tools/ApiCenter';
+import { getCookie } from '../../assets/tools/Utils';
+import { config } from '../../config';
 import React, { useEffect, useState } from 'react';
 import UserButton from './UserButton';
 

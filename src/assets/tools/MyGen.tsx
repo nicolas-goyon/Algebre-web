@@ -10,21 +10,10 @@
  */
 // 'use strict';
 
-// import { Block, Workspace } from "blockly";
-// goog.module('Blockly.MyGenerator');
 import 'blockly/javascript';
 import {Block, Variables, Workspace, Names, CodeGenerator, inputTypes} from 'blockly';
-import type { NameType } from 'blockly/core/names.d';
-// const {NameType} = require('../../../node_modules/blockly/core/names');
-import type { isNumber, wrap } from 'blockly/core/utils/string.d';
-// const {isNumber, wrap} = require('../../../node_modules/blockly/core/utils/string.d');
-// const Variables = goog.require('Blockly.Variables');
-// const stringUtils = goog.require('Blockly.utils.string');
-// const {Block} = goog.requireType('Blockly.Block');
-// const {CodeGenerator} = goog.require('Blockly.CodeGenerator');
-// const {inputTypes} = goog.require('Blockly.inputTypes');
-// const {Names, NameType} = goog.require('Blockly.Names');
-// const {Workspace} = goog.requireType('Blockly.Workspace');
+import { NameType } from 'blockly/core/names.d'; // TODO: if not work change import to import type
+import { isNumber, wrap } from 'blockly/core/utils/string.d'; // TODO: if not work change import to import type
 
 
 /**

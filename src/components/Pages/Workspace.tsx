@@ -1,7 +1,7 @@
 import React from 'react'
 import { useLoaderData } from "react-router-dom";
 import WsContent from '../Workspace/WsContent';
-import { getCookie } from 'src/assets/tools/Utils';
+import { getCookie } from '../../assets/tools/Utils';
 
 
 

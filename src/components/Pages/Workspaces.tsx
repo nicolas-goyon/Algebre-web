@@ -1,6 +1,6 @@
 import React from "react";
 import WsList from "../Workspace/WsList";
-import { getCookie } from "src/assets/tools/Utils";
+import { getCookie } from "../../assets/tools/Utils";
 import Title from "../Utils/Title";
 
 

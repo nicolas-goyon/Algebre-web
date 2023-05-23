@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 import './index.css';
 import { MathJaxContext } from 'better-react-mathjax';
 import App from './App';
@@ -20,7 +20,7 @@ const config = {
   }
 };
 if (rootElement instanceof Element) {
-  const root = ReactDOM.createRoot(rootElement);
+  const root = createRoot(rootElement);
   root.render(
       <MathJaxContext version={3} config={config}>
         <App />

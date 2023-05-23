@@ -1,7 +1,7 @@
 import React /*, { useState }*/ from 'react';
-import {api} from 'src/assets/tools/ApiCenter';
-import { inputValidator } from 'src/assets/tools/Utils';
-import { config } from 'src/config';
+import { api } from '../../assets/tools/ApiCenter';
+import { inputValidator } from '../../assets/tools/Utils';
+import { config } from '../../config';
 
 export default
  function SignIn() {
