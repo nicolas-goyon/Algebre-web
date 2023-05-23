@@ -1,8 +1,7 @@
 
 import {javascriptGenerator} from 'blockly/javascript';
-import WorkspaceRelations from '../classes/WorkspaceRelation';
-import Relation from '../../assets/classes/Relation';
-import { v4 } from 'uuid';
+import WorkspaceRelations from '../classes/WorkspaceRelation'; // TODO : vérifier si function(...) à besoin de ça
+import Relation from '../../assets/classes/Relation'; // TODO : vérifier si function(...) à besoin de ça
 import { Renommage, Selection, Projection, Ensemble, Difference, Union, Intersection, Produit, Jointure, Division } from '../../assets/classes/Noeuds';
 import * as Blockly from "blockly";
 import MyGenerator from './MyGen';

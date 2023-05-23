@@ -1,4 +1,4 @@
-import { arrayMerge } from "../tools/ArraysTools.tsx";
+// import { arrayMerge } from "../tools/ArraysTools.tsx";
 import { Noeud } from "./Noeud.tsx";
 import { NoeudsBase } from "./Noeuds.tsx";
 
@@ -20,19 +20,19 @@ export class Union extends Noeud{
     }
 
 
-    toJSON(): string{
-        let objet = {  
-            type: this.type,
-            ensemble1: JSON.parse((this.ensemble1 != null) ? this.ensemble1.toJSON() : "null"),
-            ensemble2: JSON.parse((this.ensemble2 != null) ? this.ensemble2.toJSON() : "null"),
-        }
-        return JSON.stringify(objet)
-    }
+    // toJSON(): string{
+    //     let objet = {  
+    //         type: this.type,
+    //         ensemble1: JSON.parse((this.ensemble1 != null) ? this.ensemble1.toJSON() : "null"),
+    //         ensemble2: JSON.parse((this.ensemble2 != null) ? this.ensemble2.toJSON() : "null"),
+    //     }
+    //     return JSON.stringify(objet)
+    // }
     
-    toLatex(){
-        let chaine = "( "+ (this.ensemble1 != null) ? this.ensemble1!.toLatex() : "NULL" + " )\ \\cup\ ( " +(this.ensemble2 != null) ? this.ensemble2!.toLatex() : "NULL" + " )"
-        return chaine
-    }
+    // toLatex(){
+    //     let chaine = "( "+ (this.ensemble1 != null) ? this.ensemble1!.toLatex() : "NULL" + " )\ \\cup\ ( " +(this.ensemble2 != null) ? this.ensemble2!.toLatex() : "NULL" + " )"
+    //     return chaine
+    // }
 
     copy(): Noeud{
         return new Union(
@@ -43,26 +43,26 @@ export class Union extends Noeud{
             )
     }
 
-    deleteChild(index: Noeud): void {
-        if (this.ensemble1 === index){
-            this.ensemble1 = null
-        }
-        if (this.ensemble2 === index){
-            this.ensemble2 = null
-        }
-    }
+    // deleteChild(index: Noeud): void {
+    //     if (this.ensemble1 === index){
+    //         this.ensemble1 = null
+    //     }
+    //     if (this.ensemble2 === index){
+    //         this.ensemble2 = null
+    //     }
+    // }
     
-    fillArray(): Noeud[] {
-        let array :Noeud[] = []
-        if (this.ensemble1 != null){
-            array = this.ensemble1.fillArray()
-        }
-        if (this.ensemble2 != null){
-            array = arrayMerge(array, this.ensemble2.fillArray())
-        }
-        array[this.index] = this;
-        return array
-    }
+    // fillArray(): Noeud[] {
+    //     let array :Noeud[] = []
+    //     if (this.ensemble1 != null){
+    //         array = this.ensemble1.fillArray()
+    //     }
+    //     if (this.ensemble2 != null){
+    //         array = arrayMerge(array, this.ensemble2.fillArray())
+    //     }
+    //     array[this.index] = this;
+    //     return array
+    // }
 
 
     static toBlockly(): any {

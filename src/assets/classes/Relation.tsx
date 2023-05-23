@@ -10,9 +10,9 @@ export default class Relation {
         this.columnNames = columnNames || (data.length > 0 ? Object.keys(data[0]) : []);
     }
     
-    public async sendToCsv(csvFilePath: string): Promise<void> {
-      // Use a library like `csv-stringify` to write the DoubleEntryArray data to a CSV file
-    }
+    // public async sendToCsv(csvFilePath: string): Promise<void> {
+    //   // Use a library like `csv-stringify` to write the DoubleEntryArray data to a CSV file
+    // }
   
     public getColumnNames(): string[] {
         return this.columnNames;

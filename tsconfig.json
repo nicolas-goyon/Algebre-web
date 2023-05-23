@@ -13,7 +13,6 @@
       "noEmit": true,
       "allowImportingTsExtensions": true,
       "jsx": "react",
-      "sourceMap": true,  
     },
     "include": [
       "src/**/*"

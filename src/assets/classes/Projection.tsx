@@ -1,4 +1,4 @@
-import { arrayMerge } from "../tools/ArraysTools.tsx";
+// import { arrayMerge } from "../tools/ArraysTools.tsx";
 import { Noeud } from "./Noeud.tsx";
 import { NoeudsBase } from "./Noeuds.tsx";
 
@@ -19,27 +19,27 @@ export class Projection extends Noeud{
         return this.ensemble.estValide()
     }
 
-    toJSON(): string{
-        let objet = {  
-            type: this.type,
-            champs: this.champs,
-            ensemble: JSON.parse((this.ensemble != null) ? this.ensemble.toJSON() : "null"),
-        }
-        return JSON.stringify(objet)
-    }
+    // toJSON(): string{
+    //     let objet = {  
+    //         type: this.type,
+    //         champs: this.champs,
+    //         ensemble: JSON.parse((this.ensemble != null) ? this.ensemble.toJSON() : "null"),
+    //     }
+    //     return JSON.stringify(objet)
+    // }
 
 
 
-    toLatex(){
-        let chaine = "\\pi_{"
-        for (let i in this.champs){
-            chaine += this.champs[i] + ", "
-        }
-        chaine = chaine.slice(0, -2);
-        chaine += "}"
-        chaine += "( "+ (this.ensemble != null) ? this.ensemble!.toLatex() : "NULL" + " )"
-        return chaine
-    }
+    // toLatex(){
+    //     let chaine = "\\pi_{"
+    //     for (let i in this.champs){
+    //         chaine += this.champs[i] + ", "
+    //     }
+    //     chaine = chaine.slice(0, -2);
+    //     chaine += "}"
+    //     chaine += "( "+ (this.ensemble != null) ? this.ensemble!.toLatex() : "NULL" + " )"
+    //     return chaine
+    // }
 
     copy(): Noeud{
         return new Projection(
@@ -50,21 +50,21 @@ export class Projection extends Noeud{
             )
     }
 
-    deleteChild(index: Noeud): void {
-        if (this.ensemble === index){
-            this.ensemble = null
-        }
-    }
+    // deleteChild(index: Noeud): void {
+    //     if (this.ensemble === index){
+    //         this.ensemble = null
+    //     }
+    // }
     
 
-    fillArray(): Noeud[] {
-        let arr: Noeud[] = [];
-        if (this.ensemble != null){
-            arr = this.ensemble.fillArray();
-        }
-        arr[this.index] = this;
-        return arr;
-    }
+    // fillArray(): Noeud[] {
+    //     let arr: Noeud[] = [];
+    //     if (this.ensemble != null){
+    //         arr = this.ensemble.fillArray();
+    //     }
+    //     arr[this.index] = this;
+    //     return arr;
+    // }
 
     
 

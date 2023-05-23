@@ -11,32 +11,32 @@ export class Ensemble extends Noeud{
         return true 
     }
 
-    toJSON(): string{
-        let objet = {  
-            type: this.type,
-            nom: this.nom,
-        }
-        return JSON.stringify(objet)
-    }
+    // toJSON(): string{
+    //     let objet = {  
+    //         type: this.type,
+    //         nom: this.nom,
+    //     }
+    //     return JSON.stringify(objet)
+    // }
 
-    toLatex():String{
-        let chaine = this.nom
-        return chaine
-    }
+    // toLatex():String{
+    //     let chaine = this.nom
+    //     return chaine
+    // }
 
     copy(): Noeud{
         return new Ensemble(this.nom, this.index)
     }
 
-    deleteChild(index: Noeud): void {
-        // do nothing
-    }
+    // deleteChild(index: Noeud): void {
+    //     // do nothing
+    // }
 
-    fillArray(): Noeud[] {
-        let array: Noeud[] = []
-        array[this.index] = this;
-        return array
-    }
+    // fillArray(): Noeud[] {
+    //     let array: Noeud[] = []
+    //     array[this.index] = this;
+    //     return array
+    // }
 
     static toBlockly(): any{
         return {
