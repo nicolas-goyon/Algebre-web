@@ -1,6 +1,7 @@
 import { WorkspaceSvg } from "blockly";
 import { getDebut } from "./getDebut";
-import {  sampleGenerator as LatexGenerator } from 'src/assets/tools/initBlockly';
+import { javascriptGen } from "../Blockly/javascriptGen";
+import { latexGenerator } from "../Blockly/latexGenerator";
 
 export const getLatex = (wokspace : WorkspaceSvg) => {
     const baseBlock = getDebut(wokspace);
@@ -8,6 +9,7 @@ export const getLatex = (wokspace : WorkspaceSvg) => {
         console.log("baseBlock doesn't exist");
         return;
     }
-    var code = LatexGenerator.blockToCode(baseBlock);
-    return code;
+    var code = javascriptGen.blockToCode(baseBlock);
+    var code = latexGenerator.blockToCode(baseBlock);
+    return "code";
 }

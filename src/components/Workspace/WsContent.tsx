@@ -9,7 +9,10 @@ import CsvInput from '../Input/CsvInput';
 import WsButtons from './WsButtons';
 import WsDataArea from './WsDataArea';
 import WsBlockArea from './WsBlockArea';
-import {serialize, executeCode, add, resize, load, save, loadToWorkspace, create, init, getLatex } from 'src/assets/Helper/Workspace';
+// import {serialize, add, resize, load, save, loadToWorkspace, create, init, getLatex } from 'src/assets/Helper/Workspace';
+import { getLatex } from 'src/assets/Helper/Workspace/getLatex';
+import { serialize } from 'src/assets/Helper/Workspace/Serialize';
+
 
 export default function WsContent(prop: any) {
     // TODO : remove
@@ -45,13 +48,13 @@ export default function WsContent(prop: any) {
         }
         const code = getLatex(blockWorkspace);
 
-        // afficher le code dans la zone d'affichage
-        if (code != null && code.length > 0) {
-            setDemoLatex('$' + code + '$');
-        }
-        else if (code.length === 0) {
-            setDemoLatex('');
-        }
+        // // afficher le code dans la zone d'affichage
+        // if (code != null && code.length > 0) {
+        //     setDemoLatex('$' + code + '$');
+        // }
+        // else if (code.length === 0) {
+        //     setDemoLatex('');
+        // }
     }
 
 
@@ -66,7 +69,7 @@ export default function WsContent(prop: any) {
             console.log("blockWorkspace doesn't exist");
             return;
         }
-        resize(blocklyArea, blocklyDiv, blockWorkspace)
+        // resize(blocklyArea, blocklyDiv, blockWorkspace)
     };
 
     function saveWorkspace(e: any) {
@@ -80,41 +83,42 @@ export default function WsContent(prop: any) {
             return;
         }
 
-        /* ----------------------------- SAVE WORKSPACE ----------------------------- */
-        const state = serialize(blockWorkspace);
-        const data = {
-            "workspace": JSON.stringify(state),
-            "workspaceId": prop.id,
-            "name": "Mon espace de travail"
-        }
-        api.patch(config.apiUrl + '/workspace/', data)
-            .then((res) => {
-                console.log("Workspace saved");
-                // Change the button color to green then back to normal after 1 second
-                var button = document.getElementById("saveButton");
-                if (button === null || button === undefined) { return; }
-                // Set the button color to green
-                button.classList.add("bg-success");
-                // Set the button color on hover to green
-                button.classList.add("hover:bg-success");
-                setTimeout(() => {
-                    if (button === null || button === undefined) { return; }
-                    // Set the button color to normal
-                    button.classList.remove("bg-success");
-                    // Set the button color on hover to normal
-                    button.classList.remove("hover:bg-success");
-                }
-                    , 2000);
-            })
-            .catch((err) => {
-                console.log("Workspace not saved");
-                console.log(err);
-            });
+        // /* ----------------------------- SAVE WORKSPACE ----------------------------- */
+        // const state = serialize(blockWorkspace);
+        // const data = {
+        //     "workspace": JSON.stringify(state),
+        //     "workspaceId": prop.id,
+        //     "name": "Mon espace de travail"
+        // }
+        // api.patch(config.apiUrl + '/workspace/', data)
+        //     .then((res) => {
+        //         console.log("Workspace saved");
+        //         // Change the button color to green then back to normal after 1 second
+        //         var button = document.getElementById("saveButton");
+        //         if (button === null || button === undefined) { return; }
+        //         // Set the button color to green
+        //         button.classList.add("bg-success");
+        //         // Set the button color on hover to green
+        //         button.classList.add("hover:bg-success");
+        //         setTimeout(() => {
+        //             if (button === null || button === undefined) { return; }
+        //             // Set the button color to normal
+        //             button.classList.remove("bg-success");
+        //             // Set the button color on hover to normal
+        //             button.classList.remove("hover:bg-success");
+        //         }
+        //             , 2000);
+        //     })
+        //     .catch((err) => {
+        //         console.log("Workspace not saved");
+        //         console.log(err);
+        //     });
     }
 
 
 
     function saveRelations(e: any) {
+        // return;
         if (prop.noSave === true) {
             console.log("Relations can not be saved");
             return;
@@ -125,17 +129,17 @@ export default function WsContent(prop: any) {
             return;
         }
 
-        save(WorkspaceRelations.getTables(), prop.id, (res: any) => { console.log("Succes save relation") }, (err: any) => { console.log("Error save relation") });
+        // save(WorkspaceRelations.getTables(), prop.id, (res: any) => { console.log("Succes save relation") }, (err: any) => { console.log("Error save relation") });
     }
 
     useEffect(() => {
-        // Si le workspace n'est pas défini, on le crée
+    //     // Si le workspace n'est pas défini, on le crée
         if (blockWorkspace === undefined) {
-            create(setBlockWorkspace);
+    //         create(setBlockWorkspace);
         } // fin si
         if (blockWorkspace !== undefined && !firstLoad) {
             setFirstLoad(true);
-            init(blockWorkspace, updateCode, onresize);
+    //         init(blockWorkspace, updateCode, onresize);
             if (prop.id === null) {
                 return;
             }
@@ -143,8 +147,8 @@ export default function WsContent(prop: any) {
             if (prop.noLoad) {
                 return;
             }
-            load(blockWorkspace, prop.id);
-            loadToWorkspace(prop.id, setInputArray);
+    //         load(blockWorkspace, prop.id);
+    //         loadToWorkspace(prop.id, setInputArray);
         }
 
 
@@ -157,18 +161,18 @@ export default function WsContent(prop: any) {
             console.log("blockWorkspace doesn't exist");
             return;
         }
-        const resultat = executeCode(blockWorkspace)
-        const data: WsData = {
-            "title": "Result",
-            "data": resultat.getData(),
-            "columnNames": resultat.getColumnNames(),
-            "isShrinkable": false
-        }
-        setResultTable(data);
+        // const resultat = executeCode(blockWorkspace)
+        // const data: WsData = {
+        //     "title": "Result",
+        //     "data": resultat.getData(),
+        //     "columnNames": resultat.getColumnNames(),
+        //     "isShrinkable": false
+        // }
+        // setResultTable(data);
     }
 
     function newTableau(text: string, name: string) {
-        add(text, name, inputArray, setInputArray);
+        // add(text, name, inputArray, setInputArray);
     }
 
 
@@ -194,4 +198,3 @@ export default function WsContent(prop: any) {
         </div>
     );
 }
-
