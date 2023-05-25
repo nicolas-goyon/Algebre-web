@@ -19,6 +19,6 @@ export function Workspace() : JSX.Element {
 
 
     return (
-        <WsContent id={workspace}/>
+        <WsContent id={workspace as number}/>
     )
 }
