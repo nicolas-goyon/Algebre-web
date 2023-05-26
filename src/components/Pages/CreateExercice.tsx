@@ -34,7 +34,7 @@ export function CreateExercice() {
     }
 
 
-    function handleSubmit(e:any){
+    function handleSubmit(e: any) {
         // console.log(relations)
         e.preventDefault();
 
@@ -53,11 +53,11 @@ export function CreateExercice() {
             console.log("name doesn't exist");
             return;
         }
-        const dataRelation: {content:string, name:string}[] = [];
+        const dataRelation: { content: string, name: string }[] = [];
         const tables = [...relations]
         for (let i = 0; i < tables.length; i++) {
             const relation = tables[i];
-            dataRelation.push({content: JSON.stringify(relation), name: relation.title});
+            dataRelation.push({ content: JSON.stringify(relation), name: relation.title });
         }
         console.log(dataRelation);
 
@@ -75,13 +75,13 @@ export function CreateExercice() {
             ).catch((error) => {
                 console.log(error);
             }
-        );
+            );
     }
 
 
 
 
-    
+
     return (
         <>
             <Title title="Créer un exercice" />
@@ -94,25 +94,30 @@ export function CreateExercice() {
                             </label>
                             <input className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" id="grid-name" type="text" placeholder="Nom de l'exercice" />
                             <p className="text-gray-600 text-xs italic">Donnez un nom à votre exercice</p>
-                            
+
                             <hr className="my-5" />
-                            
+
                             <MarkdownInput inputId="MarkdownInput" />
 
                             <hr className="my-5" />
 
-                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-ressources">
-                                Ressources de l'exercice
-                            </label>
-                            <p className="text-gray-600 text-xs italic">Donnez les ressources de votre exercice</p>
-                            <CsvInput callBack={addTab} />
-                            <div id="dataArea" className='flex justify-center'>
-                                <div id="inputArea" className='w-2/3'>
-                                    {relations.map((input, index) => (
-                                        <Table key={index} columnNames={input.columnNames} data={input.data} title={input.title} isShrinkable={input.isShrinkable} />
-                                    ))}
+                            <div className="flex flex-row justify-between">
+                                <div>
+                                    <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-ressources">
+                                        Ressources de l'exercice
+                                    </label>
+                                    <p className="text-gray-600 text-xs italic">Donnez les ressources de votre exercice</p>
+                                    <CsvInput callBack={addTab} />
+                                    <div id="dataArea" className='flex justify-center'>
+                                        <div id="inputArea" className='w-2/3'>
+                                            {relations.map((input, index) => (
+                                                <Table key={index} columnNames={input.columnNames} data={input.data} title={input.title} isShrinkable={input.isShrinkable} />
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
+
 
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleSubmit}>
                                 Créer l'exercice
