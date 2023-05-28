@@ -1,4 +1,5 @@
 export default function csvReader(text: string) : [string[], string[][]] {
+    text = text.replace(/\r/g, '');
     const endOfLine = '\n';
     const separator = ',';
     let lines = text.split(endOfLine);

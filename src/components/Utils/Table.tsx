@@ -48,7 +48,7 @@ export default function Table(props : any) {
         <div className="flex flex-col">
             <div className="overflow-x-auto">
                 <div className="p-1.5 w-full inline-block align-middle">
-                    <div className="overflow-scroll border rounded-lg">
+                    <div className="overflow-auto border rounded-lg">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 {title !== undefined ?
@@ -85,7 +85,6 @@ export default function Table(props : any) {
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {data.map((row : any) => (
-
                                     <tr key={row + v4()}>
                                         {columns.map((column : string, index: number) => (
                                             <td

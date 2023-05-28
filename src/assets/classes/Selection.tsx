@@ -1,84 +1,85 @@
 // import { arrayMerge } from "../tools/ArraysTools.tsx";
+import { Condition, Link, createRecordChecker } from "../Helper/ConditionChecker.tsx";
+import { getConditions } from "../Helper/Strings.tsx";
+import { JsonOperation } from "../Types/JsonOperation.tsx";
 import { Noeud } from "./Noeud.tsx";
-import { NoeudsBase } from "./Noeuds.tsx";
+import { NoeudsBase, fromJsonNextNode } from "./Noeuds.tsx";
+import Relation from "./Relation.tsx";
 
-export class Selection extends Noeud{
+export class Selection extends Noeud {
     // condition : [[champ:String, condition: String, valeur: String]];
-    condition: String;
+    champs: string;
     ensemble: Noeud | null;
-    constructor(condition: String/*condition: [[champ:String, condition: String, valeur: String]]*/, ensemble: Noeud | null, index: number, parent : Noeud | null = null) {
-        super(NoeudsBase.Selection, index , parent)
-        this.condition = condition
+    constructor(champs: string, ensemble: Noeud | null, parent: Noeud | null = null) {
+        super(NoeudsBase.Selection, parent)
+        this.champs = champs
         this.ensemble = ensemble
     }
 
-    estValide (){
-        if (this.ensemble == null){
+    estValide() {
+        if (this.ensemble === null) {
             return false
         }
         return this.ensemble.estValide()
     }
 
-    // toJSON(): string{
-    //     let objet = {  
-    //         type: this.type,
-    //         condition: this.condition,
-    //         ensemble: JSON.parse((this.ensemble != null) ? this.ensemble.toJSON() : "null"),
-    //     }
-    //     return JSON.stringify(objet)
-    // }
-    
-    // toLatex(): String{
-    //     let chaine = "\sigma_{"
-    //     // for (let i in this.condition){
-    //     //     chaine += i[0] + i[1] + i[2] + ", "
-    //     // }
-    //     chaine = chaine.slice(0, -2);
-    //     chaine += "}"
-    //     chaine += "( "+ (this.ensemble != null) ? this.ensemble!.toLatex() : "NULL" + " )"
-    //     return chaine
-    // }
-    
-    copy(): Noeud{
-        return new Selection(
-            this.condition, 
-            (this.ensemble != null)?this.ensemble.copy():null, 
-            this.index,
-            this.parent            
-            )
+    static fromJson(data: JsonOperation): Selection {
+        if (data["operation"] !== "Selection") {
+            throw new Error("Erreur de JSON : type d'opération incorrect" + JSON.stringify(data));
+        }
+        // if (data.relation === undefined) {
+        //     throw new Error("Erreur de JSON : relation1 manquante");
+        // }
+        // if (data.champs === undefined) {
+        //     throw new Error("Erreur de JSON : champs manquant");
+        // }
+        let join = new Selection("", null, null);
+        if (data.relation !== undefined) {
+            join.ensemble = fromJsonNextNode(data.relation)
+        }
+        if (data.champs !== undefined) {
+            join.champs = data.champs
+        }
+        return join;
     }
 
-    // deleteChild(index: Noeud): void {
-    //     if (this.ensemble === index){
-    //         this.ensemble = null
-    //     }
-    // }
-    
+    copy(): Noeud {
+        return new Selection(
+            this.champs,
+            (this.ensemble !== null) ? this.ensemble.copy() : null,
+            this.parent
+        )
+    }
 
-    // fillArray(): Noeud[] {
-    //     let arr: Noeud[] = [];
-    //     if (this.ensemble != null){
-    //         arr = this.ensemble.fillArray();
-    //     }
-    //     arr[this.index] = this;
-    //     return arr;
-    // }
+    execute() : Relation {
+        if (this.ensemble === null) {
+            throw new Error("Erreur d'exécution : ensemble manquant");
+        }
+        let relation = this.ensemble.execute();
+        const res = getConditions(this.champs)
+        const conditions = res.conditions as Condition[];
+        const conditionLinks = res.conditionLinks as Link[];
+        // const checkFn = (row : Record<string, string>) : boolean => {
+        const checkFn = createRecordChecker(conditions, conditionLinks);
+        const newRelation = relation.selectRowsWithCheck(checkFn);
+        return newRelation;
+    }
 
-    static toBlockly(): any{
+    static toBlockly(): any {
         return {
             "type": "selection",
             "message0": "Selection %1 Relation %2",
             "args0": [
-              {
-                "type": "input_value",
-                "name": "Champs",
-                "check": "String"
-              },
-              {
-                "type": "input_statement",
-                "name": "ensemble",
-                "check": "Noeud"
-              }
+                {
+                    "type": "input_value",
+                    "name": "Champs",
+                    "check": "String"
+                },
+                {
+                    "type": "input_statement",
+                    "name": "ensemble",
+                    "check": "Noeud"
+                }
             ],
             "previousStatement": "Noeud",
             "colour": 120,

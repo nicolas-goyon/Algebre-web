@@ -9,7 +9,8 @@ import { Difference } from "./Difference"
 import { Jointure } from "./Jointure"
 import { Division } from "./Division"
 import { Noeud } from "./Noeud"
-
+import { JsonOperation } from "../Types/JsonOperation"
+import type { Noeud as NoeudType } from "./Noeud"
 
 
 export { Noeud } from "./Noeud"
@@ -26,18 +27,20 @@ export { Difference } from "./Difference"
 export { Jointure } from "./Jointure"
 export { Division } from "./Division"
 
+
+
 export const NoeudsBase = {
     // Noeud de base 
-    Noeud:{
-        name:"Noeud",
+    Noeud: {
+        name: "Noeud",
         children: 0,
         hasChamp: false,
         isBinary: false,
         class: Noeud
     },
     // Noeuds avec 0 enfants
-    Ensemble:{
-        name:"Ensemble",
+    Ensemble: {
+        name: "Ensemble",
         children: 0,
         hasChamp: true,
         isBinary: false,
@@ -45,22 +48,22 @@ export const NoeudsBase = {
     },
 
     // Noeuds avec 1 enfant
-    Renommage:{
-        name:"Renommage",
+    Renommage: {
+        name: "Renommage",
         children: 1,
         hasChamp: true,
         isBinary: false,
         class: Renommage
     },
-    Selection:{
-        name:"Selection",
+    Selection: {
+        name: "Selection",
         children: 1,
         hasChamp: true,
         isBinary: false,
         class: Selection
     },
-    Projection:{
-        name:"Projection",
+    Projection: {
+        name: "Projection",
         children: 1,
         hasChamp: true,
         isBinary: false,
@@ -68,44 +71,44 @@ export const NoeudsBase = {
     },
 
     // Noeuds avec 2 enfants
-    Union:{
-        name:"Union",
+    Union: {
+        name: "Union",
         children: 2,
         hasChamp: false,
         isBinary: true,
         class: Union
     },
-    Produit:{
-        name:"Produit",
+    Produit: {
+        name: "Produit",
         children: 2,
         hasChamp: false,
         isBinary: true,
         class: Produit
     },
-    Intersection:{
-        name:"Intersection",
+    Intersection: {
+        name: "Intersection",
         children: 2,
         hasChamp: false,
         isBinary: true,
         class: Intersection
     },
-    Difference:{
-        name:"Difference",
+    Difference: {
+        name: "Difference",
         children: 2,
         hasChamp: false,
         isBinary: true,
         class: Difference
     },
 
-    Jointure:{
-        name:"Jointure",
+    Jointure: {
+        name: "Jointure",
         children: 2,
         hasChamp: false,
         isBinary: true,
         class: Jointure
     },
-    Division:{
-        name:"Division",
+    Division: {
+        name: "Division",
         children: 2,
         hasChamp: false,
         isBinary: true,
@@ -113,9 +116,38 @@ export const NoeudsBase = {
     }
 }
 
-export class NoeudsGet{
-    static getNoeuds(noeud: String): Noeuds{
-        switch(noeud){
+
+export function fromJsonNextNode(jsonObject: JsonOperation): NoeudType | null {
+    switch (jsonObject["operation"]) {
+        case "Jointure":
+            return Jointure.fromJson(jsonObject);
+        case "Projection":
+            return Projection.fromJson(jsonObject);
+        case "Selection":
+            return Selection.fromJson(jsonObject);
+        case "Relation":
+            return Ensemble.fromJson(jsonObject);
+        case "Renommage":
+            return Renommage.fromJson(jsonObject);
+        case "Union":
+            return Union.fromJson(jsonObject);
+        case "Produit":
+            return Produit.fromJson(jsonObject);
+        case "Intersection":
+            return Intersection.fromJson(jsonObject);
+        case "Difference":
+            return Difference.fromJson(jsonObject);
+        case "Division":
+            return Division.fromJson(jsonObject);
+        default:
+            return null
+            // throw new Error("Noeud type not found" + JSON.stringify(jsonObject));
+    }
+    // return new Difference(null, null, null);
+}
+export class NoeudsGet {
+    static getNoeuds(noeud: String): Noeuds {
+        switch (noeud) {
             case "Noeud":
                 return NoeudsBase.Noeud
             case "Ensemble":

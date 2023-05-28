@@ -1,18 +1,53 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ListTitle from '../Utils/ListTitle'
+import { api } from 'src/assets/tools/ApiCenter'
+import { config } from 'src/config'
 
 
 export function Exerciceliste(): JSX.Element {
     const data = [
-        "Exercice 1",
-        "Exercice 2",
-        "Exercice 3",
-        "Exercice 4",
+        { id: 1, title: 'Exercice 1' },
+        { id: 2, title: 'Exercice 2' },
+        { id: 3, title: 'Exercice 3' },
+        { id: 4, title: 'Exercice 4' }
     ]
+
+    const [exercices, setExercices] = useState(data)
+
+    useEffect(() => {
+        api.get(config.apiUrl + '/exercice')
+            .then((res) => {
+                if (res.status === 200 && res.response != null) {
+                    const newDatas = res.response.exercices.map((item: any) => {
+                        return { id: item.id, title: item.name }
+                    })
+                    setExercices(newDatas)
+                }
+            })
+            .catch((err) => {
+                alert(err)
+            })
+    }, [])
+
+    // function deleteHandler(id: number) {
+    //     api.delete(config.apiUrl + '/exercice/' + id, null)
+    //         .then((res) => {
+    //             if (res.status === 200) {
+    //                 const newDatas = exercices.filter((item) => item.id !== id)
+    //                 setExercices(newDatas)
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             alert(err)
+    //         })
+    // }
+
+
+    {/* deleteHandler={(e: any) => {e.preventDefault(); e.stopPropagation(); deleteHandler(item.id)}} */ }
     return (
         <div id="WorkspaceList" className="flex flex-wrap justify-center gap-4">
-            {data.map((item, index) => (
-                <ListTitle id={index} title={item} handler={() => (window.location.href = '/exercices/' + index)} />
+            {exercices.map((item) => (
+                <ListTitle id={item.id} title={item.title} handler={() => (window.location.href = '/exercice/' + item.id)} />
             ))}
         </div>
     )

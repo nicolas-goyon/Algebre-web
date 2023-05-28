@@ -98,7 +98,7 @@ export default function Navbar(props: any) {
                 <div className="fixed inset-0 z-10" />
                 <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div className="flex items-center justify-between">
-                        <a href="/" className="-m-1.5 p-1.5">
+                        <a  href="/" className="-m-1.5 p-1.5">
                             <span className="sr-only">Algebre</span>
                             <img
                                 className="h-8 w-auto"
@@ -121,7 +121,7 @@ export default function Navbar(props: any) {
                                 {
                                     menuTabs.map((item) => {
                                         return (
-                                            <a href={item.href} className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" ref={loginButton} >
+                                            <a key={v4()} href={item.href} className="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50" ref={loginButton} >
                                                 {item.name}
                                             </a>
                                         )
