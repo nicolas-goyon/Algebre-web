@@ -5,20 +5,23 @@ import { getCookie } from 'src/assets/tools/Utils';
 
 
 
-export async function loader({ params } : any) {
+export async function loader({ params }: any) {
     return params.workspaceId;
 }
 
-export function Workspace() : JSX.Element {
-    const workspace : any = useLoaderData();
+export function Workspace(): JSX.Element {
+    const titreRef = React.useRef<HTMLDivElement>(null);
+    const workspace: any = useLoaderData();
     const token = getCookie("token");
-    if (token === undefined || token === null || token === ""){
+    if (token === undefined || token === null || token === "") {
         window.location.href = "/signin";
         return <div></div>;
     }
 
 
     return (
-        <WsContent id={workspace as number}/>
+        <>
+            <WsContent id={workspace as number} />
+        </>
     )
 }

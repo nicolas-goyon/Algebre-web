@@ -4,6 +4,7 @@ import ReactMarkdown from 'react-markdown'
 import rehypeHighlight from 'rehype-highlight'
 import remarkGfm from 'remark-gfm'
 import 'github-markdown-css/github-markdown-light.css'
+import WsContent from '../Workspace/WsContent';
 
 
 export function Exercicedemo(): JSX.Element {
@@ -58,13 +59,8 @@ const markdown = "Hello World";
                 </div>
             </div>
             {/* Zone de code */}
-            <div className="flex flex-col h-56 bg-dark">
-                {/* Texte centré et gros */}
-                <div className="flex flex-row justify-center items-center h-full">
-                    <h1 className="text-4xl font-mono text-light">
-                        TBA
-                    </h1>
-                </div>
+            <div className="flex flex-col">
+                <WsContent noSave noLoad />
             </div>
         </>
     )

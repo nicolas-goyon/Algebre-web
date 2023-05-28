@@ -45,20 +45,19 @@ export function Exercice(prop: any) {
         if (token === undefined || token === null || token === "") {
             window.location.href = "/signin";
         }
-        await sleep(5000);
+        await sleep(500);
         api.get(config.apiUrl + '/exercice/' + exoId)
             .then((response) => {
                 const exercice = response.response.exercice;
-                const resultat = JSON.parse(exercice.relations[0].content);
+                const resultat = (exercice.relations !== undefined && exercice.relations.length > 0 ? JSON.parse(exercice.relations[0].content) : null)
                 const titre = exercice.name;
                 const markdownExo = exercice.enonce;
-               // setMarkdown(markdownExo);
                 if (markdownParentRef.current !== null) {
                     createRoot(markdownParentRef.current).render(
                         <ReactMarkdown components={{ h1: "h2" }} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} children={markdownExo} />
                     );
                 } 
-                if (resultatRef.current !== null) {
+                if (resultatRef.current !== null && resultat !== null) {
                     createRoot(resultatRef.current).render(
                         <Table data={resultat.data} columnNames={resultat.columnNames} title="Résultat attendu" isShrinkable={true} />
                     );
@@ -71,12 +70,11 @@ export function Exercice(prop: any) {
             .catch((error) => {
                 console.log(error);
             });
-        // // TODO : vérfier si un ws est en cours pour cet exercice
+        // TODO : vérfier si un ws est en cours pour cet exercice
     }
 
     useEffect(() => {
         getExercice();
-
     }, []);
     const token = getCookie("token");
     if (token === undefined || token === null || token === "") {

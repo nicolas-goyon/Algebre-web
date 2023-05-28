@@ -34,7 +34,10 @@ export class ApiClass {
                 return resolve(xhr)
             };
             xhr.onerror = () => reject(xhr.statusText);
-            xhr.send(JSON.stringify(body));
+            if (body)
+                xhr.send(JSON.stringify(body));
+            else
+                xhr.send();
         });
     }
 
@@ -50,8 +53,8 @@ export class ApiClass {
         return this.request(path, "PUT", body);
     }
 
-    public async delete(path: string) {
-        return this.request(path, "DELETE", null);
+    public async delete(path: string, body: any) {
+        return this.request(path, "DELETE", body);
     }
 
     public async patch(path: string, body: any) {
