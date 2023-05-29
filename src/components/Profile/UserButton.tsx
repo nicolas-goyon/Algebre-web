@@ -3,8 +3,8 @@ import { v4 } from 'uuid';
 
 export default function UserButton(props: any) {
     const navigation = [
-        { title: "Dashboard", path: "#" },
-        { title: "Settings", path: "#" },
+        // { title: "Dashboard", path: "#" },
+        // { title: "Settings", path: "#" },
         { title: "Log out", path: "/logout" },
     ]
     const profileRef = useRef<HTMLButtonElement | null>(null);

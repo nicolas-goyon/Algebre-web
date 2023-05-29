@@ -12,6 +12,7 @@ import { createRoot } from 'react-dom/client';
 import 'src/assets/CSS/loaders.css'
 import WsContent from '../Workspace/WsContent';
 import type { TWsData } from 'src/assets/Types/TWsData';
+import rehypeRaw from 'rehype-raw';
 /**
  * 
 # Exercice de pseudo division
@@ -71,7 +72,11 @@ export function Exercice(prop: any) {
         let workspaceId = exercice.workspaceId;
         if (markdownParentRef.current !== null) {
             createRoot(markdownParentRef.current).render(
-                <ReactMarkdown components={{ h1: "h2" }} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} children={markdownExo} />
+                <ReactMarkdown 
+                    components={{ h1: "h2" }}  
+                    rehypePlugins={[[rehypeHighlight, { ignoreMissing: true }], [rehypeRaw]]}
+                    remarkPlugins={[remarkGfm]}  
+                    children={markdownExo} />
             );
         }
         if (resultatRef.current !== null && resultat !== null && resultat !== undefined) {
@@ -84,7 +89,6 @@ export function Exercice(prop: any) {
         }
         if (workspaceId === null || workspaceId === undefined) {
             workspaceId = await createWorkspace(exercice.id);
-            
         }
         if (workspaceRef.current !== null) {
             let relationExo : TWsData[] = relations.map((relation: any) => {

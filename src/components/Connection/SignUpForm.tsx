@@ -198,9 +198,9 @@ export default function SignUp() {
                     >
                         Sign Up
                     </button>
-                    <div className="text-center">
+                    {/* <div className="text-center">
                         <button className="text-gray-600 hover:text-indigo-500">Forgot password?</button>
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </main>
