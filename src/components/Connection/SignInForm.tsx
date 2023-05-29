@@ -2,15 +2,20 @@ import React /*, { useState }*/ from 'react';
 import {api} from 'src/assets/tools/ApiCenter';
 import { inputValidator } from 'src/assets/tools/Utils';
 import { config } from 'src/config';
+import {SHA1, HmacSHA1} from 'crypto-js';
 
 export default
  function SignIn() {
-    // const [isPasswordHidden, setPasswordHidden] = useState(true)// TODO : make function for password icon
-
+    const hashSeed = "Myhash";
+    const password = "123456789";
+    const hashedPassword = HmacSHA1(password, hashSeed).toString();
+    console.log(hashedPassword);
+    const secondHashedPassword = HmacSHA1(password, hashSeed).toString();
+    console.log(secondHashedPassword);
+    
     // Request to check email and password
     async function checkEmailPassword(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        // tests@gmail.com
         const emailElement = document.getElementById("email") as HTMLInputElement;
         const email = emailElement.value;
         const passwordElement = document.getElementById("password") as HTMLInputElement;
@@ -93,9 +98,9 @@ export default
                     >
                         Sign in
                     </button>
-                    <div className="text-center">
+                    {/* <div className="text-center">
                         <button className="text-gray-600 hover:text-indigo-500">Forgot password?</button>
-                    </div>
+                    </div> */}
                 </form>
             </div>
         </main>
