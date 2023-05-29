@@ -10,6 +10,24 @@ import { api } from 'src/assets/tools/ApiCenter';
 import { useLoaderData } from 'react-router-dom';
 import { createRoot } from 'react-dom/client';
 import 'src/assets/CSS/loaders.css'
+import WsContent from '../Workspace/WsContent';
+import type { TWsData } from 'src/assets/Types/TWsData';
+/**
+ * 
+# Exercice de pseudo division
+## Schema relationnel
+- Pilote : (<u>idP</u>, nom, prenom, ville_naissance) 
+- Avion : (<u>idA</u>, nbPlaces) 
+- Vol : (<u>idP, idA</u>, ville_dep, ville_arr)
+
+## Question
+Quels sont les pilotes ayant volé tous les avions depuis leurs ville de naissance ?
+
+## Rappel
+C'est une pseudo division, il est donc important de se rappeler que le block de division de fonctionne pas pour cette requête.
+
+![https://www.9raytifclick.com/wp-content/uploads/2021/10/division1.png](https://www.9raytifclick.com/wp-content/uploads/2021/10/division1.png)
+ */
 
 export function ExerciceLoader({ params }: any) {
     return params.exerciceId;
@@ -20,7 +38,7 @@ function sleep(ms: number) {
 export function Exercice(prop: any) {
     const resultatRef = React.useRef<HTMLDivElement>(null);
     const titreRef = React.useRef<HTMLDivElement>(null);
-    const [markdown, setMarkdown] = React.useState<string>("");
+    const workspaceRef = React.useRef<HTMLDivElement>(null);
     const markdownParentRef = React.useRef<HTMLDivElement>(null);
     const exoId = useLoaderData();
 
@@ -40,6 +58,65 @@ export function Exercice(prop: any) {
         { Nom: "Lenon", Prénom: "John", Age: "22" },
     ];
 
+
+    async function handleResponse(response: any) {
+        const exercice = response.exercice;
+        let resultat = null
+        if (exercice.resultat !== null && exercice.resultat !== undefined) {
+            resultat = JSON.parse(exercice.resultat.content);
+        }
+        const relations = exercice.relations;
+        const titre = exercice.name;
+        const markdownExo = exercice.enonce;
+        let workspaceId = exercice.workspaceId;
+        if (markdownParentRef.current !== null) {
+            createRoot(markdownParentRef.current).render(
+                <ReactMarkdown components={{ h1: "h2" }} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} children={markdownExo} />
+            );
+        }
+        if (resultatRef.current !== null && resultat !== null && resultat !== undefined) {
+            createRoot(resultatRef.current).render(
+                <Table data={resultat.data} columnNames={resultat.columnNames} title="Résultat attendu" isShrinkable={true} />
+            );
+        }
+        if (titreRef.current !== null) {
+            titreRef.current.innerHTML = titre;
+        }
+        if (workspaceId === null || workspaceId === undefined) {
+            workspaceId = await createWorkspace(exercice.id);
+            
+        }
+        if (workspaceRef.current !== null) {
+            let relationExo : TWsData[] = relations.map((relation: any) => {
+                return {
+                    title: relation.name,
+                    data: JSON.parse(relation.content).data,
+                    columnNames: JSON.parse(relation.content).columnNames,
+                    isShrinkable: true,
+                }
+            });
+
+            createRoot(workspaceRef.current).render(
+                <WsContent exerciceId={exercice.id} id={workspaceId} exerciceData={relationExo} noLoadData noSaveData noLoad={false} noSave={false} noImportData={true} />
+            );
+        }
+
+    }
+
+    async function createWorkspace(idexo: number) : Promise<number> {
+        let promise = new Promise<number>((resolve, reject) => {
+            api.post(config.apiUrl + '/workspace', { id_exercice:  idexo })
+                .then((response) => {
+                    resolve(response.response.id);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    reject(error);
+                });
+        });
+        return promise;
+    }
+
     async function getExercice() {
         const token = getCookie("token");
         if (token === undefined || token === null || token === "") {
@@ -48,29 +125,12 @@ export function Exercice(prop: any) {
         await sleep(500);
         api.get(config.apiUrl + '/exercice/' + exoId)
             .then((response) => {
-                const exercice = response.response.exercice;
-                const resultat = (exercice.relations !== undefined && exercice.relations.length > 0 ? JSON.parse(exercice.relations[0].content) : null)
-                const titre = exercice.name;
-                const markdownExo = exercice.enonce;
-                if (markdownParentRef.current !== null) {
-                    createRoot(markdownParentRef.current).render(
-                        <ReactMarkdown components={{ h1: "h2" }} remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]} children={markdownExo} />
-                    );
-                } 
-                if (resultatRef.current !== null && resultat !== null) {
-                    createRoot(resultatRef.current).render(
-                        <Table data={resultat.data} columnNames={resultat.columnNames} title="Résultat attendu" isShrinkable={true} />
-                    );
-                }
-                if (titreRef.current !== null) {
-                    titreRef.current.innerHTML = titre;
-                }
-
+                handleResponse(response.response);
             })
             .catch((error) => {
                 console.log(error);
             });
-        // TODO : vérfier si un ws est en cours pour cet exercice
+
     }
 
     useEffect(() => {
@@ -110,14 +170,9 @@ export function Exercice(prop: any) {
                     </div>
                 </div>
             </div>
-            {/* Zone de code */}
-            <div className="flex flex-col h-56 bg-dark">
-                {/* Texte centré et gros */}
-                <div className="flex flex-row justify-center items-center h-full">
-                    <h1 className="text-4xl font-mono text-light">
-                        TBA
-                    </h1>
-                </div>
+            {/* <WsContent exerciceId={exoId} /> */}
+            <div className="w-full" ref={workspaceRef}>
+                <span className='loaderCard '></span>
             </div>
         </>
     )

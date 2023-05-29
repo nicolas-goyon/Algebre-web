@@ -21,7 +21,7 @@ export function Workspace(): JSX.Element {
 
     return (
         <>
-            <WsContent id={workspace as number} />
+            <WsContent id={workspace as number} noSave={false} exerciceData={[]} exerciceId={undefined} noLoad={undefined} noLoadData={undefined} noSaveData={undefined} />
         </>
     )
 }

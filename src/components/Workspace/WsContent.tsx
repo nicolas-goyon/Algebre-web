@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { WorkspaceSvg, serialization, Events, svgResize, inject, Block } from "blockly";
 import { options, sampleGenerator as LatexGenerator } from '../../assets/tools/initBlockly';
 import { javascriptGen } from 'src/assets/Blockly/javascript';
-import { MathJax } from 'better-react-mathjax';
+import { MathJax, MathJaxContext } from 'better-react-mathjax';
 import Relation from 'src/assets/classes/Relation';
 import { api } from 'src/assets/tools/ApiCenter';
 import { config } from 'src/config';
@@ -13,15 +13,21 @@ import CsvInput from '../Input/CsvInput';
 import WorkspaceRelations from 'src/assets/classes/WorkspaceRelation';
 import { extractTableau } from 'src/assets/Helper/addTableau';
 import { fromJsonNextNode } from 'src/assets/classes/Noeuds';
+import type { TWsData as WsData } from 'src/assets/Types/TWsData';
 
-type WsData = {
-    title: string,
-    data: any[],
-    columnNames: string[],
-    isShrinkable: boolean,
-}
 
-export default function WsContent(prop: any) {
+type WsContentProps = {
+    noSave: boolean | undefined,
+    id: number | undefined,
+    exerciceData: WsData[],
+    exerciceId: number | undefined,
+    noLoad: boolean | undefined,
+    noLoadData: boolean | undefined,
+    noSaveData: boolean | undefined,
+    noImportData: boolean | null | undefined
+};
+
+export default function WsContent(prop: WsContentProps) {
     // TODO : remove
     const dummyTableColumnNames = [
         "Nom",
@@ -29,18 +35,11 @@ export default function WsContent(prop: any) {
         "Age",
     ];
 
-    const dummyTableData = [
-        { Nom: "Doe", Prénom: "John", Age: "42" },
-        { Nom: "Doe", Prénom: "Jane", Age: "43" },
-        { Nom: "Dark", Prénom: "John", Age: "32" },
-        { Nom: "Dark", Prénom: "Jane", Age: "33" },
-        { Nom: "Lenon", Prénom: "John", Age: "22" },
-    ];
+    let dummyTableData: WsData[] = [];
     const [inputArray, setInputArray] = useState<WsData[]>([]);
     const [blockWorkspace, setBlockWorkspace] = useState<WorkspaceSvg>();
     const [demoLatex, setDemoLatex] = useState<string>('');
     const [firstLoad, setFirstLoad] = useState<boolean>(false);
-    const [result, setResult] = useState<string>('');;
     const [resultTable, setResultTable] = useState<WsData>({
         title: 'Result',
         data: dummyTableData,
@@ -139,7 +138,7 @@ export default function WsContent(prop: any) {
             });
     }
 
-    function loadWorkspace(id: number | null) {
+    function loadWorkspace(id: number | undefined) {
         if (prop.noLoad) {
             return;
         }
@@ -170,7 +169,7 @@ export default function WsContent(prop: any) {
 
 
     function saveRelations(e: any) {
-        if (prop.noSave === true) {
+        if (prop.noSave === true || prop.noSaveData === true) {
             console.log("Relations can not be saved");
             return;
         }
@@ -200,8 +199,8 @@ export default function WsContent(prop: any) {
         });
     }
 
-    function loadRelations(id: number | null) {
-        if (prop.noLoad) {
+    function loadRelations(id: number | undefined) {
+        if (prop.noLoad || prop.noLoadData) {
             return;
         }
 
@@ -241,6 +240,18 @@ export default function WsContent(prop: any) {
             });
     }
 
+    function loadExerciceData() {
+        if (prop.exerciceId === undefined || prop.exerciceData === undefined) {
+            return;
+        }
+        setInputArray(prop.exerciceData);
+        for (let i = 0; i < prop.exerciceData.length; i++) {
+            const element = prop.exerciceData[i];
+            const newRelation = new Relation(element.title, element.data, element.columnNames);
+            WorkspaceRelations.addTable(newRelation);
+        }
+    }
+
 
     useEffect(() => {
         // Si le workspace n'est pas défini, on le crée
@@ -271,14 +282,12 @@ export default function WsContent(prop: any) {
             baseBlock.render();
             baseBlock.moveBy(x, y);
 
+            loadExerciceData();
             if (prop.id === null) {
                 return;
             }
             loadWorkspace(prop.id);
             loadRelations(prop.id);
-            // console.log("===================================");
-            // test();
-            // console.log("===================================");
         }
 
 
@@ -318,19 +327,15 @@ export default function WsContent(prop: any) {
         const debut = getDebut();
         var code = javascriptGen.blockToCode(debut);
         executeAlgebra(code);
-        setResult(result => code);
     }
     function executeAlgebra(code: string) {
         console.log("Execute Algebra Start");
         try {
-            console.log(code);
             const rel = fromJsonNextNode(JSON.parse(code));
-            console.info(rel);
             if (rel === null) {
                 return;
             }
             const res = rel.execute();
-            console.info(res);
             const dataRes = {
                 title: "Result",
                 data: res.getData(),
@@ -353,7 +358,9 @@ export default function WsContent(prop: any) {
             <div>
                 {/* Zone d'affichage du latex, zone ressemblant à une zone de code */}
                 <div id="latexDiv" className='overflow-x-scroll bg-black rounded-md text-white'>
-                    <MathJax dynamic id="latex">{demoLatex}</MathJax>
+                    <MathJaxContext>
+                        <MathJax dynamic id="latex">{demoLatex}</MathJax>
+                    </MathJaxContext>
                 </div>
             </div>
             {/* Save button */}
@@ -362,28 +369,31 @@ export default function WsContent(prop: any) {
                     <div className='flex justify-center'>
                         <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveWorkspace}>Save Workspace</button>
                     </div>
-                    <div className='flex justify-center'>
-                        <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveRelations}>Save Relations</button>
-                    </div>
+
                 </>
+                : null
+            }
+            {prop.exerciceId === undefined && (prop.noSave === undefined || prop.noSave === false) ?
+                <div className='flex justify-center'>
+                    <button id="saveButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={saveRelations}>Save Relations</button>
+                </div>
                 : null
             }
             {/* Execute button */}
             <div className='flex justify-center'>
                 <button id="executeButton" className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors duration-500 ease-in-out' onClick={executeCode}>Execute</button>
             </div>
-            {/* Zone d'affichage du résultat */}
-            <div id="resultArea" className='flex justify-center'>
-                <div id="resultDiv" className='overflow-x-scroll bg-black rounded-md text-white'>
-                    {result}
-                </div>
-            </div>
+
             {/* Zone d'ajout de fichier csv pour ajouter de nouveaux tableaux */}
-            <div className='flex justify-center'>
-                <div className='w-2/3'>
-                    <CsvInput callBack={addTableau} />
+            {prop.noImportData !== undefined && prop.noImportData !== null && prop.noImportData === true ?
+                null
+                :
+                <div className='flex justify-center'>
+                    <div className='w-2/3'>
+                        <CsvInput callBack={addTableau} />
+                    </div>
                 </div>
-            </div>
+            }
 
             {/* Tableau de données */}
             {/* Deux colonnes, l'une faisant 2/3 et l'autre 1/3 : plusieurs tables les unes au dessus des autres avec un titre dans la première et qu'une seule table avec le titre résultat dans la seconde */}

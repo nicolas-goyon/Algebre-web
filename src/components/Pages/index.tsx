@@ -6,7 +6,6 @@ export { Logout } from './Logout';
 export { Workspaces } from './Workspaces';
 export { Workspace, loader as WorspaceLoader } from './Workspace';
 export { CreateWorkspace } from './CreateWorkspace';
-export { Exercicedemo } from './Exercicedemo';
 export { Exerciceliste } from './Exercicesliste';
 export { CreateExercice } from './CreateExercice';
 export { Exercice, ExerciceLoader } from './Exercice';
