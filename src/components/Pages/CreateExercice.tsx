@@ -14,7 +14,7 @@ import { config } from 'src/config';
 
 export function CreateExercice() {
     const [relations, setRelations] = useState<TWsData[]>([]);
-    const sumbitRef = useRef<HTMLButtonElement>(null);
+    const [resultat, setResultat] = useState<TWsData | null>(null)
     const formRef = useRef<HTMLFormElement>(null);
 
 
@@ -23,16 +23,37 @@ export function CreateExercice() {
         if (newData === null) {
             return;
         }
+        // Check if the name is already used
+        for (let i = 0; i < relations.length; i++) {
+            if (relations[i].title === newData.title) {
+                alert("Le nom de la relation est déjà utilisé");
+                return;
+            }
+        }
         setRelations((prevRelations) => [...prevRelations, newData]);
-        // console.log(newRelations);
     }
 
-    function testSubmit(e: any) {
-        e.preventDefault();
-        console.log("testSubmit");
-        console.log(relations);
+    function removeTab(index: number) {
+        setRelations((prevRelations) => {
+            const newRelations = [...prevRelations];
+            newRelations.splice(index, 1);
+            return newRelations;
+        });
     }
 
+    function addResultat(text: string, name: string) {
+        const newData = extractTableau(text, name);
+        if (newData === null) {
+            return;
+        }
+        newData.title = "Résultat";
+        setResultat(newData);
+    }
+
+    function removeResultat() {
+        setResultat(null);
+    }
+    
 
     function handleSubmit(e: any) {
         // console.log(relations)
@@ -53,14 +74,14 @@ export function CreateExercice() {
             console.log("name doesn't exist");
             return;
         }
+
         const dataRelation: { content: string, name: string }[] = [];
         const tables = [...relations]
         for (let i = 0; i < tables.length; i++) {
             const relation = tables[i];
             dataRelation.push({ content: JSON.stringify(relation), name: relation.title });
         }
-        console.log(dataRelation);
-
+        dataRelation.push({ content: JSON.stringify(resultat), name: resultat?.title || "" });
         const requestBody = {
             name: name.value,
             description: description.value,
@@ -101,8 +122,8 @@ export function CreateExercice() {
 
                             <hr className="my-5" />
 
-                            <div className="flex flex-row justify-between">
-                                <div>
+                            <div className="flex flex-row justify-between w-full">
+                                <div className="w-1/2 px-3">
                                     <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-ressources">
                                         Ressources de l'exercice
                                     </label>
@@ -111,10 +132,27 @@ export function CreateExercice() {
                                     <div id="dataArea" className='flex justify-center'>
                                         <div id="inputArea" className='w-2/3'>
                                             {relations.map((input, index) => (
-                                                <Table key={index} columnNames={input.columnNames} data={input.data} title={input.title} isShrinkable={input.isShrinkable} />
+                                                <Table key={index} columnNames={input.columnNames} data={input.data} title={input.title} isShrinkable={input.isShrinkable} deletableCallback={() => {removeTab(index)}}/>
                                             ))}
                                         </div>
                                     </div>
+                                </div>
+                                <div className="w-1/2 px-3">
+                                    {resultat === null ?
+                                        <>
+                                            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" htmlFor="grid-ressources" >
+                                                Résultat attendu de l'exercice
+                                            </label>
+                                            <p className="text-gray-600 text-xs italic">Donnez le résultat attendu de votre exercice</p>
+                                            <CsvInput callBack={addResultat} />
+                                        </>
+                                        :
+                                        <div id="resultatArea" className='flex justify-center'>
+                                            <div className='w-2/3'>
+                                                <Table columnNames={resultat.columnNames} data={resultat.data} title={resultat.title} isShrinkable={resultat.isShrinkable} deletableCallback={removeResultat}/>
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
                             </div>
 
