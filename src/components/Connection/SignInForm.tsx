@@ -51,7 +51,7 @@ export default
         <main className="w-full h-screen flex flex-col items-center justify-center px-4">
             <div className="max-w-sm w-full text-gray-600">
                 <div className="text-center">
-                    <img src="https://floatui.com/logo.svg" alt="icon" width={150} className="mx-auto" />
+                    {/* <img src="https://floatui.com/logo.svg" alt="icon" width={150} className="mx-auto" /> */}
                     <div className="mt-5 space-y-2">
                         <h3 className="text-gray-800 text-2xl font-bold sm:text-3xl">Log in to your account</h3>
                         <p className="">Don't have an account? <a href="/signup" className="font-medium text-indigo-600 hover:text-indigo-500">Sign up</a></p>

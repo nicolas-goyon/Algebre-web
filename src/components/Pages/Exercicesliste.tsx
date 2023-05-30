@@ -30,18 +30,18 @@ export function Exerciceliste(): JSX.Element {
             })
     }, [])
 
-    function deleteHandler(id: number) {
-        api.delete(config.apiUrl + '/exercice/' + id, null)
-            .then((res) => {
-                if (res.status === 200) {
-                    const newDatas = exercices.filter((item) => item.id !== id)
-                    setExercices(newDatas)
-                }
-            })
-            .catch((err) => {
-                alert(err)
-            })
-    }
+    // function deleteHandler(id: number) {
+    //     api.delete(config.apiUrl + '/exercice/' + id, null)
+    //         .then((res) => {
+    //             if (res.status === 200) {
+    //                 const newDatas = exercices.filter((item) => item.id !== id)
+    //                 setExercices(newDatas)
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             alert(err)
+    //         })
+    // }
 
 
     {/* deleteHandler={(e: any) => {e.preventDefault(); e.stopPropagation(); deleteHandler(item.id)}} */ }
@@ -59,7 +59,7 @@ export function Exerciceliste(): JSX.Element {
             {/* Affichage des différents workspaces avec une liste */}
             <div className="flex flex-wrap justify-center gap-4">
                 {exercices.map((item) => (
-                    <ListTitle id={item.id} title={item.title} handler={() => (window.location.href = '/exercice/' + item.id)} deleteHandler={(e: any) => {e.preventDefault(); e.stopPropagation(); deleteHandler(item.id)}}/>
+                    <ListTitle id={item.id} title={item.title} handler={() => (window.location.href = '/exercice/' + item.id)}/>
                 ))}
             </div>
         </>
