@@ -59,27 +59,6 @@ export class Difference extends Noeud {
   }
 
 
-  // deleteChild(index: Noeud): void {
-  //     if (this.ensemble1 === index){
-  //         this.ensemble1 = null
-  //     }
-  //     if (this.ensemble2 === index){
-  //         this.ensemble2 = null
-  //     }
-  // }
-
-  // fillArray(): Noeud[] {
-  //     let array :Noeud[] = []
-  //     if (this.ensemble1 != null){
-  //         array = this.ensemble1.fillArray()
-  //     }
-  //     if (this.ensemble2 != null){
-  //         array = arrayMerge(array, this.ensemble2.fillArray())
-  //     }
-  //     array[this.index] = this;
-  //     return array
-  // }
-
 
   static toBlockly(): any {
     return {
